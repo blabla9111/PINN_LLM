@@ -1,0 +1,49 @@
+import unittest
+# from loss_dinn_LLM import 
+import traceback
+import torch
+
+from loss_dinn_LLM import loss_dinn
+
+
+class TestLossDinnFunction():
+
+    def test_loss_dinn_runs_without_errors(self):
+        # Создаем тензоры для тестирования
+        S_hat = torch.randn(50)
+        S_pred = torch.randn(50)
+        I_hat = torch.randn(50)
+        I_pred = torch.randn(50)
+        D_hat = torch.randn(50)
+        D_pred = torch.randn(50)
+        R_hat = torch.randn(50)
+        R_pred = torch.randn(50)
+        f1 = torch.randn(50, 100)
+        f2 = torch.randn(50, 100)
+        f3 = torch.randn(50)
+        f4 = torch.randn(50)
+        I_pred_last = torch.randn(1)
+
+        # Вызываем функцию и проверяем, что она не выбрасывает ошибок
+        try:
+            loss = loss_dinn(S_hat, S_pred, I_hat, I_pred, D_hat,
+                             D_pred, R_hat, R_pred, f1, f2, f3, f4, I_pred_last)
+            # Проверяем, что функция вернула значение
+            if loss is None:
+                return False, "loss =  None"
+            # print(loss)
+            if loss.shape != torch.Size([]) and loss.shape != torch.Size([1]):
+                return False, "loss should be scalar"
+            # print(f'loss = {loss}\n\n\n')
+            # self.assertIsNotNone(loss)
+
+            return True, ""
+        except Exception as e:
+            #  print(type(e))
+            # str(self.fail(e)) # мб как-то более полно выводить ошибку (traceback?)
+            return False, str(traceback.format_exc())
+
+
+if __name__ == '__main__':
+    tester =  TestLossDinnFunction()
+    print(tester.test_loss_dinn_runs_without_errors())
