@@ -1,0 +1,16 @@
+{
+    "model": "meta-llama-3.1-8b-instruct",
+    "messages": [
+        {
+            "role": "system",
+            "content": "You are a helpful assistant with deep knowledge of epidemiology. Your task is to classify comment. There are 5 classes of comments: 0. Undefined; 1. Shape of the epidemic curve (visual characteristics); 2. Accounting for the measures introduced; 3. Parameters and temporal dynamics of the epidemic process (numerical characteristics); 4. Position of the peak of the epidemic. \nA comment should be assigned to only one class.\nYou get a comment, but you only have to return its class number."
+        },
+        {
+            "role": "user",
+            "content": "Vaccination began on the 30th day – where is the smoothing of the curve in 2-3 weeks?"
+        }
+    ],
+    "temperature": 0.0,
+    "max_tokens": -1,
+    "stream": false
+}

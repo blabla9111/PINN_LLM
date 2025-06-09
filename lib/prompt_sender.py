@@ -23,6 +23,29 @@ def save_answer(file_path_to_save, text):
     return text  # Если ОК, то вернется <Response [200]>
 
 
+def create_comment_class_prompt(prompt_file_path, comment):
+    with open(prompt_file_path, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+    data['messages'][1]['content'] = comment
+    with open(prompt_file_path, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=4)
+
+    return prompt_file_path
+
+
+def create_comment_subclass_prompt(prompt_file_path, comment_class, comment):
+    with open(prompt_file_path, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+    with open("rules/comment_subclasses.json", 'r', encoding='utf-8') as f:
+        comment_subclasses = json.load(f)
+    data['messages'][0]['content'] = "You are a helpful assistant with deep knowledge of epidemiology. Your task is to classify comment. " + comment_subclasses[comment_class] + \
+        "\nA comment should be assigned to only one class.\nYou get a comment, but you only have to return its class number."
+    data['messages'][1]['content'] = comment
+    with open(prompt_file_path, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=4)
+
+    return prompt_file_path
+
 def create_primary_prompt(prompt_file_path, code, comment):
     with open(prompt_file_path, 'r', encoding='utf-8') as f:
         data = json.load(f)

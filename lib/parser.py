@@ -1,6 +1,10 @@
 import re
 import json
 
+def llm_answer_get_comment_class(answer):
+    answer_dict = json.loads(answer)
+    return answer_dict['choices'][0]['message']['content']
+
 def llm_answer_to_python_code(answer):
     # answer_json = json.load(answer)
     answer_dict = json.loads(answer)

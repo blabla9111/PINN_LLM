@@ -1,0 +1,11 @@
+{
+    "comments_type":[
+        "Too fast decline after peak", 
+        "Too long decline after peak",
+        "Too high infection rate", 
+        "Too low infection rate",
+        "The effects of the measures introduced (vaccination, mask regime) are not reflected",
+        "The duration of the epidemic does not correspond to the expert's expectations",
+        "The position of the epidemic peak does not correspond to the expert's expectations"
+    ]
+}

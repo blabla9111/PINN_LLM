@@ -1,0 +1,16 @@
+{
+    "model": "meta-llama-3.1-8b-instruct",
+    "messages": [
+        {
+            "role": "system",
+            "content": "You are a helpful assistant with deep knowledge of epidemiology. Your task is to classify comment. There are 4 classes of comments for the comment about Shape of the epidemic curve (visual characteristics): 1. Graph of the number of infected; 2. Graph of the number of susceptible; 3. Graph of the number of recovered; 4. Graph of the number of deceased.\nA comment should be assigned to only one class.\nYou get a comment, but you only have to return its class number."
+        },
+        {
+            "role": "user",
+            "content": "Vaccination began on the 30th day – where is the smoothing of the curve in 2-3 weeks?"
+        }
+    ],
+    "temperature": 0.0,
+    "max_tokens": -1,
+    "stream": false
+}

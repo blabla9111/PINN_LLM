@@ -1,0 +1,105 @@
+Comment: Too sharp a decline after the peak – in reality, the 'tail' of the epidemic should be longer.
+Class: 3
+Subclass: 1
+==================================================
+Comment: The graph of recovered does not correspond to infected – where is the delayed immune response?
+Class: 1
+Subclass: 1
+==================================================
+Comment: The effect of lockdown should appear earlier – inertia is 5-7 days, not 14.
+Class: 2
+Subclass: 1
+==================================================
+Comment: Masks reduce the transmission rate, but this is not visible on the graph.
+Class: 1
+Subclass: 1 
+
+The comment mentions masks reducing the transmission rate, which would affect the number of infected over time, so it's related to the shape of the graph of the number of infected.
+==================================================
+Comment: Vaccination began on the 30th day – where is the smoothing of the curve in 2-3 weeks?
+Class: 1
+Subclass: 1
+==================================================
+Comment: Quarantine measures cut off the curve too sharply – in reality, there will be a smoother decline.
+Class: 1
+Subclass: 1
+==================================================
+Comment: Mortality increases linearly with morbidity – but should lag behind by 1-2 weeks.
+Class: 3
+Subclass: 1
+==================================================
+Comment: Too many recovered in the first days – the average duration of the disease is longer.
+Class: 1
+Subclass: 2
+==================================================
+Comment: The peak should be wider – in reality, people are not infected at the same time
+Class: 1
+Subclass: 1
+==================================================
+Comment: Asymptomatic spread is not taken into account – the actual number of infected is higher.
+Error: '0'
+==================================================
+Comment: The graph of infected is symmetrical – in reality, the ascending and descending branches are different.
+Class: 1
+Subclass: 1
+==================================================
+Comment: The epidemic cannot end in 60 days - usually the cycle is 3-6 months.
+Class: 1
+Subclass: 1
+==================================================
+Comment: Too early peak - with such measures it should be on the 40-50th day, not on the 20th.
+Class: 3
+Subclass: 1
+==================================================
+Comment: No delayed effect of the measures - quarantine will only have an effect after 2 weeks
+Class: 1
+Subclass: 1
+==================================================
+Comment: The graph is interrupted, but epidemics usually have a 'long tail'
+Class: 1
+Subclass: 1
+==================================================
+Comment: Quarantine measures were introduced late - the peak should shift by 7-10 days.
+Class: 3
+Subclass: 1
+==================================================
+Comment: Simultaneous peak of hospitalizations and mortality - usually there is a delay of 7-14 days.
+Class: 1
+Subclass: 1
+==================================================
+Comment: Immunization of 70% of the population in 30 days - an unrealistic vaccination rate.
+Class: 1
+Subclass: 1
+==================================================
+Comment: The 14-day lag for the formation of immunity is not reflected.
+Class: 1
+Subclass: 1
+==================================================
+Comment: Mortality in hospitals is 25% with an average world rate of 3-7%.
+Class: 1
+Subclass: Based on the information provided about mortality rates, I would classify this comment as related to the Graph of the number of deceased (class 4).
+==================================================
+Comment: A sharp jump in mortality on the 50th day without changing the criteria for recording deaths.
+Class: 1
+Subclass: 1
+==================================================
+Comment: The infection rate in the forecast is too high, given the vaccination rate.
+Class: 1
+Subclass: 1
+==================================================
+Comment: The effect of quarantine is not reflected after day  # КОШМАР
+Class: 3
+Subclass: 1
+==================================================
+Comment: The effect of the mask regime is not reflected after day 15.
+Class: 2
+Subclass: 1
+==================================================
+Comment: The outbreak started too late!
+Class: 1
+Subclass: 1
+==================================================
+Comment: The epidemic cannot be so long!
+Class: 1
+Subclass: 1
+==================================================
