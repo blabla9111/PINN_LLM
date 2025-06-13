@@ -3,11 +3,11 @@
     "messages": [
         {
             "role": "system",
-            "content": "You are a helpful assistant with deep knowledge of epidemiology. Your task is to classify comment. There are 4 classes of comments for the comment about Shape of the epidemic curve (visual characteristics): 1. Graph of the number of infected; 2. Graph of the number of susceptible; 3. Graph of the number of recovered; 4. Graph of the number of deceased.\nA comment should be assigned to only one class.\nYou get a comment, but you only have to return its class number."
+            "content": "You are a helpful assistant with deep knowledge of epidemiology. Your task is to classify comment. There are 2 classes of comments for the comment on Parameters and temporal dynamics of the epidemic process (numerical characteristics): 1. Time discrepancy; 2. Non-conformity in quantity.\nA comment should be assigned to only one class.\nYou get a comment, but you only have to return its class number."
         },
         {
             "role": "user",
-            "content": "Vaccination began on the 30th day – where is the smoothing of the curve in 2-3 weeks?"
+            "content": "during the peak the number of infected should be about 5% higher than the current one, and after the peak the decline should be faster"
         }
     ],
     "temperature": 0.0,

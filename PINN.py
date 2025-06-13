@@ -226,4 +226,4 @@ plt.plot(timesteps, I_pred_list[0].detach().numpy(
 plt.xlabel("Time, days")
 plt.ylabel("Infected, persons")
 plt.legend()
-plt.savefig("PINN_py_Infected_persons_5.png", dpi=300)
+plt.savefig("PINN_py_Infected_persons_perplexity_align_primary_after2_4_1.png", dpi=300)

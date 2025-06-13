@@ -13,7 +13,7 @@ def main():
     LLM_URL = 'http://localhost:1234/v1/chat/completions'
     ANSWER_FILE_PATH = 'promts_templates/comment_classifier_1_answer.json'
     ANSWER_FILE_PATH_2 = 'promts_templates/comment_classifier_2_answer.json'
-    EXPERT_COMMENT = "The graph of recovered does not correspond to infected – where is the delayed immune response?"
+    EXPERT_COMMENT = "on the 20th day the vaccination started - this is not visible on the graphs"
 
 
     create_comment_class_prompt(PROMPT_FILE_PATH,EXPERT_COMMENT )

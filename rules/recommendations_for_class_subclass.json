@@ -1,0 +1,28 @@
+{
+    "1":{
+      "class_info": "The error is due to the fact that the behavior of the epidemic curve does not correspond to the expert's expectations.",
+      "1": "Add penalty to term2, taking into account expert's comment.",
+      "2": "Add penalty to term1, taking into account expert's comment.",
+      "3": "Add penalty to term4, taking into account expert's comment.",
+      "4": "Add penalty to term3, taking into account expert's comment.",
+      "additional_info": "Changing the rest of the function is PROHIBITED."
+    },
+    "2":{
+      "class_info": "The error is related to the consideration of measures to counter the spread of the epidemic. Only term2 can be changed.",
+      "1": "Add a time-based penalty.",
+      "2": "Adjust/add parameters that affect the introduced measures.",
+      "3": "Add a fine that takes into account the measures introduced.",
+      "additional_info": "Changing the rest of the function is PROHIBITED."
+    },
+    "3":{
+      "class_info": "The error is due to the fact that the forecast contains incorrect parameters or time dynamics of the epidemiological process.",
+      "1": "Add a time-based penalty to term2. ",
+      "2": "Add a penalty to term2 that takes into account quantitative characteristics.",
+      "additional_info": "Changing the rest of the function is PROHIBITED."
+    },
+    "4":{
+      "class_info": "The error is due to the fact that the position of the peak of the epidemic does not correspond to the expert's expectations.",
+      "1": "In term2 add an offset to the desired peak day.",
+      "additional_info": "Changing the rest of the function is PROHIBITED."
+    }
+}
