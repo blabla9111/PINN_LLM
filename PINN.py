@@ -200,6 +200,26 @@ class DINN(nn.Module):
                 print(alpha_pred.shape)
 
         return S_pred_list, I_pred_list, D_pred_list, R_pred_list, alpha_pred_list
+    
+    def predict(self, t_values=None):
+        """Получить прогноз модели для заданных временных точек"""
+        if t_values is None:
+            t_values = self.t_float
+
+        t_batch = torch.reshape(t_values, (len(t_values), 1))
+
+        with torch.no_grad():
+            sidr_hat, alpha_hat = self.net_sidr(t_batch)
+            S_hat, I_hat, D_hat, R_hat = sidr_hat[:,
+                                                  0], sidr_hat[:, 1], sidr_hat[:, 2], sidr_hat[:, 3]
+
+            # Денормализация
+            S_pred = self.S_min + (self.S_max - self.S_min) * S_hat
+            I_pred = self.I_min + (self.I_max - self.I_min) * I_hat
+            D_pred = self.D_min + (self.D_max - self.D_min) * D_hat
+            R_pred = self.R_min + (self.R_max - self.R_min) * R_hat
+
+        return S_pred, I_pred, D_pred, R_pred, alpha_hat
 
 
 dinn = DINN(timesteps, susceptible, infected, dead, recovered)
@@ -216,37 +236,31 @@ dinn.scheduler = scheduler
 
 
 S_pred_list, I_pred_list, D_pred_list, R_pred_list, alpha_pred_list = dinn.train(
-    100000, regul=0.8)
-
-# # Сохраняем только веса (параметры) модели
-# torch.save(dinn.state_dict(), './saved_models/meta_llama_1_dinn_weights.pth')
+    100, regul=0.8)
 
 
-plt.scatter(timesteps[:x][::10], infected[:x][::10],
-            c='blue', alpha=0.5, lw=0.5, label='Real data')
-plt.scatter(timesteps[x:][::10], infected[x:][::10], c='white',
-            edgecolors='black', alpha=0.5, lw=0.5, label='Future data')
-plt.plot(timesteps, I_pred_list[0].detach().numpy(
-), 'black', alpha=0.9, lw=2, label='Model', linestyle='dashed')
-plt.xlabel("Time, days")
-plt.ylabel("Infected, persons")
-plt.legend()
-plt.savefig(
-    "./results/PINN_py_Infected_persons_claude_3.png", dpi=300)
-save_dir = "saved_results_arrays"
+def save_model(model, filepath):
+    """Сохранить модель полностью"""
+    torch.save({
+        'model_state_dict': model.state_dict(),
+        'beta_tilda': model.beta_tilda,
+        'gamma_tilda': model.gamma_tilda,
+        'S_max': model.S_max,
+        'I_max': model.I_max,
+        'D_max': model.D_max,
+        'R_max': model.R_max,
+        'S_min': model.S_min,
+        'I_min': model.I_min,
+        'D_min': model.D_min,
+        'R_min': model.R_min,
+        't': model.t,
+        'S': model.S,
+        'I': model.I,
+        'D': model.D,
+        'R': model.R
+    }, filepath)
+    print(f"Model saved to {filepath}")
 
-timesteps_arr = np.array(timesteps)
-infected_arr = np.array(infected)
-I_pred_arr = I_pred_list[0].detach().numpy()
 
-# np.save(os.path.join(save_dir, "timesteps.npy"), timesteps_arr)
-# np.save(os.path.join(save_dir, "infected.npy"), infected_arr)
-# np.save(os.path.join(save_dir, "I_pred_primary.npy"), I_pred_arr)
-# np.save(os.path.join(save_dir, "I_pred_deekseek.npy"), I_pred_arr)
-# np.save(os.path.join(save_dir, "I_pred_perplexity.npy"), I_pred_arr)
-# np.save(os.path.join(save_dir, "I_pred_perplexity_2.npy"), I_pred_arr)
-# np.save(os.path.join(save_dir, "I_pred_meta_llama_1.npy"), I_pred_arr)
-# np.save(os.path.join(save_dir, "I_pred_gpt4_1_1.npy"), I_pred_arr)
-# np.save(os.path.join(save_dir, "I_pred_claude_2.npy"), I_pred_arr)
-np.save(os.path.join(save_dir, "I_pred_claude_3.npy"), I_pred_arr)
 
+save_model(dinn, './saved_models/dinn_2.pth')
