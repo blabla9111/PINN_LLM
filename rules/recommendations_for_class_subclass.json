@@ -23,6 +23,7 @@
     "4":{
       "class_info": "The error is due to the fact that the position of the peak of the epidemic does not correspond to the expert's expectations.",
       "1": "In term2 add an offset to the desired peak day.",
+      "2": "Add a penalty for the discrepancy in the number of infected during the peak in term2. ",
       "additional_info": "Changing the rest of the function is PROHIBITED."
     }
 }

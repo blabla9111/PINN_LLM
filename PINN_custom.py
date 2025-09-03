@@ -6,7 +6,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
-from loss_dinn_LLM import loss_dinn
+from loss_dinn_custom import loss_dinn
 
 torch.manual_seed(123)
 torch.cuda.manual_seed(123)
@@ -172,14 +172,14 @@ class DINN(nn.Module):
             D_pred_list.append(self.D_min + (self.D_max - self.D_min) * D_pred)
             R_pred_list.append(self.R_min + (self.R_max - self.R_min) * R_pred)
             alpha_pred_list.append(alpha_pred)
-            loss = loss_dinn(self.S_hat[:x], S_pred[:x],
-                             self.I_hat[:x], I_pred[:x],
-                             self.D_hat[:x], D_pred[:x],
-                             self.R_hat[:x], R_pred[:x],
-                             f1[:x],
-                             f2[:x],
-                             f3[:x],
-                             f4[:x], I_pred[-1])
+            loss = loss_dinn(self.S_hat[:x], S_pred,
+                             self.I_hat[:x], I_pred,
+                             self.D_hat[:x], D_pred,
+                             self.R_hat[:x], R_pred,
+                             f1,
+                             f2,
+                             f3,
+                             f4, I_pred[-1], x)
             # print("!!!!!!!!!!!!")
             loss.backward()
             self.optimizer.step()
@@ -232,12 +232,12 @@ plt.xlabel("Time, days")
 plt.ylabel("Infected, persons")
 plt.legend()
 plt.savefig(
-    "./results/PINN_py_Infected_persons_claude_3.png", dpi=300)
-save_dir = "saved_results_arrays"
+    "./results/PINN_py_Infected_persons_custom_16_1addition_regul_09.png", dpi=300)
+# save_dir = "saved_results_arrays"
 
-timesteps_arr = np.array(timesteps)
-infected_arr = np.array(infected)
-I_pred_arr = I_pred_list[0].detach().numpy()
+# timesteps_arr = np.array(timesteps)
+# infected_arr = np.array(infected)
+# I_pred_arr = I_pred_list[0].detach().numpy()
 
 # np.save(os.path.join(save_dir, "timesteps.npy"), timesteps_arr)
 # np.save(os.path.join(save_dir, "infected.npy"), infected_arr)
@@ -246,7 +246,4 @@ I_pred_arr = I_pred_list[0].detach().numpy()
 # np.save(os.path.join(save_dir, "I_pred_perplexity.npy"), I_pred_arr)
 # np.save(os.path.join(save_dir, "I_pred_perplexity_2.npy"), I_pred_arr)
 # np.save(os.path.join(save_dir, "I_pred_meta_llama_1.npy"), I_pred_arr)
-# np.save(os.path.join(save_dir, "I_pred_gpt4_1_1.npy"), I_pred_arr)
-# np.save(os.path.join(save_dir, "I_pred_claude_2.npy"), I_pred_arr)
-np.save(os.path.join(save_dir, "I_pred_claude_3.npy"), I_pred_arr)
 

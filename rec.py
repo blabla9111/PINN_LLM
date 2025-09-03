@@ -14,7 +14,7 @@ def main():
     LLM_URL = 'http://localhost:1234/v1/chat/completions'
     ANSWER_FILE_PATH = 'promts_templates/comment_classifier_1_answer.json'
     ANSWER_FILE_PATH_2 = 'promts_templates/comment_classifier_2_answer.json'
-    EXPERT_COMMENT = "during the peak the number of infected should be about 5 percents higher than the current one, and after the peak the decline should be faster"
+    EXPERT_COMMENT = "after the peak there should be a much sharper decline in the number of infected"
 
     RUN_PINN_COMMAND = ['python', 'PINN.py']
     RUN_TESTER_COMMAND = ['python', 'loss_dinn_check.py']
@@ -27,6 +27,7 @@ def main():
     # print("send prompt")
     # json_text = load_text_to_json(ANSWER_FILE_PATH)
     # comment_class = llm_answer_get_comment_class(json_text)
+    # comment_class = re.search(r'\d+', comment_class).group()
     # print(f'Class:\n{comment_class}')
     # create_comment_subclass_prompt(
     #     PROMPT_FILE_PATH_2, comment_class, EXPERT_COMMENT)
@@ -36,13 +37,13 @@ def main():
     # comment_subclass = llm_answer_get_comment_class(json_text)
     # print(f'Subclass:\n{comment_subclass}')
 
-    comment_class = '3'
+    comment_class = '4'
     comment_subclass = '2'
 
     PROMPT_FILE_PATH = 'promts_templates/get_loss_based_on_recommendation_prompt.json'
     ANSWER_FILE_PATH = 'promts_templates/get_loss_based_on_recommendation_prompt_answer.json'
     LOSS_FILE_PATH = 'loss_dinn_LLM.py'
-    LOSS_PRIMARY_FILE_PATH = 'loss_dinn_LLM.py'
+    LOSS_PRIMARY_FILE_PATH = 'loss_dinn_primary.py'
 
     code = get_loss_func_as_str(LOSS_PRIMARY_FILE_PATH)
     create_get_loss_based_on_recommendation_prompt(PROMPT_FILE_PATH, comment_class, comment_subclass, EXPERT_COMMENT, code)
@@ -93,7 +94,7 @@ def main():
     #                         capture_output=True, text=True)
 
     # print(output.stdout)
-    # print('done!')
+    print('done!')
 
 
 if __name__ == "__main__":
