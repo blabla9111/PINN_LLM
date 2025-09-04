@@ -188,7 +188,7 @@ def main_page():
         })
 
         metrics_df = pd.DataFrame(metrics_df)
-        st.dataframe(metrics_df, hide_index=True, use_container_width=True)
+        st.dataframe(metrics_df, hide_index=True, width='stretch')
 
         # Дополнительная статистика
         st.subheader("Дополнительная информация")
