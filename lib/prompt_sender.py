@@ -2,23 +2,35 @@ import json
 import requests
 
 
-def send_prompt(prompt_path, LLM_url, file_path_to_save=None):
+def send_prompt(prompt_path, LLM_url, client, file_path_to_save=None):
     with open(prompt_path) as f:
         prompt = json.load(f)
 
     url = LLM_url
-    answer = requests.post(url, json=prompt)
+    # answer = requests.post(url, json=prompt)
+
+
+    # answer = client.chat.completions.create(prompt)
+    print(prompt['messages'])
+    completion = client.chat.completions.create(
+        # Убедитесь что модель поддерживает чат
+        model="meta-llama/Meta-Llama-3.1-8B-Instruct",
+        messages=[{"role": "user", "content": str(prompt["messages"])}],
+        max_tokens=500,
+        temperature=0.7
+    )
+    print(completion)
 
     if file_path_to_save:
-        save_answer(file_path_to_save, answer)
+        save_answer(file_path_to_save, completion.choices[0].message.content)
 
-    return answer  # Если ОК, то вернется <Response [200]>
+    return completion  # Если ОК, то вернется <Response [200]>
 
 
 def save_answer(file_path_to_save, text):
     with open(file_path_to_save, 'w') as f:
         # Записывается только полученный json (body ответа)
-        json.dump(text.text, f, ensure_ascii=False, indent=4)
+        json.dump(text, f, ensure_ascii=False, indent=4)
 
     return text  # Если ОК, то вернется <Response [200]>
 

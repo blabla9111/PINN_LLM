@@ -6,7 +6,7 @@ def loss_dinn(S_hat, S_pred, I_hat, I_pred, D_hat, D_pred, R_hat, R_pred, f1, f2
     last_infected_penalty = 0.05
     aggregation_func = torch.mean
     norm_func = torch.square
-
+    sdfghjk
     term1 = aggregation_func(norm_func(S_hat - S_pred))
     term2 = aggregation_func(norm_func(I_hat - I_pred))
     # term3 = aggregation_func(norm_func(D_hat - D_pred))

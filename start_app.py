@@ -39,61 +39,61 @@ def main():
     # comment_subclass = llm_answer_get_comment_class(json_text)
     print(f'Subclass:\n{top_indices[1]}  {top_probs[1]}')
 
-    # comment_class = '4'
-    # comment_subclass = '2'
+    comment_class = str(top_indices[0])
+    comment_subclass = str(top_indices[1])
 
-    # PROMPT_FILE_PATH = 'promts_templates/get_loss_based_on_recommendation_prompt.json'
-    # ANSWER_FILE_PATH = 'promts_templates/get_loss_based_on_recommendation_prompt_answer.json'
-    # LOSS_FILE_PATH = 'loss_dinn_LLM.py'
-    # LOSS_PRIMARY_FILE_PATH = 'loss_dinn_primary.py'
+    PROMPT_FILE_PATH = 'promts_templates/get_loss_based_on_recommendation_prompt.json'
+    ANSWER_FILE_PATH = 'promts_templates/get_loss_based_on_recommendation_prompt_answer.json'
+    LOSS_FILE_PATH = 'loss_dinn_LLM.py'
+    LOSS_PRIMARY_FILE_PATH = 'loss_dinn_primary.py'
 
-    # code = get_loss_func_as_str(LOSS_PRIMARY_FILE_PATH)
-    # create_get_loss_based_on_recommendation_prompt(PROMPT_FILE_PATH, comment_class, comment_subclass, EXPERT_COMMENT, code)
-    # send_prompt(PROMPT_FILE_PATH,
-    #             LLM_URL, ANSWER_FILE_PATH)
-    # print("send prompt")
-    # json_text = load_text_to_json(ANSWER_FILE_PATH)
-    # code = llm_answer_to_python_code(json_text)
-    # print(f'code:\n{code}')
-    # save(LOSS_FILE_PATH, code)
-    # print("Run tester")
-    # output = subprocess.run(RUN_TESTER_COMMAND,
-    #                         capture_output=True, text=True)
-    # # print(output.stdout)
-    # t = eval(output.stdout)
-    # is_correct = t[0]
-    # error = t[1]
-    # print(f'tester result = {is_correct}')
-    # error_counter = 0
-    # while is_correct == False:
-    #     error_counter += 1
-    #     create_prompt_to_fix_error(PROMPT_FIX_ERROR_FILE_PATH, code, error)
-    #     print(f'error:\n{error}\n\n')
-    #     if error_counter % 3 == 0:
-    #         print("Again send primary prompt")
-    #         send_prompt(PROMPT_FILE_PATH,
-    #                     LLM_URL, ANSWER_FILE_PATH)
-    #         json_text = load_text_to_json(ANSWER_FILE_PATH)
-    #     else:
-    #         print("send fix error prompt")
-    #         send_prompt(PROMPT_FIX_ERROR_FILE_PATH,
-    #                     LLM_URL, ANSWER_FIX_ERROR_FILE_PATH)
+    code = get_loss_func_as_str(LOSS_PRIMARY_FILE_PATH)
+    create_get_loss_based_on_recommendation_prompt(PROMPT_FILE_PATH, comment_class, comment_subclass, EXPERT_COMMENT, code)
+    send_prompt(PROMPT_FILE_PATH,
+                LLM_URL, ANSWER_FILE_PATH)
+    print("send prompt")
+    json_text = load_text_to_json(ANSWER_FILE_PATH)
+    code = llm_answer_to_python_code(json_text)
+    print(f'code:\n{code}')
+    save(LOSS_FILE_PATH, code)
+    print("Run tester")
+    output = subprocess.run(RUN_TESTER_COMMAND,
+                            capture_output=True, text=True)
+    # print(output.stdout)
+    t = eval(output.stdout)
+    is_correct = t[0]
+    error = t[1]
+    print(f'tester result = {is_correct}')
+    error_counter = 0
+    while is_correct == False:
+        error_counter += 1
+        create_prompt_to_fix_error(PROMPT_FIX_ERROR_FILE_PATH, code, error)
+        print(f'error:\n{error}\n\n')
+        if error_counter % 3 == 0:
+            print("Again send primary prompt")
+            send_prompt(PROMPT_FILE_PATH,
+                        LLM_URL, ANSWER_FILE_PATH)
+            json_text = load_text_to_json(ANSWER_FILE_PATH)
+        else:
+            print("send fix error prompt")
+            send_prompt(PROMPT_FIX_ERROR_FILE_PATH,
+                        LLM_URL, ANSWER_FIX_ERROR_FILE_PATH)
 
-    #         json_text = load_text_to_json(ANSWER_FIX_ERROR_FILE_PATH)
-    #     code = llm_answer_to_python_code(json_text)
-    #     print(f'code:\n{code}')
-    #     save(LOSS_FILE_PATH, code)
-    #     output = subprocess.run(RUN_TESTER_COMMAND,
-    #                             capture_output=True, text=True)
-    #     # print(output.stdout)
-    #     t = eval(output.stdout)
-    #     is_correct = t[0]
-    #     error = t[1]
-    #     # break
+            json_text = load_text_to_json(ANSWER_FIX_ERROR_FILE_PATH)
+        code = llm_answer_to_python_code(json_text)
+        print(f'code:\n{code}')
+        save(LOSS_FILE_PATH, code)
+        output = subprocess.run(RUN_TESTER_COMMAND,
+                                capture_output=True, text=True)
+        # print(output.stdout)
+        t = eval(output.stdout)
+        is_correct = t[0]
+        error = t[1]
+        # break
 
-    # print('RUN PINN')
-    # output = subprocess.run(RUN_PINN_COMMAND,
-    #                         capture_output=True, text=True)
+    print('RUN PINN')
+    output = subprocess.run(RUN_PINN_COMMAND,
+                            capture_output=True, text=True)
 
     # print(output.stdout)
     print('done!')

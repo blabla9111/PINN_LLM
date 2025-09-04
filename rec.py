@@ -37,16 +37,16 @@ def main():
     # comment_subclass = llm_answer_get_comment_class(json_text)
     # print(f'Subclass:\n{comment_subclass}')
 
-    comment_class = '4'
-    comment_subclass = '2'
+    # comment_class = '4'
+    # comment_subclass = '2'
 
-    PROMPT_FILE_PATH = 'promts_templates/get_loss_based_on_recommendation_prompt.json'
-    ANSWER_FILE_PATH = 'promts_templates/get_loss_based_on_recommendation_prompt_answer.json'
-    LOSS_FILE_PATH = 'loss_dinn_LLM.py'
-    LOSS_PRIMARY_FILE_PATH = 'loss_dinn_primary.py'
+    # PROMPT_FILE_PATH = 'promts_templates/get_loss_based_on_recommendation_prompt.json'
+    # ANSWER_FILE_PATH = 'promts_templates/get_loss_based_on_recommendation_prompt_answer.json'
+    # LOSS_FILE_PATH = 'loss_dinn_LLM.py'
+    # LOSS_PRIMARY_FILE_PATH = 'loss_dinn_primary.py'
 
-    code = get_loss_func_as_str(LOSS_PRIMARY_FILE_PATH)
-    create_get_loss_based_on_recommendation_prompt(PROMPT_FILE_PATH, comment_class, comment_subclass, EXPERT_COMMENT, code)
+    # code = get_loss_func_as_str(LOSS_PRIMARY_FILE_PATH)
+    # create_get_loss_based_on_recommendation_prompt(PROMPT_FILE_PATH, comment_class, comment_subclass, EXPERT_COMMENT, code)
     # send_prompt(PROMPT_FILE_PATH,
     #             LLM_URL, ANSWER_FILE_PATH)
     # print("send prompt")
@@ -89,11 +89,11 @@ def main():
     #     error = t[1]
     #     # break
 
-    # print('RUN PINN')
-    # output = subprocess.run(RUN_PINN_COMMAND,
-    #                         capture_output=True, text=True)
+    print('RUN PINN')
+    output = subprocess.run(RUN_PINN_COMMAND,
+                            capture_output=True, text=True)
 
-    # print(output.stdout)
+    print(output.stdout)
     print('done!')
 
 

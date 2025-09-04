@@ -7,9 +7,10 @@ def llm_answer_get_comment_class(answer):
 
 def llm_answer_to_python_code(answer):
     # answer_json = json.load(answer)
-    answer_dict = json.loads(answer)
-    code = answer_dict['choices'][0]['message']['content']
-    code = extract_python_code(code)
+    print(answer)
+    # answer_dict = json.loads(answer)
+    # code = answer_dict['choices'][0]['message']['content']
+    code = extract_python_code(answer)
     # if code[0].str().contain("'''python"):
     #     code = code[1:-1]
     # code = '\n'.join(code)

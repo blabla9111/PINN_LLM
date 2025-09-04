@@ -109,6 +109,7 @@ def predict_class_and_sub_class(text):
     model = load_model()
     tokenizer = load_tokenizer()
     top_indices, top_probs, all_probs = predict_text(model, tokenizer, text)
+    print(top_indices)
     for i in range(len(top_indices)):
         top_indices[i] = labels_level_main[top_indices[i]]
     return top_indices, top_probs
