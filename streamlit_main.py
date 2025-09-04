@@ -14,8 +14,10 @@ import subprocess
 import time
 from huggingface_hub import InferenceClient
 
+
 client = InferenceClient(model="meta-llama/Meta-Llama-3.1-8B-Instruct",
-                         token="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")
+                         token=st.secrets['HUGGINGFACE_HUB_TOKEN'])
+
 
 CLASS_TYPE_INFO = {"1": ["Поведение эпидемической кривой не соответствует ожиданиям эксперта.",{
     "1": "График кол-ва инфицированнных",
