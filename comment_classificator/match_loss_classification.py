@@ -76,7 +76,7 @@ def predict_text(model, tokenizer, text, device=None, top_k=2):
 def load_model():
     model = BertClassifier()
     state_dict = torch.load(
-    './comment_classificator/saved_models/model_weights_MATCH_LOSS_2_82_0.pth', weights_only=True)  # путь относительно корневой папки
+    './comment_classificator/saved_models/model_weights_MATCH_LOSS_2_82_0.pth', weights_only=False)  # путь относительно корневой папки
     model.load_state_dict(state_dict)
 
     return model
