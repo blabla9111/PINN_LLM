@@ -419,7 +419,7 @@ def generate_model_page():
     # print(code)
     details_container.text(f"Полученный код:\n```python\n{code}\n```")
     progress_bar.progress(40)
-    # return
+    return
 
     # Шаг 4: Сохранение и первая проверка
     # status_text.text("💾 Сохранение сгенерированного кода...")
@@ -439,7 +439,7 @@ def generate_model_page():
         t = (False, output.stdout)
     # return
     is_correct = t[0]
-    status_text.text("is_correct🧪 Первая проверка кода...")
+    status_text.text(is_correct)
     print(is_correct)
     error = t[1]
 
@@ -486,6 +486,7 @@ def generate_model_page():
         else:
             t = (False, output.stdout)
         is_correct = t[0]
+        status_text.text(is_correct)
         error = t[1]
 
         if is_correct:
