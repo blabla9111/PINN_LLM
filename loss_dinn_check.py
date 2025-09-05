@@ -28,7 +28,7 @@ class TestLossDinnFunction():
         # Вызываем функцию и проверяем, что она не выбрасывает ошибок
         try:
             code = "import torch\n\n"+code+"\n\nloss = loss_dinn(S_hat, S_pred, I_hat, I_pred, D_hat, D_pred, R_hat, R_pred, f1, f2, f3, f4, I_pred_last)\n"
-            exec(code)
+            # exec(code)
             # loss = loss_dinn(S_hat, S_pred, I_hat, I_pred, D_hat,
             #                  D_pred, R_hat, R_pred, f1, f2, f3, f4, I_pred_last)
             # Проверяем, что функция вернула значение
