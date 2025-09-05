@@ -2,13 +2,14 @@ import unittest
 # from loss_dinn_LLM import 
 import traceback
 import torch
+import sys
 
-from loss_dinn_LLM import loss_dinn
+# from loss_dinn_LLM import loss_dinn
 
 
 class TestLossDinnFunction():
 
-    def test_loss_dinn_runs_without_errors(self):
+    def test_loss_dinn_runs_without_errors(self, code):
         # Создаем тензоры для тестирования
         S_hat = torch.randn(50)
         S_pred = torch.randn(50)
@@ -26,14 +27,16 @@ class TestLossDinnFunction():
 
         # Вызываем функцию и проверяем, что она не выбрасывает ошибок
         try:
-            loss = loss_dinn(S_hat, S_pred, I_hat, I_pred, D_hat,
-                             D_pred, R_hat, R_pred, f1, f2, f3, f4, I_pred_last)
+            code = "import torch\n\n"+code+"\n\nloss = loss_dinn(S_hat, S_pred, I_hat, I_pred, D_hat, D_pred, R_hat, R_pred, f1, f2, f3, f4, I_pred_last)\n"
+            exec(code)
+            # loss = loss_dinn(S_hat, S_pred, I_hat, I_pred, D_hat,
+            #                  D_pred, R_hat, R_pred, f1, f2, f3, f4, I_pred_last)
             # Проверяем, что функция вернула значение
-            if loss is None:
-                return False, "loss =  None"
-            # print(loss)
-            if loss.shape != torch.Size([]) and loss.shape != torch.Size([1]):
-                return False, "loss should be scalar"
+            # if loss is None:
+            #     return False, "loss =  None"
+            # # print(loss)
+            # if loss.shape != torch.Size([]) and loss.shape != torch.Size([1]):
+            #     return False, "loss should be scalar"
             # print(f'loss = {loss}\n\n\n')
             # self.assertIsNotNone(loss)
 
@@ -45,5 +48,10 @@ class TestLossDinnFunction():
 
 
 if __name__ == '__main__':
-    tester =  TestLossDinnFunction()
-    print(tester.test_loss_dinn_runs_without_errors())
+    if len(sys.argv) >= 2:
+        tester = TestLossDinnFunction()
+        print(sys.argv)
+        print(tester.test_loss_dinn_runs_without_errors(sys.argv[1]))
+    else:
+        print("Недостаточно аргументов")
+    

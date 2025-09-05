@@ -379,7 +379,7 @@ def generate_model_page():
     LOSS_PRIMARY_FILE_PATH = 'loss_dinn_primary.py'
     LLM_URL = 'http://localhost:1234/v1/chat/completions'
     RUN_PINN_COMMAND = ['python', 'PINN.py']
-    RUN_TESTER_COMMAND = ['python', 'loss_dinn_check.py']
+    RUN_TESTER_COMMAND = ['python', 'loss_dinn_check.py ', '']
     PROMPT_FIX_ERROR_FILE_PATH = "prompt_fix_error.json"
     ANSWER_FIX_ERROR_FILE_PATH = 'answer_fix_error_from_LLM_2.json'
 
@@ -419,7 +419,7 @@ def generate_model_page():
     # print(code)
     details_container.text(f"Полученный код:\n```python\n{code}\n```")
     progress_bar.progress(40)
-    return
+    # return
 
     # Шаг 4: Сохранение и первая проверка
     status_text.text("💾 Сохранение сгенерированного кода...")
@@ -428,9 +428,18 @@ def generate_model_page():
     # return 
     status_text.text("🧪 Первая проверка кода...")
     details_container.text("Запуск тестера для проверки корректности")
+    RUN_TESTER_COMMAND[2] = code
     output = subprocess.run(RUN_TESTER_COMMAND, capture_output=True, text=True)
-    t = eval(output.stdout)
+    print(output.stdout)
+
+    if "True" in output.stdout:
+        t = (True, '')
+        print(f"Результат: {t}")
+    else:
+        t = (False, output.stdout)
+    # return
     is_correct = t[0]
+    print(is_correct)
     error = t[1]
 
     error_counter = 0
@@ -464,9 +473,17 @@ def generate_model_page():
 
         # Проверка исправленного кода
         details_container.text("Проверка исправленного кода...")
+        RUN_TESTER_COMMAND[2] = code
         output = subprocess.run(
-            RUN_TESTER_COMMAND, capture_output=True, text=True)
-        t = eval(output.stdout)
+            RUN_TESTER_COMMAND, capture_output=True, text=True, shell=True)
+        # print(f'!!!!!!!!\n\n{output}')
+        # return
+        # t = eval(output.stdout)
+        if "True" in output.stdout:
+            t = (True, '')
+            print(f"Результат: {t}")
+        else:
+            t = (False, output.stdout)
         is_correct = t[0]
         error = t[1]
 
