@@ -4783,3 +4783,248 @@ def loss_dinn(S_hat, S_pred, I_hat, I_pred, D_hat, D_pred, R_hat, R_pred, f1, f2
            (time_penalty * 60 / (60 + 30)) * norm_func(I_pred_last) + \
            last_infected_penalty * norm_func(I_pred_last-0)
     return loss
+
+import torch
+
+
+def loss_dinn(S_hat, S_pred, I_hat, I_pred, D_hat, D_pred, R_hat, R_pred, f1, f2, f3, f4, I_pred_last):
+    regul = 0.8
+    last_infected_penalty = 0.05
+    delayed_immunity_penalty = 0.2  # penalty for delayed immune response
+
+    aggregation_func = torch.mean
+    norm_func = torch.square
+
+    term1 = aggregation_func(norm_func(S_hat - S_pred))
+    term2 = aggregation_func(norm_func(I_hat - I_pred))
+    term3 = aggregation_func(norm_func(D_hat - D_pred))
+    term4 = aggregation_func(norm_func(R_hat - R_pred)) + delayed_immunity_penalty * (R_hat - I_hat)  # added penalty for delayed immune response
+
+    term5 = aggregation_func(norm_func(f1))
+    term6 = aggregation_func(norm_func(f2))
+    term7 = aggregation_func(norm_func(f3))
+    term8 = aggregation_func(norm_func(f4))
+
+    loss = regul * (term1 + term2 + term3 + term4) + \
+        (1 - regul) * (term5 + term6 + term7 + term8) + \
+        last_infected_penalty * norm_func(I_pred_last-0)
+    return loss
+
+import torch
+
+
+def loss_dinn(S_hat, S_pred, I_hat, I_pred, D_hat, D_pred, R_hat, R_pred, f1, f2, f3, f4, I_pred_last):
+    regul = 0.8
+    last_infected_penalty = 0.05
+    delayed_immunity_penalty = 0.2  # penalty for delayed immune response
+
+    aggregation_func = torch.mean
+    norm_func = torch.square
+
+    term1 = aggregation_func(norm_func(S_hat - S_pred))
+    term2 = aggregation_func(norm_func(I_hat - I_pred))
+    term3 = aggregation_func(norm_func(D_hat - D_pred))
+    term4 = aggregation_func(norm_func(R_hat - R_pred)) + delayed_immunity_penalty * (R_hat - I_hat)  # added penalty for delayed immune response
+
+    term5 = aggregation_func(norm_func(f1))
+    term6 = aggregation_func(norm_func(f2))
+    term7 = aggregation_func(norm_func(f3))
+    term8 = aggregation_func(torch.norm(f4))  # changed f4 from norm_func to torch.norm
+
+    loss = regul * (term1 + term2 + term3 + term4) + \
+        (1 - regul) * (term5 + term6 + term7 + term8) + \
+        last_infected_penalty * norm_func(I_pred_last-0)
+    return loss.unsqueeze(0)  # changed return type to scalar
+
+import torch
+
+
+def loss_dinn(S_hat, S_pred, I_hat, I_pred, D_hat, D_pred, R_hat, R_pred, f1, f2, f3, f4, I_pred_last):
+    regul = 0.8
+    last_infected_penalty = 0.05
+    delayed_immunity_penalty = 0.2  # penalty for delayed immune response
+
+    aggregation_func = torch.mean
+    norm_func = torch.square
+
+    term1 = aggregation_func(norm_func(S_hat - S_pred))
+    term2 = aggregation_func(norm_func(I_hat - I_pred))
+    term3 = aggregation_func(norm_func(D_hat - D_pred))
+    term4 = aggregation_func(norm_func(R_hat - R_pred)) + delayed_immunity_penalty * (R_hat - I_hat)  # added penalty for delayed immune response
+
+    term5 = aggregation_func(norm_func(f1))
+    term6 = aggregation_func(norm_func(f2))
+    term7 = aggregation_func(norm_func(f3))
+    term8 = aggregation_func(torch.norm(f4))  # changed f4 from norm_func to torch.norm
+
+    loss = regul * (term1 + term2 + term3 + term4) + \
+        (1 - regul) * (term5 + term6 + term7 + term8) + \
+        last_infected_penalty * norm_func(I_pred_last)
+    
+    # Remove unsqueeze(0) to make loss a scalar
+    return loss
+
+import torch
+
+
+def loss_dinn(S_hat, S_pred, I_hat, I_pred, D_hat, D_pred, R_hat, R_pred, f1, f2, f3, f4, I_pred_last):
+    regul = 0.8
+    last_infected_penalty = 0.05
+    delayed_response_penalty = 0.05  # new penalty to account for delayed immune response
+
+    aggregation_func = torch.mean
+    norm_func = torch.square
+
+    term1 = aggregation_func(norm_func(S_hat - S_pred))
+    term2 = aggregation_func(norm_func(I_hat - I_pred))
+    term3 = aggregation_func(norm_func(D_hat - D_pred))
+    term4 = aggregation_func(norm_func(R_hat - R_pred)) + delayed_response_penalty * norm_func(R_hat - I_pred)  # add penalty to term4
+
+    term5 = aggregation_func(norm_func(f1))
+    term6 = aggregation_func(norm_func(f2))
+    term7 = aggregation_func(norm_func(f3))
+    term8 = aggregation_func(norm_func(f4))
+
+    loss = regul * (term1 + term2 + term3 + term4) + \
+          (1 - regul) * (term5 + term6 + term7 + term8) + \
+          last_infected_penalty * norm_func(I_pred_last-0)
+    return loss
+
+import torch
+
+
+def loss_dinn(S_hat, S_pred, I_hat, I_pred, D_hat, D_pred, R_hat, R_pred, f1, f2, f3, f4, I_pred_last):
+    regul = 0.8
+    last_infected_penalty = 0.05
+    delayed_response_penalty = 0.05  
+
+    aggregation_func = torch.mean
+    norm_func = torch.square
+
+    term1 = aggregation_func(norm_func(S_hat - S_pred))
+    term2 = aggregation_func(norm_func(I_hat - I_pred))
+    term3 = aggregation_func(norm_func(D_hat - D_pred))
+    term4 = aggregation_func(norm_func(R_hat - R_pred)) + delayed_response_penalty * norm_func(R_hat - I_pred)  
+
+    term5 = aggregation_func(norm_func(f1))
+    term6 = aggregation_func(norm_func(f2))
+    term7 = aggregation_func(norm_func(f3))
+    term8 = aggregation_func(norm_func(f4))
+
+    loss = regul * (term1 + term2 + term3 + term4) + \
+          (1 - regul) * (term5 + term6 + term7 + term8) + \
+          last_infected_penalty * norm_func(I_pred_last.float()).unsqueeze(0) # ensure I_pred_last is a tensor with a single value
+
+    return loss
+
+import torch
+
+
+def loss_dinn(S_hat, S_pred, I_hat, I_pred, D_hat, D_pred, R_hat, R_pred, f1, f2, f3, f4, I_pred_last):
+    regul = 0.8
+    last_infected_penalty = 0.05
+    delayed_response_penalty = 0.05  # Removed this from term4 as it was causing the error
+
+    aggregation_func = torch.mean
+    norm_func = torch.square
+
+    term1 = aggregation_func(norm_func(S_hat - S_pred))
+    term2 = aggregation_func(norm_func(I_hat - I_pred))
+    term3 = aggregation_func(norm_func(D_hat - D_pred))
+    term4 = aggregation_func(norm_func(R_hat - R_pred))  # Removed delayed_response_penalty
+
+    term5 = aggregation_func(norm_func(f1))
+    term6 = aggregation_func(norm_func(f2))
+    term7 = aggregation_func(norm_func(f3))
+    term8 = aggregation_func(norm_func(f4))
+
+    loss = regul * (term1 + term2 + term3 + term4) + \
+          (1 - regul) * (term5 + term6 + term7 + term8) + \
+          last_infected_penalty * norm_func(I_pred_last.float())
+
+    return loss
+
+import torch
+
+
+def loss_dinn(S_hat, S_pred, I_hat, I_pred, D_hat, D_pred, R_hat, R_pred, f1, f2, f3, f4, I_pred_last):
+    regul = 0.8
+    last_infected_penalty = 0.05
+    time_penalty_coeff = 0.1  # introduce a new parameter for time-based penalty
+    
+    aggregation_func = torch.mean
+    norm_func = torch.square
+
+    term1 = aggregation_func(norm_func(S_hat - S_pred))
+    term2 = aggregation_func(norm_func(I_hat - I_pred))  # only this term should be changed
+    term3 = aggregation_func(norm_func(D_hat - D_pred))
+    term4 = aggregation_func(norm_func(R_hat - R_pred))
+
+    term5 = aggregation_func(norm_func(f1))
+    term6 = aggregation_func(norm_func(f2))
+    term7 = aggregation_func(norm_func(f3))
+    term8 = aggregation_func(norm_func(f4))
+
+    # introduce time-based penalty for term2
+    time_penalty = time_penalty_coeff * norm_func((I_pred_last - I_pred) / (1e-9 + torch.abs(I_pred - I_pred_last)))  # avoid division by zero
+    term2 = aggregation_func(norm_func(I_hat - I_pred)) + time_penalty  # add time-based penalty to term2
+
+    loss = regul * (term1 + term2 + term3 + term4) + \
+        (1 - regul) * (term5 + term6 + term7 + term8) + \
+        last_infected_penalty * norm_func(I_pred_last-0)
+    return loss
+
+import torch
+
+
+def loss_dinn(S_hat, S_pred, I_hat, I_pred, D_hat, D_pred, R_hat, R_pred, f1, f2, f3, f4, I_pred_last):
+    regul = 0.8
+    last_infected_penalty = 0.05
+    time_penalty_coeff = 0.1  
+
+    aggregation_func = torch.mean
+    norm_func = torch.square
+
+    term1 = aggregation_func(norm_func(S_hat - S_pred))
+    term2 = aggregation_func(norm_func(I_hat - I_pred))
+    term3 = aggregation_func(norm_func(D_hat - D_pred))
+    term4 = aggregation_func(norm_func(R_hat - R_pred))
+
+    term5 = aggregation_func(norm_func(f1))
+    term6 = aggregation_func(norm_func(f2))
+    term7 = aggregation_func(norm_func(f3))
+    term8 = aggregation_func(norm_func(f4))
+
+    term2 = aggregation_func(norm_func(I_hat - I_pred)) + \
+            time_penalty_coeff * aggregation_func(norm_func((I_pred_last - I_pred) / (1e-9 + torch.abs(I_pred - I_pred_last))))  # avoid division by zero
+
+    loss = regul * (term1 + term2 + term3 + term4) + \
+           (1 - regul) * (term5 + term6 + term7 + term8) + \
+           last_infected_penalty * aggregation_func(norm_func(I_pred_last)) # ensure aggregation for last_infected_penalty
+    return loss
+
+import torch
+
+
+def loss_dinn(S_hat, S_pred, I_hat, I_pred, D_hat, D_pred, R_hat, R_pred, f1, f2, f3, f4, I_pred_last):
+    regul = 0.8
+    last_infected_penalty = 0.05
+
+    aggregation_func = torch.mean
+    norm_func = torch.square
+
+    term1 = aggregation_func(norm_func(S_hat - S_pred))
+    term2 = aggregation_func(norm_func(I_hat - I_pred))  # add an offset to the desired peak day
+    term2 = aggregation_func(norm_func((I_hat - I_pred) + torch.tensor([10])))  # adjust the offset as needed
+    term3 = aggregation_func(norm_func(D_hat - D_pred))
+    term4 = aggregation_func(norm_func(R_hat - R_pred))
+
+    term5 = aggregation_func(norm_func(f1))
+    term6 = aggregation_func(norm_func(f2))
+    term7 = aggregation_func(norm_func(f3))
+    term8 = aggregation_func(norm_func(f4))
+
+    loss = regul * (term1 + term2 + term3 + term4) + \
+           (1 - regul) * (term5 + term6 + term7 + term8) + \
+           last_infected_penalty * norm_func(I_pred_last - 0)
+    return loss

@@ -3,9 +3,9 @@ import numpy as np
 import torch
 from torch import nn
 from transformers import BertModel
+from huggingface_hub import PyTorchModelHubMixin
 
-
-class BertClassifier(nn.Module):
+class BertClassifier(nn.Module, PyTorchModelHubMixin):
 
     def __init__(self, dropout=0.5):
 
@@ -74,9 +74,8 @@ def predict_text(model, tokenizer, text, device=None, top_k=2):
     return top_indices, top_probs, probs
 
 def load_model():
-    model = BertClassifier()
-    state_dict = torch.load('./comment_classificator/saved_models/model_weights_MATCH_LOSS_2_82_0.pth', weights_only=False)  # путь относительно корневой папки
-    model.load_state_dict(state_dict)
+    model = BertClassifier.from_pretrained(
+        "Dinara777/epidemic_classificator_model")
 
     return model
 
@@ -108,7 +107,7 @@ def predict_class_and_sub_class(text):
     model = load_model()
     tokenizer = load_tokenizer()
     top_indices, top_probs, all_probs = predict_text(model, tokenizer, text)
-    print(top_indices)
+    # print(top_indices)
     for i in range(len(top_indices)):
         top_indices[i] = labels_level_main[top_indices[i]]
     return top_indices, top_probs
