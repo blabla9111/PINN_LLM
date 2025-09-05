@@ -238,16 +238,12 @@ def main_page():
 
         if st.session_state.comment_history:
             for i, item in enumerate(st.session_state.comment_history[::-1]):
-                st.write(
-                    f"**{item['timestamp']}** - {item['main_class']}: {item['comment'][:50]}...")
                 if st.button(f"Просмотреть подробнее #{len(st.session_state.comment_history)-i}", key=f"view_{i}"):
                     st.session_state.current_page = "results"
                     st.session_state.user_comment = item['comment']
                     st.session_state.comment_analysis = {
                         "main_class": item['main_class'],
-                        "subclass": item['subclass'],
-                        "confidence": item['confidence'],
-                        "timestamp": item['timestamp']
+                        "subclass": item['subclass']
                     }
                     st.rerun()
         else:
