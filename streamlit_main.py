@@ -439,6 +439,7 @@ def generate_model_page():
         t = (False, output.stdout)
     # return
     is_correct = t[0]
+    status_text.text("is_correct🧪 Первая проверка кода...")
     print(is_correct)
     error = t[1]
 
