@@ -422,9 +422,9 @@ def generate_model_page():
     # return
 
     # Шаг 4: Сохранение и первая проверка
-    status_text.text("💾 Сохранение сгенерированного кода...")
-    save(LOSS_FILE_PATH, code)
-    progress_bar.progress(50)
+    # status_text.text("💾 Сохранение сгенерированного кода...")
+    # save(LOSS_FILE_PATH, code)
+    # progress_bar.progress(50)
     # return 
     status_text.text("🧪 Первая проверка кода...")
     details_container.text("Запуск тестера для проверки корректности")
