@@ -418,14 +418,14 @@ def generate_model_page():
     code = llm_answer_to_python_code(json_text)
     # print(code)
     details_container.text(f"Полученный код:\n```python\n{code}\n```")
-    # return
     progress_bar.progress(40)
+    return
 
     # Шаг 4: Сохранение и первая проверка
     status_text.text("💾 Сохранение сгенерированного кода...")
     save(LOSS_FILE_PATH, code)
     progress_bar.progress(50)
-    return 
+    # return 
     status_text.text("🧪 Первая проверка кода...")
     details_container.text("Запуск тестера для проверки корректности")
     output = subprocess.run(RUN_TESTER_COMMAND, capture_output=True, text=True)
