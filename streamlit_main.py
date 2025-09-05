@@ -420,7 +420,9 @@ def generate_model_page():
     details_container.text("Извлечение кода из ответа")
     json_text = load_text_to_json(ANSWER_FILE_PATH)
     code = llm_answer_to_python_code(json_text)
-    details_container.text(f"Полученный код:\n```python\n{code[:200]}...\n```")
+    # print(code)
+    details_container.text(f"Полученный код:\n```python\n{code}\n```")
+    return
     progress_bar.progress(40)
 
     # Шаг 4: Сохранение и первая проверка
