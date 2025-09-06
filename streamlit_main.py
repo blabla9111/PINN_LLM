@@ -9,7 +9,7 @@ from PINN_class import DINN
 from comment_classificator.match_loss_classification import predict_class_and_sub_class
 from lib.prompt_sender import *
 from lib.parser import *
-from lib.loss_update import save
+from lib.loss_update import save, save_py
 import subprocess
 import time
 from huggingface_hub import InferenceClient
@@ -423,7 +423,8 @@ def generate_model_page():
 
     # Шаг 4: Сохранение и первая проверка
     status_text.text("💾 Сохранение сгенерированного кода...")
-    save(LOSS_FILE_PATH, code)
+    # save(LOSS_FILE_PATH, code)
+    file_path, content = save_py(LOSS_FILE_PATH, code)
     progress_bar.progress(50)
     return 
     status_text.text("🧪 Первая проверка кода...")
