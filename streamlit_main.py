@@ -13,6 +13,7 @@ from lib.loss_update import save, save_py
 import subprocess
 import time
 from huggingface_hub import InferenceClient
+import sys
 
 
 client = InferenceClient(model="meta-llama/Meta-Llama-3.1-8B-Instruct",
@@ -431,15 +432,17 @@ def generate_model_page():
     status_text.text("🧪 Первая проверка кода...")
     details_container.text("Запуск тестера для проверки корректности")
     RUN_TESTER_COMMAND[2] = code
-    output = subprocess.run(RUN_TESTER_COMMAND, capture_output=True, text=True)
+    # output = subprocess.run(RUN_TESTER_COMMAND, capture_output=True, text=True)
+    output = subprocess.run([f"{sys.executable}", "loss_dinn_check.py", code],capture_output=True)
     print(output.stdout)
+    # t =  eval(output.stdout)
     return
 
-    if "True" in output.stdout:
+    if "True" in str(output.stdout):
         t = (True, '')
         print(f"Результат: {t}")
     else:
-        t = (False, output.stdout)
+        t = (False, str(output.stdout))
     # return
     is_correct = t[0]
     status_text.text(is_correct)
@@ -483,11 +486,11 @@ def generate_model_page():
         # print(f'!!!!!!!!\n\n{output}')
         # return
         # t = eval(output.stdout)
-        if "True" in output.stdout:
+        if "True" in str(output.stdout):
             t = (True, '')
             print(f"Результат: {t}")
         else:
-            t = (False, output.stdout)
+            t = (False, str(output.stdout))
         is_correct = t[0]
         status_text.text(is_correct)
         error = t[1]
@@ -497,6 +500,7 @@ def generate_model_page():
             details_container.text("✅ Ошибки исправлены!")
             progress_bar.progress(80)
 
+    return
     # Если превышено максимальное количество попыток
     if not is_correct:
         status_text.text(
