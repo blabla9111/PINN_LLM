@@ -231,7 +231,7 @@ dinn.scheduler = scheduler
 
 
 S_pred_list, I_pred_list, D_pred_list, R_pred_list, alpha_pred_list = dinn.train(
-    100, regul=0.8)
+    100000, regul=0.8)
 
 
 def save_model(model, filepath):
