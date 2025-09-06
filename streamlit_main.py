@@ -477,7 +477,7 @@ def generate_model_page():
     print(error)
 
     error_counter = 0
-    max_error_iterations = 1
+    max_error_iterations = 4
 
     # Шаг 5: Цикл исправления ошибок
     while not is_correct and error_counter < max_error_iterations:
