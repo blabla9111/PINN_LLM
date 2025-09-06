@@ -419,13 +419,13 @@ def generate_model_page():
     # print(code)
     details_container.text(f"Полученный код:\n```python\n{code}\n```")
     progress_bar.progress(40)
-    return
+    # return
 
     # Шаг 4: Сохранение и первая проверка
-    # status_text.text("💾 Сохранение сгенерированного кода...")
-    # save(LOSS_FILE_PATH, code)
-    # progress_bar.progress(50)
-    # return 
+    status_text.text("💾 Сохранение сгенерированного кода...")
+    save(LOSS_FILE_PATH, code)
+    progress_bar.progress(50)
+    return 
     status_text.text("🧪 Первая проверка кода...")
     details_container.text("Запуск тестера для проверки корректности")
     RUN_TESTER_COMMAND[2] = code
