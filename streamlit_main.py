@@ -518,11 +518,18 @@ def generate_model_page():
     progress_bar.progress(90)
 
     # Запуск с индикатором прогресса
+    filename = ""
     with st.spinner("Идет обучение модели..."):
         file_path, content = create_new_PINN(code, "PINN_new.py",
                         "PINN_class_start_code.txt", "PINN_class_end_code.txt")
         output = subprocess.run(
             [f"{sys.executable}", file_path], capture_output=True, text=True)
+        print(output.stdout)
+        text = str(output.stdout)
+        lines = text.strip().split('\n')
+        last_line = lines[-1] if lines else ""
+        filename = last_line.split("Model saved to ")[-1].strip()
+        print(filename)
 
     # Шаг 7: Завершение
     status_text.text("✅ Обучение завершено!")
@@ -543,7 +550,7 @@ def generate_model_page():
             st.code(output.stderr)
 
     st.write("Generate complete!")
-    return
+    # return
     covid_cases = pd.read_csv('data.csv')
 
     S = covid_cases['S']
@@ -572,7 +579,7 @@ def generate_model_page():
     x = 180
     loaded_dinn = load_model('./saved_models/dinn_1.pth',
                              timesteps, susceptible, infected, dead, recovered)
-    loaded_dinn_new = load_model('./saved_models/NEW_MODEL_dinn_1.pth',
+    loaded_dinn_new = load_model(filename,
                              timesteps, susceptible, infected, dead, recovered)
     S_pred, I_pred, D_pred, R_pred, alpha_pred = loaded_dinn.predict()
 
