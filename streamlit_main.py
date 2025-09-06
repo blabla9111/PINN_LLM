@@ -436,7 +436,7 @@ def generate_model_page():
     output = subprocess.run([f"{sys.executable}", "loss_dinn_check.py", code],capture_output=True)
     print(output.stdout)
     # t =  eval(output.stdout)
-    return
+    # return
 
     if "True" in str(output.stdout):
         t = (True, '')
