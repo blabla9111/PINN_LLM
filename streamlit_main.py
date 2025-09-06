@@ -433,8 +433,10 @@ def generate_model_page():
     status_text.text("🧪 Первая проверка кода...")
     details_container.text("Запуск тестера для проверки корректности")
     RUN_TESTER_COMMAND[2] = code
+    file_path, content = create_new_PINN(code, "loss_dinn_check.py",
+                                         "loss_dinn_check_start.txt", "loss_dinn_check_end.txt")
     # output = subprocess.run(RUN_TESTER_COMMAND, capture_output=True, text=True)
-    output = subprocess.run([f"{sys.executable}", "loss_dinn_check.py", code],capture_output=True)
+    output = subprocess.run([f"{sys.executable}", file_path, code],capture_output=True)
     print(output.stdout)
     # t =  eval(output.stdout)
     # return
@@ -449,15 +451,16 @@ def generate_model_page():
     status_text.text(is_correct)
     print(is_correct)
     error = t[1]
+    print(error)
 
     error_counter = 0
-    max_error_iterations = 2
+    max_error_iterations = 1
 
     # Шаг 5: Цикл исправления ошибок
     while not is_correct and error_counter < max_error_iterations:
         error_counter += 1
         status_text.text(f"⚠️ Исправление ошибок (попытка {error_counter})...")
-        details_container.text(f"Обнаружена ошибка: {error[:100]}...")
+        # details_container.text(f"Обнаружена ошибка: {error[:100]}...")
         error_container.error(f"Ошибка: {error}")
 
         progress_value = 50 + (error_counter * 10)
@@ -482,8 +485,12 @@ def generate_model_page():
         # Проверка исправленного кода
         details_container.text("Проверка исправленного кода...")
         RUN_TESTER_COMMAND[2] = code
+        file_path, content = create_new_PINN(code, "loss_dinn_check.py",
+                                             "loss_dinn_check_start.txt", "loss_dinn_check_end.txt")
         output = subprocess.run(
-            RUN_TESTER_COMMAND, capture_output=True, text=True, shell=True)
+            [f"{sys.executable}", file_path, code], capture_output=True)
+        # output = subprocess.run(
+        #     RUN_TESTER_COMMAND, capture_output=True, text=True, shell=True)
         # print(f'!!!!!!!!\n\n{output}')
         # return
         # t = eval(output.stdout)

@@ -27,8 +27,12 @@ class TestLossDinnFunction():
 
         # Вызываем функцию и проверяем, что она не выбрасывает ошибок
         try:
-            code = "import torch\n\n"+code+"\n\nloss = loss_dinn(S_hat, S_pred, I_hat, I_pred, D_hat, D_pred, R_hat, R_pred, f1, f2, f3, f4, I_pred_last)\n"
-            # exec(code)
+            code = "import torch\n\n"+code + \
+                "\n\nloss = loss_dinn(S_hat, S_pred, I_hat, I_pred, D_hat, D_pred, R_hat, R_pred, f1, f2, f3, f4, I_pred_last)\n"
+            with open("code.txt", 'r', encoding='utf-8') as f:
+                code_end_from_file = f.read()
+            d = "if loss is None:\n  return False, 'loss = None'\nif loss.shape != torch.Size([]) and loss.shape != torch.Size([1]):\n   return False, 'loss should be scalar'"
+            exec(code+code_end_from_file)
             # loss = loss_dinn(S_hat, S_pred, I_hat, I_pred, D_hat,
             #                  D_pred, R_hat, R_pred, f1, f2, f3, f4, I_pred_last)
             # Проверяем, что функция вернула значение
