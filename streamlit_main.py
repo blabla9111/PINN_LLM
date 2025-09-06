@@ -137,7 +137,8 @@ def download_temp_file(file_path, button_label="📥 Скачать файл"):
             label=button_label+" "+file_name,
             data=file_data,
             file_name=file_name,
-            mime="application/octet-stream"
+            mime="application/octet-stream",
+            on_click="ignore"
         )
     else:
         st.error(f"Файл {file_path} не найден")
