@@ -10,6 +10,7 @@ from comment_classificator.match_loss_classification import predict_class_and_su
 from lib.prompt_sender import *
 from lib.parser import *
 from lib.loss_update import save, save_py
+from lib.create_file import create_new_PINN
 import subprocess
 import time
 from huggingface_hub import InferenceClient
@@ -518,8 +519,10 @@ def generate_model_page():
 
     # Запуск с индикатором прогресса
     with st.spinner("Идет обучение модели..."):
+        file_path, content = create_new_PINN(code, "PINN_new.py",
+                        "PINN_class_start_code.txt", "PINN_class_end_code.txt")
         output = subprocess.run(
-            [f"{sys.executable}", "PINN.py", code], capture_output=True, text=True)
+            [f"{sys.executable}", file_path], capture_output=True, text=True)
 
     # Шаг 7: Завершение
     status_text.text("✅ Обучение завершено!")
@@ -528,7 +531,7 @@ def generate_model_page():
 
     # Показ результатов
     st.success("Модель успешно сгенерирована и обучена!")
-
+    
     # Дополнительная информация о результате
     with st.expander("Детали выполнения"):
         st.text("Логи выполнения:")
@@ -540,6 +543,7 @@ def generate_model_page():
             st.code(output.stderr)
 
     st.write("Generate complete!")
+    return
     covid_cases = pd.read_csv('data.csv')
 
     S = covid_cases['S']
