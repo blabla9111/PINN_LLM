@@ -426,12 +426,14 @@ def generate_model_page():
     # save(LOSS_FILE_PATH, code)
     file_path, content = save_py(LOSS_FILE_PATH, code)
     progress_bar.progress(50)
-    return 
+    print(file_path)
+    # return 
     status_text.text("🧪 Первая проверка кода...")
     details_container.text("Запуск тестера для проверки корректности")
     RUN_TESTER_COMMAND[2] = code
     output = subprocess.run(RUN_TESTER_COMMAND, capture_output=True, text=True)
     print(output.stdout)
+    return
 
     if "True" in output.stdout:
         t = (True, '')
