@@ -500,7 +500,7 @@ def generate_model_page():
             details_container.text("✅ Ошибки исправлены!")
             progress_bar.progress(80)
 
-    return
+    # return
     # Если превышено максимальное количество попыток
     if not is_correct:
         status_text.text(
@@ -519,7 +519,7 @@ def generate_model_page():
     # Запуск с индикатором прогресса
     with st.spinner("Идет обучение модели..."):
         output = subprocess.run(
-            RUN_PINN_COMMAND, capture_output=True, text=True)
+            [f"{sys.executable}", "PINN.py", code], capture_output=True, text=True)
 
     # Шаг 7: Завершение
     status_text.text("✅ Обучение завершено!")
