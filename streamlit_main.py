@@ -15,7 +15,7 @@ import subprocess
 import time
 from huggingface_hub import InferenceClient
 import sys
-
+import os
 
 client = InferenceClient(model="meta-llama/Meta-Llama-3.1-8B-Instruct",
                          token=st.secrets['HUGGINGFACE_HUB_TOKEN'])
@@ -118,6 +118,29 @@ def calculate_metrics(y_true, y_pred):
     }
 
     return metrics
+
+
+def download_temp_file(file_path, button_label="📥 Скачать файл"):
+    """
+    Функция для скачивания временного файла
+    
+    file_path: путь к временному файлу
+    button_label: текст на кнопке скачивания
+    """
+    if os.path.exists(file_path):
+        with open(file_path, "rb") as file:
+            file_data = file.read()
+
+        file_name = os.path.basename(file_path)
+
+        st.download_button(
+            label=button_label+" "+file_name,
+            data=file_data,
+            file_name=file_name,
+            mime="application/octet-stream"
+        )
+    else:
+        st.error(f"Файл {file_path} не найден")
 
 # Главная страница
 
@@ -426,9 +449,9 @@ def generate_model_page():
     # Шаг 4: Сохранение и первая проверка
     status_text.text("💾 Сохранение сгенерированного кода...")
     # save(LOSS_FILE_PATH, code)
-    file_path, content = save_py(LOSS_FILE_PATH, code)
+    loss_file_path, content = save_py(LOSS_FILE_PATH, code)
     progress_bar.progress(50)
-    print(file_path)
+    # print(file_path)
     # return 
     status_text.text("🧪 Первая проверка кода...")
     details_container.text("Запуск тестера для проверки корректности")
@@ -480,7 +503,7 @@ def generate_model_page():
             json_text = load_text_to_json(ANSWER_FIX_ERROR_FILE_PATH)
 
         code = llm_answer_to_python_code(json_text)
-        save(LOSS_FILE_PATH, code)
+        loss_file_path, content = save_py(LOSS_FILE_PATH, code)
 
         # Проверка исправленного кода
         details_container.text("Проверка исправленного кода...")
@@ -618,6 +641,9 @@ def generate_model_page():
 
         # Отображение в Streamlit
         st.pyplot(fig)
+
+        download_temp_file(loss_file_path)
+        download_temp_file(filename)
 
 # Инициализация session state
 if 'current_page' not in st.session_state:
