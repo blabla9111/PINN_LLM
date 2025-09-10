@@ -1,0 +1,5 @@
+{
+  "hidden_size": 256,
+  "output_size": 4,
+  "vocab_size": 30000
+}

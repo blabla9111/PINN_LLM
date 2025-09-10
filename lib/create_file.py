@@ -2,7 +2,7 @@ import tempfile
 import os
 
 
-def create_new_PINN(loss_function_str, py_file_path, start_file_path, end_file_path):
+def create_file_in_tmp(loss_function_str, py_file_path, start_file_path, end_file_path):
     """
     Создает Python файл с функцией потерь для PINN, используя начало и конец из файлов
     

@@ -1,8 +1,9 @@
-from loss_dinn_check import TestLossDinnFunction
+from web.backend.PINN_utils.loss_dinn_check import TestLossDinnFunction
 import tempfile
 import os
 
-def save(py_file_path, code, add_imports=True, history_file_path = 'losses.py'):
+
+def save(py_file_path, code, add_imports=True, history_file_path='results/saved_losses/losses.py'):
 
     code = "\n\nimport torch\n\n\n" + code  # костыль
     with open(py_file_path, 'w', encoding='utf-8') as f:
@@ -13,7 +14,7 @@ def save(py_file_path, code, add_imports=True, history_file_path = 'losses.py'):
     return py_file_path
 
 
-def save_py(py_file_path, code, add_imports=True, history_file_path='losses.py'):
+def save_py(py_file_path, code, add_imports=True, history_file_path='results/saved_losses/losses.py'):
     # Создаем временный файл
     temp_dir = tempfile.gettempdir()
     temp_file_path = os.path.join(temp_dir, py_file_path)

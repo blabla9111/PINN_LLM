@@ -4,12 +4,12 @@ The effect of lockdown should appear earlier – inertia is 5-7 days, not 14.
 Masks reduce the transmission rate, but this is not visible on the graph.
 Vaccination began on the 30th day – where is the smoothing of the curve in 2-3 weeks?
 Quarantine measures cut off the curve too sharply – in reality, there will be a smoother decline.
-Mortality increases linearly with morbidity – but should lag behind by 1-2 weeks.
+# Mortality increases linearly with morbidity – but should lag behind by 1-2 weeks.
 Too many recovered in the first days – the average duration of the disease is longer.
-The peak should be wider – in reality, people are not infected at the same time
-Asymptomatic spread is not taken into account – the actual number of infected is higher.
-The graph of infected is symmetrical – in reality, the ascending and descending branches are different.
-The epidemic cannot end in 60 days - usually the cycle is 3-6 months.
+#The peak should be wider – in reality, people are not infected at the same time flaatten the curve
+#Asymptomatic spread is not taken into account – the actual number of infected is higher. тестировать два
+#The graph of infected is symmetrical – in reality, the ascending and descending branches are different.
+The epidemic cannot end in 60 days - usually the  is 3-6 months.
 Too early peak - with such measures it should be on the 40-50th day, not on the 20th.
 No delayed effect of the measures - quarantine will only have an effect after 2 weeks
 The graph is interrupted, but epidemics usually have a 'long tail'
