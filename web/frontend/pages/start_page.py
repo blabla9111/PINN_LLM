@@ -75,7 +75,7 @@ def start_page():
 
                 # Сохраняем результаты в session state
                 st.session_state.comment_analysis = "analysis_result"
-                st.session_state.user_comment = comment
+                st.session_state.user_comment = translate_to_en(comment)
 
                 # Переключаемся на страницу результатов
                 st.session_state.current_page = "results"

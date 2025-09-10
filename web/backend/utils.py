@@ -6,6 +6,7 @@ import pandas as pd
 import streamlit as st
 import os
 
+
 def load_model(filepath, t, S_data, I_data, D_data, R_data):
     """Загрузить модель"""
     print("загрузка модели")
@@ -163,3 +164,13 @@ def get_data_for_model(filepath):
 
 
     return timesteps, susceptible, infected, dead, recovered, x
+
+
+def translate_to_en(text):
+    from deep_translator import GoogleTranslator
+
+    # Используем контекстный менеджер (работает с deep-translator)
+    translator = GoogleTranslator(source='ru', target='en')
+    translated_text = translator.translate(text)
+    # print(translated_text)
+    return translated_text
