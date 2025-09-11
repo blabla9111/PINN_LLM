@@ -38,3 +38,28 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
+
+st.markdown("""
+    <style>
+        .col1-style {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .col2-style {
+            background: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 100%);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .col3-style {
+            background: linear-gradient(135deg, #f1f8e9 0%, #dcedc8 100%);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .col4-style {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            padding: 20px;
+            border-radius: 10px;
+        }
+    </style>
+    """, unsafe_allow_html=True)

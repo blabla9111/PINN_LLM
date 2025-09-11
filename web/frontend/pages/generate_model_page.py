@@ -15,6 +15,7 @@ client = InferenceClient(model="meta-llama/Meta-Llama-3.1-8B-Instruct",
 
 
 def generate_model_page():
+    
     PROMPT_FILE_PATH = 'promts_templates/get_loss_based_on_recommendation_prompt.json'
     ANSWER_FILE_PATH = 'promts_templates/get_loss_based_on_recommendation_prompt_answer.json'
     LOSS_FILE_PATH = 'loss_dinn_LLM.py'
@@ -218,42 +219,108 @@ def generate_model_page():
     S_pred, I_pred, D_pred, R_pred, alpha_pred = loaded_dinn.predict()
 
     S_pred_new, I_pred_new, D_pred_new, R_pred_new, alpha_pred_new = loaded_dinn_new.predict()
-    st.title("Информация о модели")
 
-    # Разделение на две колонки
-    col1, col2 = st.columns([2, 1])
+    # Подготовка данных
+    real_data = {
+        'S': susceptible,
+        'I': infected,
+        'R': recovered,
+        'D': dead,
+    }
+
+    pred_old = {
+        'S': S_pred,
+        'I': I_pred,
+        'D': D_pred,
+        'R': R_pred
+    }
+
+    pred_new = {
+        'S': S_pred_new,
+        'I': I_pred_new,
+        'D': D_pred_new,
+        'R': R_pred_new
+    }
+
+    st.title("Сравнение моделей")
+    col1, col2 = st.columns(2)
+
 
     with col1:
-        st.header("📈График I")
-        fig, ax = plt.subplots(figsize=(10, 6))
+        with st.container():
 
-        ax.scatter(timesteps[:x][::10], infected[:x][::10],
-                   c='blue', alpha=0.5, lw=0.5, label='Real data')
+            fig_s = plot_S_comparison(
+                timesteps, x, susceptible, S_pred, S_pred_new)
+            st.pyplot(fig_s)
+            st.header("📊 Метрики моделей для S")
 
-        ax.scatter(timesteps[x:][::10], infected[x:][::10],
-                   c='white', edgecolors='black', alpha=0.5, lw=0.5, label='Future data')
+            metrics_I = calculate_metrics(susceptible[x:x+30], S_pred[x:x+30])
+            metrics_II = calculate_metrics(susceptible[x:x+30], S_pred_new[x:x+30])
 
-        ax.plot(timesteps, I_pred.detach().numpy(),
-                'black', alpha=0.9, lw=2, label='Model', linestyle='dashed')
-        ax.plot(timesteps, I_pred_new.detach().numpy(),
-                'red', alpha=0.9, lw=2, label='NEW_Model', linestyle='dashed')
+            comparison_table = compare_metrics(
+                metrics_I, metrics_II, "PINN", "NEW_PINN")
 
-        ax.set_xlabel("Time, days")
-        ax.set_ylabel("Infected, persons")
-        ax.legend()
-        ax.grid(True, alpha=0.3)
+        
 
-        # Отображение в Streamlit
-        st.pyplot(fig)
-
-        download_temp_file(loss_file_path)
-        download_temp_file(filename)
     with col2:
-        # st.header("📊 Метрики модели")
-        metrics_I = calculate_metrics(infected[x:187], I_pred[x:187])
-        metrics_II = calculate_metrics(
-            infected[x:187], I_pred_new[x:187])  # метрики второй модели
+        with st.container():
+            fig_i = plot_I_comparison(
+                timesteps, x, infected, I_pred, I_pred_new)
+            st.pyplot(fig_i)
+            st.header("📊 Метрики моделей для I")
+            metrics_I = calculate_metrics(infected[x:x+30], I_pred[x:x+30])
+            metrics_II = calculate_metrics(
+                infected[x:x+30], I_pred_new[x:x+30])  # метрики второй модели
 
-        # Создаем таблицу сравнения
-        comparison_table = compare_metrics(
-            metrics_I, metrics_II, "PINN", "NEW_PINN")
+            # Создаем таблицу сравнения
+            comparison_table = compare_metrics(
+                metrics_I, metrics_II, "PINN", "NEW_PINN")
+        
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        with st.container():
+            fig_r = plot_R_comparison(
+                timesteps, x, recovered, R_pred, R_pred_new)
+            st.pyplot(fig_r)
+            st.header("📊 Метрики моделей для R")
+            metrics_I = calculate_metrics(recovered[x:x+30], R_pred[x:x+30])
+            metrics_II = calculate_metrics(
+                recovered[x:x+30], R_pred_new[x:x+30])  # метрики второй модели
+
+            # Создаем таблицу сравнения
+            comparison_table = compare_metrics(
+                metrics_I, metrics_II, "PINN", "NEW_PINN")
+
+    with col2:
+        with st.container():
+            fig_d = plot_D_comparison(
+                timesteps, x, dead, D_pred, D_pred_new)
+            st.pyplot(fig_d)
+            st.header("📊 Метрики моделей для D")
+            metrics_I = calculate_metrics(dead[x:x+30], D_pred[x:x+30])
+            metrics_II = calculate_metrics(
+                dead[x:x+30], D_pred_new[x:x+30])  # метрики второй модели
+
+            # Создаем таблицу сравнения
+            comparison_table = compare_metrics(
+                metrics_I, metrics_II, "PINN", "NEW_PINN")
+
+    download_temp_file(loss_file_path)
+    download_temp_file(filename)
+
+    st.markdown("""
+        <style>
+        div[data-testid="stVerticalBlock"] > div:has(> div[data-testid="stVerticalBlock"]) {
+            background-color: #f0f8ff;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #f0f6c1;
+            margin-bottom: 20px;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+
+
+

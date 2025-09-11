@@ -16,37 +16,47 @@ def start_page():
     col1, col2 = st.columns([2, 1])
 
     with col1:
-        st.header("📈График I")
-        fig, ax = plt.subplots(figsize=(10, 6))
+        st.header("📈Графики")
 
-        ax.scatter(timesteps[:x][::10], infected[:x][::10],
-                   c='blue', alpha=0.5, lw=0.5, label='Real data')
+        # S
+        fig = plot_sidr_predictions(
+            timesteps=timesteps,
+            x=x,
+            susceptible=susceptible,  
+            infected=infected,        
+            dead=dead,        
+            recovered=recovered,      
+            S_pred=S_pred,
+            I_pred=I_pred,
+            D_pred=D_pred,
+            R_pred=R_pred
+        )
 
-        ax.scatter(timesteps[x:][::10], infected[x:][::10],
-                   c='white', edgecolors='black', alpha=0.5, lw=0.5, label='Future data')
 
-        ax.plot(timesteps, I_pred.detach().numpy(),
-                'black', alpha=0.9, lw=2, label='Model', linestyle='dashed')
-
-        ax.set_xlabel("Time, days")
-        ax.set_ylabel("Infected, persons")
-        ax.legend()
-        ax.grid(True, alpha=0.3)
 
         # Отображение в Streamlit
         st.pyplot(fig)
 
     with col2:
-        st.header("📊Метрики модели")
-        # на неделю только оцениваем
-        metrics_I = calculate_metrics(infected[x:187], I_pred[x:187])
+        st.header("📊 Метрики моделей")
+
+
+        # Вычисляем метрики для всех компонентов
+        metrics_S = calculate_metrics(susceptible[x:x+30], S_pred[x:x+30])
+        metrics_I = calculate_metrics(infected[x:x+30], I_pred[x:x+30])
+        metrics_R = calculate_metrics(recovered[x:x+30], R_pred[x:x+30])
+        metrics_D = calculate_metrics(dead[x:x+30], D_pred[x:x+30])
+
+        # Создаем общую таблицу
         metrics_df = pd.DataFrame({
             'Метрика': list(metrics_I.keys()),
-            'Значение': list(metrics_I.values())
+            'S (Susceptible)': list(metrics_S.values()),
+            'I (Infected)': list(metrics_I.values()),
+            'R (Recovered)': list(metrics_R.values()),
+            'D (Dead)': list(metrics_D.values())
         })
 
-        metrics_df = pd.DataFrame(metrics_df)
-        st.dataframe(metrics_df, hide_index=True, width='stretch')
+        st.dataframe(metrics_df, hide_index=True, use_container_width=True)
 
         # Дополнительная статистика
         st.subheader("Дополнительная информация")

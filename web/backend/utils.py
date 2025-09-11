@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 import os
+import matplotlib.pyplot as plt
 
 
 def load_model(filepath, t, S_data, I_data, D_data, R_data):
@@ -109,7 +110,7 @@ def compare_metrics(metrics_dict1, metrics_dict2, model1_name="Модель 1", 
         comparison_df[col] = comparison_df[col].apply(lambda x: f"{x:.4f}")
 
     # Отображаем таблицу
-    st.header("📊 Сравнение метрик моделей")
+    # st.header("📊 Сравнение метрик моделей")
     st.dataframe(comparison_df, hide_index=True, width='stretch')
 
     return comparison_df
@@ -174,3 +175,182 @@ def translate_to_en(text):
     translated_text = translator.translate(text)
     # print(translated_text)
     return translated_text
+
+
+def plot_sidr_predictions(timesteps, x, susceptible, infected, dead, recovered,
+                          S_pred, I_pred, D_pred, R_pred, figsize=(15, 12)):
+    """
+    Создает графики предсказаний модели SIDR в формате 2x2
+    
+    Parameters:
+    -----------
+    timesteps : array-like
+        Массив временных шагов
+    x : int
+        Индекс разделения данных на обучающую и тестовую части
+    susceptible : array-like
+        Реальные данные по восприимчивым
+    infected : array-like
+        Реальные данные по инфицированным
+    deceased : array-like
+        Реальные данные по умершим
+    recovered : array-like
+        Реальные данные по выздоровевшим
+    S_pred, I_pred, D_pred, R_pred : tensor
+        Предсказания модели для соответствующих групп
+    figsize : tuple, optional
+        Размер фигуры (по умолчанию (15, 12))
+    
+    Returns:
+    --------
+    fig : matplotlib.figure.Figure
+        Объект фигуры с графиками
+    """
+
+    # Создаем фигуру с 2x2 субплотов
+    fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=figsize)
+
+    # График 1: Susceptible (S) - верхний левый
+    ax1.scatter(timesteps[:x][::10], susceptible[:x][::10],
+                c='blue', alpha=0.5, lw=0.5, label='Real data')
+    ax1.scatter(timesteps[x:][::10], susceptible[x:][::10],
+                c='white', edgecolors='black', alpha=0.5, lw=0.5, label='Future data')
+    ax1.plot(timesteps, S_pred.detach().numpy(),
+             'black', alpha=0.9, lw=2, label='Model', linestyle='dashed')
+    ax1.set_title("Susceptible (S)")
+    ax1.set_xlabel("Time, days")
+    ax1.set_ylabel("Persons")
+    ax1.legend()
+    ax1.grid(True, alpha=0.3)
+
+    # График 2: Infected (I) - верхний правый
+    ax2.scatter(timesteps[:x][::10], infected[:x][::10],
+                c='blue', alpha=0.5, lw=0.5, label='Real data')
+    ax2.scatter(timesteps[x:][::10], infected[x:][::10],
+                c='white', edgecolors='black', alpha=0.5, lw=0.5, label='Future data')
+    ax2.plot(timesteps, I_pred.detach().numpy(),
+             'black', alpha=0.9, lw=2, label='Model', linestyle='dashed')
+    ax2.set_title("Infected (I)")
+    ax2.set_xlabel("Time, days")
+    ax2.set_ylabel("Persons")
+    ax2.legend()
+    ax2.grid(True, alpha=0.3)
+
+    
+
+    # График 3: Recovered (R) - нижний правый
+    ax3.scatter(timesteps[:x][::10], recovered[:x][::10],
+                c='blue', alpha=0.5, lw=0.5, label='Real data')
+    ax3.scatter(timesteps[x:][::10], recovered[x:][::10],
+                c='white', edgecolors='black', alpha=0.5, lw=0.5, label='Future data')
+    ax3.plot(timesteps, R_pred.detach().numpy(),
+             'black', alpha=0.9, lw=2, label='Model', linestyle='dashed')
+    ax3.set_title("Recovered (R)")
+    ax3.set_xlabel("Time, days")
+    ax3.set_ylabel("Persons")
+    ax3.legend()
+    ax3.grid(True, alpha=0.3)
+
+    # График 4: Deceased (D) - нижний левый
+    ax4.scatter(timesteps[:x][::10], dead[:x][::10],
+                c='blue', alpha=0.5, lw=0.5, label='Real data')
+    ax4.scatter(timesteps[x:][::10], dead[x:][::10],
+                c='white', edgecolors='black', alpha=0.5, lw=0.5, label='Future data')
+    ax4.plot(timesteps, D_pred.detach().numpy(),
+             'black', alpha=0.9, lw=2, label='Model', linestyle='dashed')
+    ax4.set_title("Dead (D)")
+    ax4.set_xlabel("Time, days")
+    ax4.set_ylabel("Persons")
+    ax4.legend()
+    ax4.grid(True, alpha=0.3)
+
+    # Настраиваем отступы между графиками
+    plt.tight_layout()
+
+    return fig
+
+
+def plot_comparison_single(timesteps, x, real_data, pred_old, pred_new,
+                           title, ylabel, figsize=(10, 6), sampling_step=10):
+    """
+    Функция для построения графика сравнения двух моделей для одного компонента
+    
+    Parameters:
+    -----------
+    timesteps : array-like
+        Массив временных шагов
+    x : int
+        Индекс разделения данных на обучающую и тестовую части
+    real_data : array-like
+        Реальные данные
+    pred_old : tensor
+        Предсказания старой модели
+    pred_new : tensor
+        Предсказания новой модели
+    title : str
+        Заголовок графика
+    ylabel : str
+        Подпись оси Y
+    figsize : tuple, optional
+        Размер фигуры (по умолчанию (10, 6))
+    sampling_step : int, optional
+        Шаг дискретизации для scatter plot (по умолчанию 10)
+    
+    Returns:
+    --------
+    fig : matplotlib.figure.Figure
+        Объект фигуры с графиком
+    """
+
+    fig, ax = plt.subplots(figsize=figsize)
+
+    ax.scatter(timesteps[:x][::sampling_step], real_data[:x][::sampling_step],
+               c='blue', alpha=0.5, lw=0.5, label='Real data')
+
+    ax.scatter(timesteps[x:][::sampling_step], real_data[x:][::sampling_step],
+               c='white', edgecolors='black', alpha=0.5, lw=0.5, label='Future data')
+
+    ax.plot(timesteps, pred_old.detach().numpy(),
+            'black', alpha=0.9, lw=2, label='Old Model', linestyle='dashed')
+    ax.plot(timesteps, pred_new.detach().numpy(),
+            'red', alpha=0.9, lw=2, label='New Model', linestyle='dashed')
+
+    ax.set_xlabel("Time, days")
+    ax.set_ylabel(ylabel)
+    ax.set_title(title)
+    ax.legend()
+    ax.grid(True, alpha=0.3)
+
+    return fig
+
+# Функции для отдельных компонентов
+def plot_S_comparison(timesteps, x, susceptible, S_pred_old, S_pred_new, figsize=(10, 6)):
+    """График сравнения для Susceptible"""
+    return plot_comparison_single(
+        timesteps, x, susceptible, S_pred_old, S_pred_new,
+        "Susceptible (S) Comparison", "Susceptible, persons", figsize
+    )
+
+
+def plot_I_comparison(timesteps, x, infected, I_pred_old, I_pred_new, figsize=(10, 6)):
+    """График сравнения для Infected"""
+    return plot_comparison_single(
+        timesteps, x, infected, I_pred_old, I_pred_new,
+        "Infected (I) Comparison", "Infected, persons", figsize
+    )
+
+
+def plot_R_comparison(timesteps, x, recovered, R_pred_old, R_pred_new, figsize=(10, 6)):
+    """График сравнения для Recovered"""
+    return plot_comparison_single(
+        timesteps, x, recovered, R_pred_old, R_pred_new,
+        "Recovered (R) Comparison", "Recovered, persons", figsize
+    )
+
+
+def plot_D_comparison(timesteps, x, deceased, D_pred_old, D_pred_new, figsize=(10, 6)):
+    """График сравнения для Deceased"""
+    return plot_comparison_single(
+        timesteps, x, deceased, D_pred_old, D_pred_new,
+        "Dead (D) Comparison", "Dead, persons", figsize
+    )
