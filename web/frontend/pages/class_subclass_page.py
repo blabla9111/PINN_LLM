@@ -1,4 +1,5 @@
 import streamlit as st
+import time
 
 from comment_classificator.match_loss_classification import predict_class_and_sub_class
 
@@ -67,6 +68,54 @@ def class_subclass_page():
         # Время анализа
         # st.write(f"**Время анализа:** {datetime.now().strftime(" % Y-%m-%d % H: % M: % S")}")
 
+    st.subheader("Подтверждение классификации")
+    st.write("Подходят ли предложенные класс и подкласс под ваш комментарий?")
+
+    col_confirm1, col_confirm2 = st.columns(2)
+
+    with col_confirm1:
+        if st.button("✅ Да, подходят", type="primary", use_container_width=True):
+            # Сохраняем в историю
+            if 'comment_history' not in st.session_state:
+                st.session_state.comment_history = []
+
+            st.session_state.comment_history.append({
+                "comment": comment,
+                "main_class": comment_class,
+                "subclass": comment_subclass,
+                "confirmed": True,
+                # "confidence": analysis['confidence'],
+                # "timestamp": analysis['timestamp']
+            })
+
+            st.session_state.current_page = "generate new model"
+            st.rerun()
+
+    with col_confirm2:
+        if st.button("❌ Нет, не подходят", type="secondary", use_container_width=True):
+            # Сохраняем в историю как неподтвержденный
+            if 'comment_history' not in st.session_state:
+                st.session_state.comment_history = []
+
+            st.session_state.comment_history.append({
+                "comment": comment,
+                "main_class": comment_class,
+                "subclass": comment_subclass,
+                "confirmed": False,
+                # "confidence": analysis['confidence'],
+                # "timestamp": analysis['timestamp']
+            })
+
+            # st.success(
+            #     "Спасибо за обратную связь! Возвращаемся на главную страницу.")
+            st.toast(
+                    "⚠️ Переход на главную страницу... Нужно переформулировать комментарий", icon="⚠️")
+
+            # Задержка и переход
+            time.sleep(5)
+            st.session_state.current_page = "main"
+            st.rerun()
+
     # Кнопки для навигации
     col_btn1, col_btn2 = st.columns(2)
 
@@ -87,7 +136,7 @@ def class_subclass_page():
             st.session_state.current_page = "main"
             st.rerun()
 
-    with col_btn2:
-        if st.button("Сделать новый прогноз с учетом комментария"):
-            st.session_state.current_page = "generate new model"
-            st.rerun()
+    # with col_btn2:
+    #     if st.button("Сделать новый прогноз с учетом комментария"):
+    #         st.session_state.current_page = "generate new model"
+    #         st.rerun()
