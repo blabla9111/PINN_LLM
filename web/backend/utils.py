@@ -6,6 +6,7 @@ import pandas as pd
 import streamlit as st
 import os
 import matplotlib.pyplot as plt
+from web.backend.EpidParams.EpidParams import EpidParams
 
 
 def load_model(filepath, t, S_data, I_data, D_data, R_data):
@@ -354,3 +355,8 @@ def plot_D_comparison(timesteps, x, deceased, D_pred_old, D_pred_new, figsize=(1
         timesteps, x, deceased, D_pred_old, D_pred_new,
         "Dead (D) Comparison", "Dead, persons", figsize
     )
+
+
+def get_R0(S, I, R, D, timesteps):
+    epidParams = EpidParams(S, I, R, D, timesteps)
+    return epidParams.R0()

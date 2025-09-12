@@ -58,6 +58,10 @@ def start_page():
 
         st.dataframe(metrics_df, hide_index=True, use_container_width=True)
 
+        st.subheader("Эпид.параметры")
+        st.metric("R0 (basic reproduction number)",
+                  get_R0(S_pred, I_pred, D_pred, R_pred, timesteps))
+
         # Дополнительная статистика
         st.subheader("Дополнительная информация")
         st.metric("Объем данных", len(timesteps))

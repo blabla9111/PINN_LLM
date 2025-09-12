@@ -1,5 +1,6 @@
 import numpy as np
 
+#https: // www.frontiersin.org/journals/public-health/articles/10.3389/fpubh.2020.556689/full
 class EpidParams:
     def __init__(self, S, I, R, D, timesteps):
         self.S_data = S
