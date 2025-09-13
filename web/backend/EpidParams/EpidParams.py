@@ -1,5 +1,5 @@
 import numpy as np
-
+import torch
 #https: // www.frontiersin.org/journals/public-health/articles/10.3389/fpubh.2020.556689/full
 class EpidParams:
     def __init__(self, S, I, R, D, timesteps):
@@ -26,14 +26,17 @@ class EpidParams:
         return dDdt/self.I_data[t]
 
     def Rt(self, t):
-        return self.beta_t(t)/(self.gamma_t(t) + self.delta_t(t))*(self.N/self.S_data[t])
+        # return self.beta_t(t)/(self.gamma_t(t) + self.delta_t(t))*(self.S_data[t]/self.N)
+        # return self.I_data[t]/(self.R_data[t]-self.R_data[t-1]+self.D_data[t]-self.D_data[t-1])
+        return torch.sum(self.I_data[t-4:t])/torch.sum(self.I_data[t-8:t-4])
 
     def R0(self):
-        return self.Rt(1)
+        return self.Rt(8)
 
     def Rt_array(self):
-        Rt_array = np.zeros(len(self.timesteps)-2)
-        for i in range(1, len(self.timesteps)-1):
-            Rt_array[i-1] = self.Rt(i)
+        # почему 8, а не 7?
+        Rt_array = np.zeros(len(self.timesteps)-8)
+        for i in range(8, len(self.timesteps)):
+            Rt_array[i-8] = self.Rt(i)
 
         return Rt_array

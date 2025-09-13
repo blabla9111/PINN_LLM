@@ -360,3 +360,13 @@ def plot_D_comparison(timesteps, x, deceased, D_pred_old, D_pred_new, figsize=(1
 def get_R0(S, I, R, D, timesteps):
     epidParams = EpidParams(S, I, R, D, timesteps)
     return epidParams.R0()
+
+
+def get_Rt_array(S, I, R, D, timesteps):
+    epidParams = EpidParams(S, I, R, D, timesteps)
+    return epidParams.Rt_array()
+
+
+def get_Rt(S, I, R, D, timesteps, t):
+    epidParams = EpidParams(S, I, R, D, timesteps)
+    return epidParams.Rt(t)
