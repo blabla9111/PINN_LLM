@@ -54,6 +54,7 @@ parso==0.8.4
 patsy==1.0.1
 pillow==11.1.0
 platformdirs==4.3.7
+plotly==6.3.0
 prompt_toolkit==3.0.50
 protobuf==6.32.0
 psutil==7.0.0
@@ -64,7 +65,7 @@ Pygments==2.19.1
 pyparsing==3.2.3
 python-dateutil==2.9.0.post0
 pytz==2025.2
-#pywin32==311
+pywin32==311
 PyYAML==6.0.2
 pyzmq==26.4.0
 referencing==0.36.2
