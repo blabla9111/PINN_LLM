@@ -12,9 +12,10 @@ from web.backend.EpidParams.EpidParams import EpidParams
 def load_model(filepath, t, S_data, I_data, D_data, R_data):
     """Загрузить модель"""
     print("загрузка модели")
-    checkpoint = torch.load(filepath)
     # Определяем девайс: cuda если есть, иначе cpu
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    checkpoint = torch.load(filepath, map_location== device)
+    
     # Создаем экземпляр модели
     model = DINN(t, S_data, I_data, D_data, R_data, device=device)
 
