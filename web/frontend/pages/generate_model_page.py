@@ -212,7 +212,7 @@ def generate_model_page():
     # return
     timesteps, susceptible, infected, dead, recovered, x = get_data_for_model(
         "data.csv")
-    loaded_dinn = load_model('./saved_models/dinn_1.pth',
+    loaded_dinn = load_model('./saved_models/dinn_cuda.pth',
                              timesteps, susceptible, infected, dead, recovered)
     loaded_dinn_new = load_model(filename,
                                  timesteps, susceptible, infected, dead, recovered)

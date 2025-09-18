@@ -3,23 +3,28 @@ import torch.nn as nn
 import torch.nn.functional as F
 # from loss_dinn_LLM import loss_dinn
 
+
+
+
+
 class DINN(nn.Module):
-    def __init__(self, t, S_data, I_data, D_data, R_data):
+    def __init__(self, t, S_data, I_data, D_data, R_data, device):
         super(DINN, self).__init__()
+        self.device = device
         self.N = 6e6
-        self.t = torch.tensor(t, requires_grad=True)
+        self.t = torch.tensor(t, requires_grad=True, device=self.device)
         self.t_float = self.t.float()
         self.t_batch = torch.reshape(self.t_float, (len(self.t), 1))
-        self.S = torch.tensor(S_data)
-        self.I = torch.tensor(I_data)
-        self.D = torch.tensor(D_data)
-        self.R = torch.tensor(R_data)
+        self.S = torch.tensor(S_data, device=self.device)
+        self.I = torch.tensor(I_data, device=self.device)
+        self.D = torch.tensor(D_data, device=self.device)
+        self.R = torch.tensor(R_data, device=self.device)
 
         self.losses = []
 
-        self.beta_tilda = torch.nn.Parameter(torch.rand(1, requires_grad=True))
+        self.beta_tilda = torch.nn.Parameter(torch.rand(1, requires_grad=True, device=self.device))
         self.gamma_tilda = torch.nn.Parameter(
-            torch.rand(1, requires_grad=True))
+            torch.rand(1, requires_grad=True, device=self.device))
 
         self.S_max = max(self.S)
         self.I_max = max(self.I)
@@ -35,16 +40,16 @@ class DINN(nn.Module):
         self.D_hat = (self.D - self.D_min) / (self.D_max - self.D_min)
         self.R_hat = (self.R - self.R_min) / (self.R_max - self.R_min)
 
-        self.m1 = torch.zeros((len(self.t), 4))
+        self.m1 = torch.zeros((len(self.t), 4), device=self.device)
         self.m1[:, 0] = 1
-        self.m2 = torch.zeros((len(self.t), 4))
+        self.m2 = torch.zeros((len(self.t), 4), device=self.device)
         self.m2[:, 1] = 1
-        self.m3 = torch.zeros((len(self.t), 4))
+        self.m3 = torch.zeros((len(self.t), 4), device=self.device)
         self.m3[:, 2] = 1
-        self.m4 = torch.zeros((len(self.t), 4))
+        self.m4 = torch.zeros((len(self.t), 4), device=self.device)
         self.m4[:, 3] = 1
 
-        self.net_sidr = self.Net_sidr()
+        self.net_sidr = self.Net_sidr().to(self.device)
         self.params = list(self.net_sidr.parameters())
         self.params.extend([self.beta_tilda, self.gamma_tilda])
 
@@ -117,6 +122,9 @@ class DINN(nn.Module):
     #     # Train
     #     print('\nStarting training...\n')
 
+    #     self.optimizer = optim.Adam(self.params, lr=1e-3)
+    #     self.scheduler = optim.lr_scheduler.StepLR(self.optimizer, step_size=5000, gamma=0.1)
+
     #     for epoch in range(n_epochs):
     #         S_pred_list = []
     #         I_pred_list = []
@@ -127,7 +135,7 @@ class DINN(nn.Module):
     #         f1, f2, f3, f4, S_pred, I_pred, D_pred, R_pred, alpha_pred = self.net_f(
     #             self.t_batch)
     #         self.optimizer.zero_grad()
-    #         x = 180 # костыль !!!!!!
+
     #         S_pred_list.append(self.S_min + (self.S_max - self.S_min) * S_pred)
     #         I_pred_list.append(self.I_min + (self.I_max - self.I_min) * I_pred)
     #         D_pred_list.append(self.D_min + (self.D_max - self.D_min) * D_pred)
@@ -179,4 +187,4 @@ class DINN(nn.Module):
             D_pred = self.D_min + (self.D_max - self.D_min) * D_hat
             R_pred = self.R_min + (self.R_max - self.R_min) * R_hat
 
-        return S_pred, I_pred, D_pred, R_pred, alpha_hat
+        return S_pred.cpu(), I_pred.cpu(), D_pred.cpu(), R_pred.cpu(), alpha_hat.cpu()

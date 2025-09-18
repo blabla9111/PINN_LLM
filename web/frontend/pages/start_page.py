@@ -9,7 +9,7 @@ def start_page():
 
     timesteps, susceptible, infected, dead, recovered, x = get_data_for_model(
         "data.csv")
-    loaded_dinn = load_model('./saved_models/dinn_1.pth',
+    loaded_dinn = load_model('./saved_models/dinn_cuda.pth',
                              timesteps, susceptible, infected, dead, recovered)
     S_pred, I_pred, D_pred, R_pred, alpha_pred = loaded_dinn.predict()
     st.title("Информация о модели")

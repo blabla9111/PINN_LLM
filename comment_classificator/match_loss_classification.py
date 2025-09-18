@@ -46,6 +46,7 @@ def predict_text(model, tokenizer, text, device=None, top_k=2):
     if device is None:
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+    model = model.to(device)
     # Prepare input
     inputs = tokenizer(text,
                        padding='max_length',
