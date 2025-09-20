@@ -55,20 +55,13 @@ def start_page():
             'D (Dead)': list(metrics_D.values())
         })
 
-        st.dataframe(metrics_df, hide_index=True, use_container_width=True)
+        st.dataframe(metrics_df, hide_index=True, width='stretch')
 
         st.subheader("Эпид.параметры")
         st.metric("R0 (basic reproduction number)",
                   get_R0(S_pred, I_pred, R_pred, D_pred, timesteps))
         # дне не соответствуют в отображении
         Rt_array = get_Rt_array(S_pred, I_pred, R_pred, D_pred, timesteps)
-        # print(get_Rt(S_pred, I_pred, R_pred, D_pred, timesteps, 366))
-        # print(Rt_array)
-        print(S_pred[360:])
-        print(I_pred[360:])
-        print(R_pred[360:])
-        print(D_pred[360:])
-        print(timesteps[360:])
 
         # Создание интерактивного графика
         fig = go.Figure()
@@ -122,7 +115,9 @@ def start_page():
 
                 # Сохраняем результаты в session state
                 st.session_state.comment_analysis = "analysis_result"
+                st.session_state.comment_primary = comment
                 st.session_state.user_comment = translate_to_en(comment)
+                # print(st.session_state.user_comment)
 
                 # Переключаемся на страницу результатов
                 st.session_state.current_page = "results"

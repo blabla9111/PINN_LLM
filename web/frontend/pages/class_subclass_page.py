@@ -44,7 +44,7 @@ def class_subclass_page():
     print(comment_subclass)
     # Отображение исходного комментария
     st.subheader("Ваш комментарий:")
-    st.info(f'"{comment}"')
+    st.info(f'"{st.session_state.comment_primary}"')
 
     # Разделение на колонки для результатов
     col1 = st.columns(1)
@@ -74,7 +74,7 @@ def class_subclass_page():
     col_confirm1, col_confirm2 = st.columns(2)
 
     with col_confirm1:
-        if st.button("✅ Да, подходят", type="primary", use_container_width=True):
+        if st.button("✅ Да, подходят", type="primary", width='stretch'):
             # Сохраняем в историю
             if 'comment_history' not in st.session_state:
                 st.session_state.comment_history = []
@@ -92,7 +92,7 @@ def class_subclass_page():
             st.rerun()
 
     with col_confirm2:
-        if st.button("❌ Нет, не подходят", type="secondary", use_container_width=True):
+        if st.button("❌ Нет, не подходят", type="secondary", width='stretch'):
             # Сохраняем в историю как неподтвержденный
             if 'comment_history' not in st.session_state:
                 st.session_state.comment_history = []
