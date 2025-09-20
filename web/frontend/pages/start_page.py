@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 from web.backend.utils import *
-import plotly.graph_objects as go
+
 
 
 def start_page():
@@ -60,33 +60,9 @@ def start_page():
         st.subheader("Эпид.параметры")
         st.metric("R0 (basic reproduction number)",
                   get_R0(S_pred, I_pred, R_pred, D_pred, timesteps))
-        # дне не соответствуют в отображении
-        Rt_array = get_Rt_array(S_pred, I_pred, R_pred, D_pred, timesteps)
+        
 
-        # Создание интерактивного графика
-        fig = go.Figure()
-
-        fig.add_trace(go.Scatter(
-            x=timesteps,
-            y=Rt_array,
-            mode='lines+markers',  # линии + точки
-            name='Временной ряд',
-            line=dict(color='blue', width=2),
-            marker=dict(size=4, color='red'),
-            hovertemplate='<b>Время:</b> %{x:.2f}<br><b>Значение:</b> %{y:.4f}<extra></extra>'
-        ))
-
-        # Настройка внешнего вида
-        fig.update_layout(
-            title='Временной ряд Rt_array',
-            xaxis_title='Время (t)',
-            yaxis_title='Значение (Rt_array)',
-            hovermode='x unified',  # показывает все точки на одной вертикали
-            template='plotly_white',
-            height=500
-        )
-
-        st.plotly_chart(fig, width='stretch')
+        st.plotly_chart(display_epid_params(S_pred, I_pred, R_pred, D_pred, timesteps), width='stretch')
 
         # Дополнительная статистика
         st.subheader("Дополнительная информация")

@@ -7,6 +7,7 @@ import streamlit as st
 import os
 import matplotlib.pyplot as plt
 from web.backend.EpidParams.EpidParams import EpidParams
+import plotly.graph_objects as go
 
 
 def load_model(filepath, t, S_data, I_data, D_data, R_data):
@@ -372,3 +373,75 @@ def get_Rt_array(S, I, R, D, timesteps):
 def get_Rt(S, I, R, D, timesteps, t):
     epidParams = EpidParams(S, I, R, D, timesteps)
     return epidParams.Rt(t)
+
+def display_epid_params(S_pred, I_pred, R_pred, D_pred, timesteps):
+        # дне не соответствуют в отображении
+    Rt_array = get_Rt_array(S_pred, I_pred, R_pred, D_pred, timesteps)
+
+        # Создание интерактивного графика
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(
+            x=timesteps,
+            y=Rt_array,
+            mode='lines+markers',  # линии + точки
+            name='Временной ряд',
+            line=dict(color='blue', width=2),
+            marker=dict(size=4, color='red'),
+            hovertemplate='<b>Время:</b> %{x:.2f}<br><b>Значение:</b> %{y:.4f}<extra></extra>'
+        ))
+
+        # Настройка внешнего вида
+    fig.update_layout(
+            title='Временной ряд Rt_array',
+            xaxis_title='Время (t)',
+            yaxis_title='Значение (Rt_array)',
+            hovermode='x unified',  # показывает все точки на одной вертикали
+            template='plotly_white',
+            height=500
+        )
+    
+    return fig
+
+def display_compared_epid_params(S_pred_1, I_pred_1, R_pred_1, D_pred_1, timesteps_1, S_pred_2, I_pred_2, R_pred_2, D_pred_2, timesteps_2):
+        # дне не соответствуют в отображении
+    Rt_array_1 = get_Rt_array(S_pred_1, I_pred_1, R_pred_1, D_pred_1, timesteps_1)
+    Rt_array_2 = get_Rt_array(S_pred_2, I_pred_2, R_pred_2, D_pred_2, timesteps_2)
+
+        # Создание интерактивного графика с двумя рядами
+    fig = go.Figure()
+
+    # Первый временной ряд
+    fig.add_trace(go.Scatter(
+        x=timesteps_1,
+        y=Rt_array_1,
+        mode='lines+markers',
+        name='PINN',
+        line=dict(color='blue', width=2),
+        marker=dict(size=4, color='red'),
+        hovertemplate='<b>Время:</b> %{x:.2f}<br><b>Значение:</b> %{y:.4f}<extra></extra>'
+    ))
+
+    # Второй временной ряд
+    fig.add_trace(go.Scatter(
+        x=timesteps_2,
+        y=Rt_array_2,
+        mode='lines+markers',
+        name='NEW_PINN',
+        line=dict(color='green', width=2),
+        marker=dict(size=4, color='orange'),
+        hovertemplate='<b>Время:</b> %{x:.2f}<br><b>Значение:</b> %{y:.4f}<extra></extra>'
+    ))
+
+    # Настройка внешнего вида
+    fig.update_layout(
+        title='Сравнение Rt_array',
+        xaxis_title='Время (t)',
+        yaxis_title='Значение (Rt_array)',
+        hovermode='x unified',
+        template='plotly_white',
+        height=500
+    )
+    
+    return fig
+

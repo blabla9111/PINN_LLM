@@ -306,6 +306,13 @@ def generate_model_page():
             # Создаем таблицу сравнения
             comparison_table = compare_metrics(
                 metrics_I, metrics_II, "PINN", "NEW_PINN")
+            
+    st.subheader("Эпид.параметры")
+    st.metric("R0 (basic reproduction number)",
+                  get_R0(S_pred, I_pred, R_pred, D_pred, timesteps))
+        
+
+    st.plotly_chart(display_compared_epid_params(S_pred, I_pred, R_pred, D_pred, timesteps, S_pred_new, I_pred_new, R_pred_new, D_pred_new, timesteps), width='stretch')
 
     download_temp_file(loss_file_path)
     download_temp_file(filename)
