@@ -21,7 +21,7 @@ def start_page():
         st.header("📈Графики")
 
         # S
-        fig = plot_sidr_predictions(
+        fig = plot_sidr_predictions_plotly(
             timesteps=timesteps,
             x=x,
             susceptible=susceptible,
@@ -35,7 +35,7 @@ def start_page():
         )
 
         # Отображение в Streamlit
-        st.pyplot(fig)
+        st.plotly_chart(fig)
 
     with col2:
         st.header("📊 Метрики моделей")

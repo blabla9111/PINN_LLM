@@ -251,7 +251,7 @@ def generate_model_page():
 
             fig_s = plot_S_comparison(
                 timesteps, x, susceptible, S_pred, S_pred_new)
-            st.pyplot(fig_s)
+            st.plotly_chart(fig_s)
             st.header("📊 Метрики моделей для S")
 
             metrics_I = calculate_metrics(susceptible[x:x+30], S_pred[x:x+30])
@@ -266,7 +266,7 @@ def generate_model_page():
         with st.container():
             fig_i = plot_I_comparison(
                 timesteps, x, infected, I_pred, I_pred_new)
-            st.pyplot(fig_i)
+            st.plotly_chart(fig_i)
             st.header("📊 Метрики моделей для I")
             metrics_I = calculate_metrics(infected[x:x+30], I_pred[x:x+30])
             metrics_II = calculate_metrics(
@@ -283,7 +283,7 @@ def generate_model_page():
         with st.container():
             fig_r = plot_R_comparison(
                 timesteps, x, recovered, R_pred, R_pred_new)
-            st.pyplot(fig_r)
+            st.plotly_chart(fig_r)
             st.header("📊 Метрики моделей для R")
             metrics_I = calculate_metrics(recovered[x:x+30], R_pred[x:x+30])
             metrics_II = calculate_metrics(
@@ -297,7 +297,7 @@ def generate_model_page():
         with st.container():
             fig_d = plot_D_comparison(
                 timesteps, x, dead, D_pred, D_pred_new)
-            st.pyplot(fig_d)
+            st.plotly_chart(fig_d)
             st.header("📊 Метрики моделей для D")
             metrics_I = calculate_metrics(dead[x:x+30], D_pred[x:x+30])
             metrics_II = calculate_metrics(
