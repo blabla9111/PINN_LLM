@@ -43,3 +43,20 @@ def create_file_in_tmp(loss_function_str, py_file_path, start_file_path, end_fil
         raise FileNotFoundError(f"Файл не найден: {e}")
     except Exception as e:
         raise Exception(f"Ошибка при создании файла: {e}")
+
+
+def load_model_to_tmp(model):
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".pth") as tmp_file:
+        tmp_file.write(model)
+        tmp_path = tmp_file.name
+
+    print("Файл сохранен во временное место:", tmp_path)
+    return tmp_path
+
+def load_data_to_tmp(data_file):
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".csv") as tmp_file:
+        tmp_file.write(data_file)
+        tmp_path = tmp_file.name
+
+    print("Файл сохранен во временное место:", tmp_path)
+    return tmp_path

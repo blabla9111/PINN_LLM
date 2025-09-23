@@ -2,14 +2,27 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 from web.backend.utils import *
-
+from lib.create_file import *
 
 
 def start_page():
 
-    timesteps, susceptible, infected, dead, recovered, x = get_data_for_model(
-        "data.csv")
-    loaded_dinn = load_model('./saved_models/dinn_cuda.pth',
+    # url = os.environ.get("SUPABASE_URL")
+    # key = os.environ.get("SUPABASE_KEY")
+    # supabase = create_client(url, key)
+    supabase = st.session_state['supabase']
+    # st.success("✅ Подключение к Supabase успешно!")
+    # test_response = supabase.table("PINN_LLM_MODELS").select("*").execute()
+    # st.json(test_response.__dict__)
+    
+    response = supabase.storage.from_("PINN_LLM_STORAGE").download("data.csv")
+    filepath = load_data_to_tmp(response)
+
+    timesteps, susceptible, infected, dead, recovered, x = get_data_for_model(filepath)
+    
+    response = supabase.storage.from_("PINN_LLM_STORAGE").download("dinn_cuda.pth")
+    filepath = load_model_to_tmp(response)
+    loaded_dinn = load_model(filepath,
                              timesteps, susceptible, infected, dead, recovered)
     S_pred, I_pred, D_pred, R_pred, alpha_pred = loaded_dinn.predict()
     st.title("Информация о модели")

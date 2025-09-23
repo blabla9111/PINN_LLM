@@ -1,5 +1,7 @@
 import streamlit as st
 from web.frontend import pages as pg
+from web.backend.database_connection.SupabaseEngine import SupabaseEngine
+
 
 # Настройка страницы
 st.set_page_config(page_title="Анализ модели", layout="wide")
@@ -7,6 +9,9 @@ st.set_page_config(page_title="Анализ модели", layout="wide")
 # Инициализация session state
 if 'current_page' not in st.session_state:
     st.session_state.current_page = "main"
+
+if "supabase" not in st.session_state:
+     st.session_state['supabase'] = SupabaseEngine().supabase
 
 # Отображение текущей страницы
 if st.session_state.current_page == "main":

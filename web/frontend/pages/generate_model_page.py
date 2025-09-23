@@ -9,6 +9,7 @@ import time
 from huggingface_hub import InferenceClient
 import sys
 import matplotlib.pyplot as plt
+from lib.create_file import *
 
 client = InferenceClient(model="meta-llama/Meta-Llama-3.1-8B-Instruct",
                          token=st.secrets['HUGGINGFACE_HUB_TOKEN'])
@@ -210,12 +211,21 @@ def generate_model_page():
 
     st.write("Generate complete!")
     # return
-    timesteps, susceptible, infected, dead, recovered, x = get_data_for_model(
-        "data.csv")
-    loaded_dinn = load_model('./saved_models/dinn_cuda.pth',
+
+    supabase = st.session_state['supabase']
+
+    response = supabase.storage.from_("PINN_LLM_STORAGE").download("data.csv")
+    filepath = load_data_to_tmp(response)
+    timesteps, susceptible, infected, dead, recovered, x = get_data_for_model(filepath)
+
+    response = supabase.storage.from_("PINN_LLM_STORAGE").download("dinn_cuda.pth")
+    filepath = load_model_to_tmp(response)
+    loaded_dinn = load_model(filepath,
                              timesteps, susceptible, infected, dead, recovered)
+    
     loaded_dinn_new = load_model(filename,
                                  timesteps, susceptible, infected, dead, recovered)
+    
     S_pred, I_pred, D_pred, R_pred, alpha_pred = loaded_dinn.predict()
 
     S_pred_new, I_pred_new, D_pred_new, R_pred_new, alpha_pred_new = loaded_dinn_new.predict()
@@ -314,6 +324,32 @@ def generate_model_page():
 
     st.plotly_chart(display_compared_epid_params(S_pred, I_pred, R_pred, D_pred, timesteps, S_pred_new, I_pred_new, R_pred_new, D_pred_new, timesteps), width='stretch')
 
+    # Кнопки возврата и сохранения
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        if st.button("↩️ Вернуться на главную страницу", use_container_width=True):
+            st.session_state.current_page = "main"
+            st.rerun()
+    
+    with col2:
+        if st.button("💾 Сохранить модель в Storage", use_container_width=True):
+            try:
+                # Загрузка модели в Supabase Storage
+                with open(filename, "rb") as model_file:
+                    response = (
+                            supabase.storage
+                            .from_("PINN_LLM_STORAGE")
+                            .upload(
+                                file=model_file,
+                                path="NEW_MODEL_dinn_cuda_2.pth",
+                                file_options={"cache-control": "3600", "upsert": "true"}
+                            )
+                        )
+                st.success("✅ Модель успешно сохранена в Storage!")
+            except Exception as e:
+                st.error(f"❌ Ошибка при сохранении модели: {str(e)}")
+    
     download_temp_file(loss_file_path)
     download_temp_file(filename)
 
@@ -328,6 +364,5 @@ def generate_model_page():
         }
         </style>
         """, unsafe_allow_html=True)
-
 
 
