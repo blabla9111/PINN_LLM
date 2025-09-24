@@ -23,6 +23,17 @@ CLASS_TYPE_INFO = {"1": ["Поведение эпидемической крив
         "2": "Неверное кол-во заболевших во время пика",
     }]}
 
+def insert_expert_comment(supabase, comment, class_num, subclass_num, approved=False):
+    data = {
+        "comment": comment,
+        "class": class_num,
+        "subclass": subclass_num,
+        "approved": approved
+    }
+    
+    response = supabase.table("expert_comment").insert(data).execute()
+    return response
+
 def class_subclass_page():
     st.title("Результаты анализа комментария")
 
@@ -46,7 +57,13 @@ def class_subclass_page():
     # Отображение исходного комментария
     st.subheader("Ваш комментарий:")
     st.info(f'"{st.session_state.comment_primary}"')
-
+    supabase = st.session_state['supabase']
+    response = insert_expert_comment(supabase, comment=st.session_state.comment_primary,
+                                     class_num=comment_class, 
+                                     subclass_num=comment_subclass,
+                                     approved=False)
+    # st.write()
+    st.session_state.comment_id = response.data[0]['id']
     # Разделение на колонки для результатов
     col1 = st.columns(1)
 
@@ -78,7 +95,7 @@ def class_subclass_page():
         if st.button("✅ Да, подходят", 
              type="primary", 
              width='stretch',
-             on_click=confirm_classification_callback):
+             on_click=confirm_classification_callback ):
             pass
 
     with col_confirm2:
@@ -120,7 +137,8 @@ def confirm_classification_callback():
         "subclass": st.session_state.user_comment_subclass,
         "confirmed": True,
     })
-
+    supabase = st.session_state['supabase']
+    update_response = supabase.table("expert_comment").update({"approved": True}).eq("id", st.session_state.comment_id).execute()
     st.session_state.current_page = "generate new model"
 
 
