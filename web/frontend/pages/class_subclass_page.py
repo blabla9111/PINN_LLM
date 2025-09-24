@@ -26,6 +26,7 @@ CLASS_TYPE_INFO = {"1": ["Поведение эпидемической крив
 def class_subclass_page():
     st.title("Результаты анализа комментария")
 
+
     if 'comment_analysis' not in st.session_state:
         st.warning("Нет данных для анализа. Вернитесь на главную страницу.")
         if st.button("Вернуться на главную"):
@@ -74,69 +75,66 @@ def class_subclass_page():
     col_confirm1, col_confirm2 = st.columns(2)
 
     with col_confirm1:
-        if st.button("✅ Да, подходят", type="primary", width='stretch'):
-            # Сохраняем в историю
-            if 'comment_history' not in st.session_state:
-                st.session_state.comment_history = []
-
-            st.session_state.comment_history.append({
-                "comment": comment,
-                "main_class": comment_class,
-                "subclass": comment_subclass,
-                "confirmed": True,
-                # "confidence": analysis['confidence'],
-                # "timestamp": analysis['timestamp']
-            })
-
-            st.session_state.current_page = "generate new model"
-            st.rerun()
+        if st.button("✅ Да, подходят", 
+             type="primary", 
+             width='stretch',
+             on_click=confirm_classification_callback):
+            pass
 
     with col_confirm2:
-        if st.button("❌ Нет, не подходят", type="secondary", width='stretch'):
-            # Сохраняем в историю как неподтвержденный
-            if 'comment_history' not in st.session_state:
-                st.session_state.comment_history = []
-
-            st.session_state.comment_history.append({
-                "comment": comment,
-                "main_class": comment_class,
-                "subclass": comment_subclass,
-                "confirmed": False,
-                # "confidence": analysis['confidence'],
-                # "timestamp": analysis['timestamp']
-            })
-
-            # st.success(
-            #     "Спасибо за обратную связь! Возвращаемся на главную страницу.")
-            st.toast(
-                    "⚠️ Переход на главную страницу... Нужно переформулировать комментарий", icon="⚠️")
-
-            # Задержка и переход
-            time.sleep(5)
-            st.session_state.current_page = "main"
-            st.rerun()
+        if st.button("❌ Нет, не подходят", 
+             type="secondary", 
+             width='stretch',
+             on_click=reject_classification_callback):
+            pass
 
     # Кнопки для навигации
     col_btn1, col_btn2 = st.columns(2)
 
     with col_btn1:
-        if st.button("Вернуться на главную", type="primary"):
-            # Сохраняем в историю
-            if 'comment_history' not in st.session_state:
-                st.session_state.comment_history = []
+        st.button("Вернуться на главную", 
+             type="primary", 
+             on_click=return_to_main_callback)
 
-            st.session_state.comment_history.append({
-                "comment": comment,
-                "main_class": comment_class,
-                "subclass": comment_subclass,
-                # "confidence": analysis['confidence'],
-                # "timestamp": analysis['timestamp']
-            })
+def return_to_main_callback():
+    # Сохраняем в историю
+    if 'comment_history' not in st.session_state:
+        st.session_state.comment_history = []
 
-            st.session_state.current_page = "main"
-            st.rerun()
+    st.session_state.comment_history.append({
+        "comment": st.session_state.user_comment,
+        "main_class": st.session_state.user_comment_class,
+        "subclass": st.session_state.user_comment_subclass,
+    })
 
-    # with col_btn2:
-    #     if st.button("Сделать новый прогноз с учетом комментария"):
-    #         st.session_state.current_page = "generate new model"
-    #         st.rerun()
+    st.session_state.current_page = "main"
+
+def confirm_classification_callback():
+    # Сохраняем в историю
+    if 'comment_history' not in st.session_state:
+        st.session_state.comment_history = []
+
+    st.session_state.comment_history.append({
+        "comment": st.session_state.user_comment,
+        "main_class": st.session_state.user_comment_class,
+        "subclass": st.session_state.user_comment_subclass,
+        "confirmed": True,
+    })
+
+    st.session_state.current_page = "generate new model"
+
+
+def reject_classification_callback():
+    # Сохраняем в историю как неподтвержденный
+    if 'comment_history' not in st.session_state:
+        st.session_state.comment_history = []
+
+    st.session_state.comment_history.append({
+        "comment": st.session_state.user_comment,
+        "main_class": st.session_state.user_comment_class,
+        "subclass": st.session_state.user_comment_subclass,
+        "confirmed": False,
+    })
+
+    st.toast("⚠️ Переход на главную страницу... Нужно переформулировать комментарий", icon="⚠️")
+    st.session_state.current_page = "main"

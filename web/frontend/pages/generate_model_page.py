@@ -334,9 +334,13 @@ def generate_model_page():
     col1, col2 = st.columns(2)
     
     with col1:
-        if st.button("↩️ Вернуться на главную страницу", use_container_width=True):
-            st.session_state.current_page = "main"
-            st.rerun()
+        if st.button("↩️ Вернуться на главную страницу", 
+             use_container_width=True,
+             on_click=lambda: (
+                 setattr(st.session_state, 'current_page', 'main')
+             )):
+            pass
+            # return
     
     with col2:
         if st.button("💾 Сохранить модель в Storage", use_container_width=True):
