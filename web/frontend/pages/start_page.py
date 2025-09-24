@@ -20,11 +20,27 @@ def start_page():
 
     timesteps, susceptible, infected, dead, recovered, x = get_data_for_model(filepath)
     
-    response = supabase.storage.from_("PINN_LLM_STORAGE").download("dinn_cuda.pth")
+
+    # Элементы в боковой панели
+    st.sidebar.title("Настройки")
+    selected_model = st.sidebar.selectbox("Выберите модель", ["LTS Модель (по умолчанию)", "Кастомизированная модель"])
+
+    if selected_model == "Кастомизированная модель":
+        response = supabase.storage.from_("PINN_LLM_STORAGE").download("NEW_MODEL_dinn_cuda_2.pth")
+        st.session_state.model_type = "CUSTOM"
+    else:
+        response = supabase.storage.from_("PINN_LLM_STORAGE").download("dinn_cuda.pth")
+        st.session_state.model_type = "LTS"
+
+        
     filepath = load_model_to_tmp(response)
     loaded_dinn = load_model(filepath,
                              timesteps, susceptible, infected, dead, recovered)
     S_pred, I_pred, D_pred, R_pred, alpha_pred = loaded_dinn.predict()
+
+        
+   
+
     st.title("Информация о модели")
 
     # Разделение на две колонки
