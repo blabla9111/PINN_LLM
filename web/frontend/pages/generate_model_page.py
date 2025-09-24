@@ -20,7 +20,7 @@ def generate_model_page():
     PROMPT_FILE_PATH = 'promts_templates/get_loss_based_on_recommendation_prompt.json'
     ANSWER_FILE_PATH = 'promts_templates/get_loss_based_on_recommendation_prompt_answer.json'
     LOSS_FILE_PATH = 'loss_dinn_LLM.py'
-    LOSS_PRIMARY_FILE_PATH = 'web/backend/PINN_utils/loss_dinn_primary.py'
+    # LOSS_PRIMARY_FILE_PATH = 'web/backend/PINN_utils/loss_dinn_primary.py'
     LLM_URL = 'http://localhost:1234/v1/chat/completions'
 
     LOSS_CHECK_FILE_NAME = "loss_dinn_check.py"
@@ -52,7 +52,14 @@ def generate_model_page():
     status_text.text("📝 Подготовка промпта для LLM...")
     details_container.text(
         "Генерация промпта на основе экспертного комментария")
-    code = get_loss_func_as_str(LOSS_PRIMARY_FILE_PATH)
+    supabase = st.session_state['supabase']
+    if st.session_state.model_type == "CUSTOM":
+        response = supabase.storage.from_("PINN_LLM_STORAGE").download("loss/loss_dinn_custom.py")
+    else:
+        response = supabase.storage.from_("PINN_LLM_STORAGE").download("loss/loss_dinn_primary.py")
+
+    loss_filepath = load_python_file_to_tmp(response)
+    code = get_loss_func_as_str(loss_filepath)
     create_get_loss_based_on_recommendation_prompt(
         PROMPT_FILE_PATH, comment_class, comment_subclass, EXPERT_COMMENT, code)
     progress_bar.progress(10)
@@ -142,11 +149,6 @@ def generate_model_page():
                                              LOSS_CHECK_START_FILE_PATH, LOSS_CHECK_END_FILE_PATH)
         output = subprocess.run(
             [f"{sys.executable}", file_path, code], capture_output=True)
-        # output = subprocess.run(
-        #     RUN_TESTER_COMMAND, capture_output=True, text=True, shell=True)
-        # print(f'!!!!!!!!\n\n{output}')
-        # return
-        # t = eval(output.stdout)
         if "True" in str(output.stdout):
             t = (True, '')
             print(f"Результат: {t}")
@@ -217,8 +219,12 @@ def generate_model_page():
     response = supabase.storage.from_("PINN_LLM_STORAGE").download("data.csv")
     filepath = load_data_to_tmp(response)
     timesteps, susceptible, infected, dead, recovered, x = get_data_for_model(filepath)
+    if st.session_state.model_type == "CUSTOM":
+        response = supabase.storage.from_("PINN_LLM_STORAGE").download("NEW_MODEL_dinn_cuda_2.pth")
+    else:
+        response = supabase.storage.from_("PINN_LLM_STORAGE").download("dinn_cuda.pth")
 
-    response = supabase.storage.from_("PINN_LLM_STORAGE").download("dinn_cuda.pth")
+    
     filepath = load_model_to_tmp(response)
     loaded_dinn = load_model(filepath,
                              timesteps, susceptible, infected, dead, recovered)
@@ -346,6 +352,17 @@ def generate_model_page():
                                 file_options={"cache-control": "3600", "upsert": "true"}
                             )
                         )
+                with open(loss_file_path, "rb") as loss_file:
+                    response = (
+                            supabase.storage
+                            .from_("PINN_LLM_STORAGE")
+                            .upload(
+                                file=loss_file,
+                                path="loss/loss_dinn_custom.py",
+                                file_options={"cache-control": "3600", "upsert": "true"}
+                            )
+                        )
+                # st.write(loss_file_path)
                 st.success("✅ Модель успешно сохранена в Storage!")
             except Exception as e:
                 st.error(f"❌ Ошибка при сохранении модели: {str(e)}")

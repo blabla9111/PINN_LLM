@@ -60,3 +60,11 @@ def load_data_to_tmp(data_file):
 
     print("Файл сохранен во временное место:", tmp_path)
     return tmp_path
+
+def load_python_file_to_tmp(python_file):
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".py") as tmp_file:
+        tmp_file.write(python_file)
+        tmp_path = tmp_file.name
+
+    print("Файл сохранен во временное место:", tmp_path)
+    return tmp_path
