@@ -8,6 +8,7 @@ import streamlit as st
 import torch
 from plotly.subplots import make_subplots
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+from datetime import datetime, timedelta
 
 from .EpidParams.EpidParams import EpidParams
 from .PINN_utils.PINN_class import DINN
@@ -377,6 +378,7 @@ def plot_sidr_predictions_plotly(
     D_pred,
     R_pred,
     figsize=(500, 300),
+    start_day=None
 ):
     """
     Создает интерактивные графики предсказаний модели SIDR в формате 2x2 с использованием Plotly
@@ -439,11 +441,37 @@ def plot_sidr_predictions_plotly(
     # Функция для выборки данных по индексам
     def get_sampled_data(data, indices):
         return [data[i] for i in indices if i < len(data)]
+    
+    # Преобразуем временные шаги в даты если указана начальная дата
+    if start_day is not None:
+        # Конвертируем start_day в datetime объект если это строка
+        if isinstance(start_day, str):
+            try:
+                start_date = datetime.strptime(start_day, '%Y-%m-%d')
+            except ValueError:
+                start_date = datetime.strptime(start_day, '%d.%m.%Y')
+        else:
+            start_date = start_day
+        
+        # Создаем массив дат
+        date_labels = [start_date + timedelta(days=int(day)) for day in timesteps]
+        x_labels = date_labels
+        x_title = "Date"
+    else:
+        x_labels = timesteps
+        x_title = "Time, days"
+    
+    # Функция для получения x-значений (дат или дней)
+    def get_x_values(indices):
+        if start_day is not None:
+            return [date_labels[i] for i in indices if i < len(date_labels)]
+        else:
+            return [timesteps[i] for i in indices if i < len(timesteps)]
 
     # График 1: Susceptible (S) - верхний левый
     fig.add_trace(
         go.Scatter(
-            x=get_sampled_data(timesteps, train_indices),
+            x=get_x_values(train_indices),
             y=get_sampled_data(susceptible, train_indices),
             mode="markers",
             marker=dict(color="blue", size=6, opacity=0.7),
@@ -457,7 +485,7 @@ def plot_sidr_predictions_plotly(
 
     fig.add_trace(
         go.Scatter(
-            x=get_sampled_data(timesteps, test_indices),
+            x=get_x_values(test_indices),
             y=get_sampled_data(susceptible, test_indices),
             mode="markers",
             marker=dict(
@@ -473,7 +501,7 @@ def plot_sidr_predictions_plotly(
 
     fig.add_trace(
         go.Scatter(
-            x=timesteps,
+            x=x_labels,
             y=S_pred,
             mode="lines",
             line=dict(color="black", width=3, dash="dash"),
@@ -488,7 +516,7 @@ def plot_sidr_predictions_plotly(
     # График 2: Infected (I) - верхний правый
     fig.add_trace(
         go.Scatter(
-            x=get_sampled_data(timesteps, train_indices),
+            x=get_x_values(train_indices),
             y=get_sampled_data(infected, train_indices),
             mode="markers",
             marker=dict(color="blue", size=6, opacity=0.7),
@@ -502,7 +530,7 @@ def plot_sidr_predictions_plotly(
 
     fig.add_trace(
         go.Scatter(
-            x=get_sampled_data(timesteps, test_indices),
+            x=get_x_values(test_indices),
             y=get_sampled_data(infected, test_indices),
             mode="markers",
             marker=dict(
@@ -518,7 +546,7 @@ def plot_sidr_predictions_plotly(
 
     fig.add_trace(
         go.Scatter(
-            x=timesteps,
+            x=x_labels,
             y=I_pred,
             mode="lines",
             line=dict(color="black", width=3, dash="dash"),
@@ -533,7 +561,7 @@ def plot_sidr_predictions_plotly(
     # График 3: Dead (D) - нижний левый
     fig.add_trace(
         go.Scatter(
-            x=get_sampled_data(timesteps, train_indices),
+            x=get_x_values(train_indices),
             y=get_sampled_data(dead, train_indices),
             mode="markers",
             marker=dict(color="blue", size=6, opacity=0.7),
@@ -547,7 +575,7 @@ def plot_sidr_predictions_plotly(
 
     fig.add_trace(
         go.Scatter(
-            x=get_sampled_data(timesteps, test_indices),
+            x=get_x_values(test_indices),
             y=get_sampled_data(dead, test_indices),
             mode="markers",
             marker=dict(
@@ -563,7 +591,7 @@ def plot_sidr_predictions_plotly(
 
     fig.add_trace(
         go.Scatter(
-            x=timesteps,
+            x=x_labels,
             y=D_pred,
             mode="lines",
             line=dict(color="black", width=3, dash="dash"),
@@ -578,7 +606,7 @@ def plot_sidr_predictions_plotly(
     # График 4: Recovered (R) - нижний правый
     fig.add_trace(
         go.Scatter(
-            x=get_sampled_data(timesteps, train_indices),
+            x=get_x_values(train_indices),
             y=get_sampled_data(recovered, train_indices),
             mode="markers",
             marker=dict(color="blue", size=6, opacity=0.7),
@@ -592,7 +620,7 @@ def plot_sidr_predictions_plotly(
 
     fig.add_trace(
         go.Scatter(
-            x=get_sampled_data(timesteps, test_indices),
+            x=get_x_values(test_indices),
             y=get_sampled_data(recovered, test_indices),
             mode="markers",
             marker=dict(
@@ -608,7 +636,7 @@ def plot_sidr_predictions_plotly(
 
     fig.add_trace(
         go.Scatter(
-            x=timesteps,
+            x=x_labels,
             y=R_pred,
             mode="lines",
             line=dict(color="black", width=3, dash="dash"),
@@ -924,9 +952,9 @@ def display_epid_params(S_pred, I_pred, R_pred, D_pred, timesteps):
 
     # Настройка внешнего вида
     fig.update_layout(
-        title="Временной ряд Rt_array",
+        title="Временной ряд Rt (effective reproduction number)",
         xaxis_title="Время (t)",
-        yaxis_title="Значение (Rt_array)",
+        yaxis_title="Значение (Rt)",
         hovermode="x unified",  # показывает все точки на одной вертикали
         template="plotly_white",
         height=500,
@@ -991,3 +1019,33 @@ def display_compared_epid_params(
     )
 
     return fig
+
+import streamlit.components.v1 as components
+
+def show_mode_indicator():
+    if 'mode' in st.session_state:
+        if st.session_state.mode == 'DEV':
+            footer_css = """
+                <style>
+                .footer {
+                    position: fixed;
+                    left: 0;
+                    bottom: 0;
+                    width: 100%;
+                    background-color: #FF4B4B;
+                    font-weight: bold;
+                    font-family: sans-serif;
+                    color: black;
+                    text-align: center;
+                    padding: 10px;
+                    border-top: 1px solid #ddd;
+                    z-index: 1000;
+                }
+                </style>
+
+                <div class="footer">
+                    🛠️ Включен режим разработчика
+                </div>
+                """
+
+            components.html(footer_css, height=50)
