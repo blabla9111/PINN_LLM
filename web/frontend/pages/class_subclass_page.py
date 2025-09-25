@@ -1,10 +1,12 @@
 import streamlit as st
 import time
+from web.backend.utils import *
 
 from comment_classificator.match_loss_classification import predict_class_and_sub_class
 
+
 CLASS_TYPE_INFO = {"1": ["Поведение эпидемической кривой не соответствует ожиданиям эксперта.", {
-    "1": "График кол-ва инфицированнных",
+    "1": "График кол-ва инфицированных",
     "2": "График кол-ва восприимчивых",
     "3": "График кол-ва выздоровевших",
     "4": "График кол-ва скончавшихся"
@@ -35,7 +37,8 @@ def insert_expert_comment(supabase, comment, class_num, subclass_num, approved=F
     return response
 
 def class_subclass_page():
-    st.title("Результаты анализа комментария")
+    show_mode_indicator()
+    st.title("Результаты анализа экспертных указаний")
 
 
     if 'comment_analysis' not in st.session_state:
@@ -55,7 +58,7 @@ def class_subclass_page():
     print(comment_class)
     print(comment_subclass)
     # Отображение исходного комментария
-    st.subheader("Ваш комментарий:")
+    st.subheader("Ваш комментарий (указание для модели):")
     st.info(f'"{st.session_state.comment_primary}"')
     supabase = st.session_state['supabase']
     response = insert_expert_comment(supabase, comment=st.session_state.comment_primary,
@@ -68,26 +71,27 @@ def class_subclass_page():
     col1 = st.columns(1)
 
     with col1[0]:
-        st.subheader("Классификация:")
+        st.subheader("Программа определила, что Ваш комментарий относится к следующим темам:")
+        st.info(f"**{CLASS_TYPE_INFO[comment_class][0]}**", icon="📋")
+        st.info(f"**{CLASS_TYPE_INFO[comment_class][1][comment_subclass]}**", icon="📋")
 
-        # Отображение основного класса
-        st.metric("Основной класс", comment_class + " " +
-                  CLASS_TYPE_INFO[comment_class][0])
-
-        # Отображение подкласса
-        st.metric("Подкласс", comment_subclass + " " +
-                  CLASS_TYPE_INFO[comment_class][1][comment_subclass])
-
-        # Уверенность модели
-        st.metric("Уверенность модели в классе", f"{top_probs[0] * 100}%")
-
-        st.metric("Уверенность модели в подклассе", f"{top_probs[1] * 100}%")
+        if st.session_state.mode == 'DEV':
+            # Дополнительная информация о результате
+            with st.expander("Детали выполнения"):
+                st.write(f"**🎯 Основной класс:** {comment_class}")
+                st.caption(CLASS_TYPE_INFO[comment_class][0])
+                st.write(f"Уверенность в классе: {round(top_probs[0] * 100)}%")
+                
+                st.write(f"**🔍 Подкласс:** {comment_subclass}")
+                st.caption(CLASS_TYPE_INFO[comment_class][1][comment_subclass])
+                st.write(f"Уверенность в подклассе: {round(top_probs[1] * 100)}%")
 
         # Время анализа
         # st.write(f"**Время анализа:** {datetime.now().strftime(" % Y-%m-%d % H: % M: % S")}")
 
-    st.subheader("Подтверждение классификации")
-    st.write("Подходят ли предложенные класс и подкласс под ваш комментарий?")
+    st.subheader("Подходят ли предложенные темы под ваш комментарий?")
+    st.write("После подтверждения программа попытается адаптировать прогноз по Вашему комментарию")
+    # st.write("Подходят ли предложенные класс и подкласс под ваш комментарий?")
 
     col_confirm1, col_confirm2 = st.columns(2)
 
@@ -105,12 +109,19 @@ def class_subclass_page():
              on_click=reject_classification_callback):
             pass
 
+    # Разделитель
+    st.divider()
+
     # Кнопки для навигации
     col_btn1, col_btn2 = st.columns(2)
 
+    # with col_btn1:
+    #     st.button("Вернуться на главную", 
+    #          type="primary", 
+    #          on_click=return_to_main_callback)
     with col_btn1:
-        st.button("Вернуться на главную", 
-             type="primary", 
+        st.button("↩️ Вернуться на главную страницу", 
+             use_container_width=True,
              on_click=return_to_main_callback)
 
 def return_to_main_callback():
@@ -154,5 +165,6 @@ def reject_classification_callback():
         "confirmed": False,
     })
 
-    st.toast("⚠️ Переход на главную страницу... Нужно переформулировать комментарий", icon="⚠️")
+    st.toast("⚠️ Переход на главную страницу... Нужно переформулировать комментарий (указание для модели)", icon="⚠️")
     st.session_state.current_page = "main"
+

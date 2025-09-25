@@ -1,19 +1,14 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 from web.backend.utils import *
 from lib.create_file import *
 
 
-def start_page():
 
-    # url = os.environ.get("SUPABASE_URL")
-    # key = os.environ.get("SUPABASE_KEY")
-    # supabase = create_client(url, key)
+def start_page():
     supabase = st.session_state['supabase']
-    # st.success("✅ Подключение к Supabase успешно!")
-    # test_response = supabase.table("PINN_LLM_MODELS").select("*").execute()
-    # st.json(test_response.__dict__)
     
     response = supabase.storage.from_("PINN_LLM_STORAGE").download("data.csv")
     filepath = load_data_to_tmp(response)
@@ -32,16 +27,23 @@ def start_page():
         response = supabase.storage.from_("PINN_LLM_STORAGE").download("dinn_cuda.pth")
         st.session_state.model_type = "LTS"
 
+    selected_model = st.sidebar.selectbox("Выберите режим работы", ["Пользователь (по умолчанию)", "Разработчик"])
+
+    if selected_model == "Разработчик":
+        st.session_state.mode = "DEV"
+    else:
+        st.session_state.mode = "USER"
+
+    show_mode_indicator()
+
         
     filepath = load_model_to_tmp(response)
     loaded_dinn = load_model(filepath,
                              timesteps, susceptible, infected, dead, recovered)
     S_pred, I_pred, D_pred, R_pred, alpha_pred = loaded_dinn.predict()
 
-        
-   
 
-    st.title("Информация о модели")
+    st.title("Информация о модели и прогноз")
 
     # Разделение на две колонки
     col1, col2 = st.columns([2, 1])
@@ -60,7 +62,8 @@ def start_page():
             S_pred=S_pred,
             I_pred=I_pred,
             D_pred=D_pred,
-            R_pred=R_pred
+            R_pred=R_pred,
+            start_day='2020-03-01'
         )
 
         # Отображение в Streamlit
@@ -87,26 +90,26 @@ def start_page():
         st.dataframe(metrics_df, hide_index=True, width='stretch')
 
         st.subheader("Эпид.параметры")
-        st.metric("R0 (basic reproduction number)",
-                  get_R0(S_pred, I_pred, R_pred, D_pred, timesteps))
+        r0_value = get_R0(S_pred, I_pred, R_pred, D_pred, timesteps).numpy()
+        st.metric("R0 (basic reproduction number)", f"{r0_value:.3f}")
         
 
         st.plotly_chart(display_epid_params(S_pred, I_pred, R_pred, D_pred, timesteps), width='stretch')
 
         # Дополнительная статистика
-        st.subheader("Дополнительная информация")
-        st.metric("Объем данных", len(timesteps))
-        st.metric("Имя модели", "dinn_1")
-        st.metric("Версия модели", "v1.0.0")
+        # st.subheader("Дополнительная информация")
+        # st.metric("Объем данных", len(timesteps))
+        # st.metric("Имя модели", "dinn_1")
+        # st.metric("Версия модели", "v1.0.0")
 
     # Разделитель
     st.divider()
 
     # Поле для ввода комментария и кнопка отправки
-    st.header("Комментарии")
+    st.header("Указания для модели")
 
     comment = st.text_area(
-        "Оставьте ваш комментарий, если в чем-то не согласны с прогнозом:",
+        "Здесь Вы можете написать свой комментарий, если в чем-то не согласны с прогнозом. Желательно выделить главный недостаток прогноза и описать его.",
         placeholder="Введите ваши наблюдения или предложения по прогнозу модели...",
         height=100,
         key="comment_input"
@@ -128,14 +131,11 @@ def start_page():
                 st.session_state.current_page = "results"
                 st.rerun()
             else:
-                st.warning("Пожалуйста, введите комментарий перед отправкой")
+                st.warning("Пожалуйста, введите рекомендации по прогнозу модели перед отправкой")
 
-    with col_btn2:
-        if st.button("Очистить", key="clear_btn"):
-            st.rerun()
 
     # Дополнительная секция с историей комментариев
-    with st.expander("История комментариев"):
+    with st.expander("История экспертных указаний"):
         if 'comment_history' not in st.session_state:
             st.session_state.comment_history = []
 
@@ -150,4 +150,4 @@ def start_page():
                     }
                     st.rerun()
         else:
-            st.info("История комментариев пуста")
+            st.info("История экспертных указаний пуста")

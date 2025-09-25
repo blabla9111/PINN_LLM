@@ -16,6 +16,7 @@ client = InferenceClient(model="meta-llama/Meta-Llama-3.1-8B-Instruct",
 
 
 def generate_model_page():
+    show_mode_indicator()
     
     PROMPT_FILE_PATH = 'promts_templates/get_loss_based_on_recommendation_prompt.json'
     ANSWER_FILE_PATH = 'promts_templates/get_loss_based_on_recommendation_prompt_answer.json'
@@ -78,7 +79,8 @@ def generate_model_page():
     json_text = load_text_to_json(ANSWER_FILE_PATH)
     code = llm_answer_to_python_code(json_text)
     # print(code)
-    details_container.text(f"Полученный код:\n```python\n{code}\n```")
+    if st.session_state.mode == 'DEV':
+        details_container.text(f"Полученный код:\n```python\n{code}\n```")
     progress_bar.progress(40)
     # return
 
@@ -114,14 +116,15 @@ def generate_model_page():
     print(error)
 
     error_counter = 0
-    max_error_iterations = 4
+    max_error_iterations = 6
 
     # Шаг 5: Цикл исправления ошибок
     while not is_correct and error_counter < max_error_iterations:
         error_counter += 1
         status_text.text(f"⚠️ Исправление ошибок (попытка {error_counter})...")
         # details_container.text(f"Обнаружена ошибка: {error[:100]}...")
-        error_container.error(f"Ошибка: {error}")
+        if st.session_state.mode == 'DEV':
+            error_container.error(f"Ошибка: {error}")
 
         progress_value = 50 + (error_counter * 10)
         progress_bar.progress(min(progress_value, 80))
@@ -170,7 +173,7 @@ def generate_model_page():
             "❌ Не удалось исправить ошибки после нескольких попыток")
         error_container.error(f"Последняя ошибка: {error}")
         progress_bar.progress(100)
-        st.error("Процесс остановлен из-за непреодолимых ошибок")
+        st.error("Процесс остановлен из-за непреодолимых ошибок. Пожалуйста, обновите страницу")
         return
 
     # Шаг 6: Запуск обучения PINN
@@ -195,25 +198,22 @@ def generate_model_page():
 
     # Шаг 7: Завершение
     status_text.text("✅ Обучение завершено!")
-    details_container.text("Процесс генерации и обучения успешно завершен")
+    # details_container.text("Процесс генерации и обучения успешно завершен")
     progress_bar.progress(100)
 
     # Показ результатов
     st.success("Модель успешно сгенерирована и обучена!")
 
+    if st.session_state.mode == 'DEV':
     # Дополнительная информация о результате
-    with st.expander("Детали выполнения"):
-        st.text("Логи выполнения:")
-        st.code(output.stdout[:1000] +
-                "..." if len(output.stdout) > 1000 else output.stdout)
+        with st.expander("Детали выполнения"):
+            st.text("Логи выполнения:")
+            st.code(output.stdout[:1000] +
+                    "..." if len(output.stdout) > 1000 else output.stdout)
 
-        if output.stderr:
-            st.warning("Предупреждения/ошибки:")
-            st.code(output.stderr)
-
-    st.write("Generate complete!")
-    # return
-
+            if output.stderr:
+                st.warning("Предупреждения/ошибки:")
+                st.code(output.stderr)
     supabase = st.session_state['supabase']
 
     response = supabase.storage.from_("PINN_LLM_STORAGE").download("data.csv")
@@ -236,100 +236,70 @@ def generate_model_page():
 
     S_pred_new, I_pred_new, D_pred_new, R_pred_new, alpha_pred_new = loaded_dinn_new.predict()
 
-    # Подготовка данных
-    real_data = {
-        'S': susceptible,
-        'I': infected,
-        'R': recovered,
-        'D': dead,
-    }
-
-    pred_old = {
-        'S': S_pred,
-        'I': I_pred,
-        'D': D_pred,
-        'R': R_pred
-    }
-
-    pred_new = {
-        'S': S_pred_new,
-        'I': I_pred_new,
-        'D': D_pred_new,
-        'R': R_pred_new
-    }
 
     st.title("Сравнение моделей")
     col1, col2 = st.columns(2)
-
-
+    OLD_MODEL_NAME = "PINN"
+    NEW_MODEL_NAME = "NEW_PINN"
     with col1:
-        with st.container():
-
-            fig_s = plot_S_comparison(
-                timesteps, x, susceptible, S_pred, S_pred_new)
+        with st.expander("📈 Susceptible (S) - Развернуть/Свернуть", expanded=True):
+            fig_s = plot_S_comparison(timesteps, x, susceptible, S_pred, S_pred_new)
             st.plotly_chart(fig_s)
-            st.header("📊 Метрики моделей для S")
-
+            st.write("📊 Метрики моделей для S")
             metrics_I = calculate_metrics(susceptible[x:x+30], S_pred[x:x+30])
             metrics_II = calculate_metrics(susceptible[x:x+30], S_pred_new[x:x+30])
-
-            comparison_table = compare_metrics(
-                metrics_I, metrics_II, "PINN", "NEW_PINN")
-
-        
+            comparison_table = compare_metrics(metrics_I, metrics_II, OLD_MODEL_NAME, NEW_MODEL_NAME)
 
     with col2:
-        with st.container():
-            fig_i = plot_I_comparison(
-                timesteps, x, infected, I_pred, I_pred_new)
+        with st.expander("🦠 Infected (I) - Развернуть/Свернуть", expanded=True):
+            fig_i = plot_I_comparison(timesteps, x, infected, I_pred, I_pred_new)
             st.plotly_chart(fig_i)
-            st.header("📊 Метрики моделей для I")
+            st.write("📊 Метрики моделей для I")
             metrics_I = calculate_metrics(infected[x:x+30], I_pred[x:x+30])
-            metrics_II = calculate_metrics(
-                infected[x:x+30], I_pred_new[x:x+30])  # метрики второй модели
-
-            # Создаем таблицу сравнения
-            comparison_table = compare_metrics(
-                metrics_I, metrics_II, "PINN", "NEW_PINN")
-        
-
+            metrics_II = calculate_metrics(infected[x:x+30], I_pred_new[x:x+30])
+            comparison_table = compare_metrics(metrics_I, metrics_II, OLD_MODEL_NAME, NEW_MODEL_NAME)
     col1, col2 = st.columns(2)
-
     with col1:
-        with st.container():
-            fig_r = plot_R_comparison(
-                timesteps, x, recovered, R_pred, R_pred_new)
+        with st.expander("💊 Recovered (R) - Развернуть/Свернуть", expanded=True):
+            fig_r = plot_R_comparison(timesteps, x, recovered, R_pred, R_pred_new)
             st.plotly_chart(fig_r)
-            st.header("📊 Метрики моделей для R")
+            st.write("📊 Метрики моделей для R")
             metrics_I = calculate_metrics(recovered[x:x+30], R_pred[x:x+30])
-            metrics_II = calculate_metrics(
-                recovered[x:x+30], R_pred_new[x:x+30])  # метрики второй модели
-
-            # Создаем таблицу сравнения
-            comparison_table = compare_metrics(
-                metrics_I, metrics_II, "PINN", "NEW_PINN")
+            metrics_II = calculate_metrics(recovered[x:x+30], R_pred_new[x:x+30])
+            comparison_table = compare_metrics(metrics_I, metrics_II, OLD_MODEL_NAME, NEW_MODEL_NAME)
 
     with col2:
-        with st.container():
-            fig_d = plot_D_comparison(
-                timesteps, x, dead, D_pred, D_pred_new)
+        with st.expander("⚰️ Dead (D) - Развернуть/Свернуть", expanded=True):
+            fig_d = plot_D_comparison(timesteps, x, dead, D_pred, D_pred_new)
             st.plotly_chart(fig_d)
-            st.header("📊 Метрики моделей для D")
+            st.write("📊 Метрики моделей для D")
             metrics_I = calculate_metrics(dead[x:x+30], D_pred[x:x+30])
-            metrics_II = calculate_metrics(
-                dead[x:x+30], D_pred_new[x:x+30])  # метрики второй модели
-
-            # Создаем таблицу сравнения
-            comparison_table = compare_metrics(
-                metrics_I, metrics_II, "PINN", "NEW_PINN")
-            
+            metrics_II = calculate_metrics(dead[x:x+30], D_pred_new[x:x+30])
+            comparison_table = compare_metrics(metrics_I, metrics_II, OLD_MODEL_NAME, NEW_MODEL_NAME)
+                    
     st.subheader("Эпид.параметры")
-    st.metric("R0 (basic reproduction number)",
-                  get_R0(S_pred, I_pred, R_pred, D_pred, timesteps))
+    r0_value = get_R0(S_pred_new, I_pred_new, R_pred_new, D_pred_new, timesteps).numpy()
+    st.metric("R0 (basic reproduction number)", f"{r0_value:.3f}")
         
 
     st.plotly_chart(display_compared_epid_params(S_pred, I_pred, R_pred, D_pred, timesteps, S_pred_new, I_pred_new, R_pred_new, D_pred_new, timesteps), width='stretch')
 
+    # st.write("Если новый проноз Вас устраивает больше предыдущего, то нажмите на кнопку сохранения. После с новой сохраненной моделью можно будет работать, для этого нужно в левой боковой панели (настройки) главной страницы выбрать Кастомную модель, а не LTS Модель.")
+    # st.write("Если Вы недовольны новым пронозом, то вернитесь на главную страницу и попытайтесь конкретнее сформулировать свое указание модели.")
+    
+    with st.expander("💡 Что делать после получения прогноза?", expanded=True):
+        st.success("✅ **Если прогноз устраивает:**")
+        st.markdown("""
+        1. Нажмите кнопку **«Сохранить модель в Storage»**
+        2. Вы автоматически перейдете на главную страницу
+        3. В боковой панели выберите **«Кастомизированная модель»** для работы с сохраненной моделью
+        """)
+        
+        st.warning("❌ **Если прогноз не устраивает:**")
+        st.markdown("""
+        1. Вернитесь на главную страницу
+        2. Переформулируйте указания для модели
+        """)
     # Кнопки возврата и сохранения
     col1, col2 = st.columns(2)
     
@@ -341,38 +311,22 @@ def generate_model_page():
              )):
             pass
             # return
-    
+    st.session_state.current_model_path = filename
+    st.session_state.current_loss_path = loss_file_path
     with col2:
-        if st.button("💾 Сохранить модель в Storage", use_container_width=True):
-            try:
-                # Загрузка модели в Supabase Storage
-                with open(filename, "rb") as model_file:
-                    response = (
-                            supabase.storage
-                            .from_("PINN_LLM_STORAGE")
-                            .upload(
-                                file=model_file,
-                                path="NEW_MODEL_dinn_cuda_2.pth",
-                                file_options={"cache-control": "3600", "upsert": "true"}
-                            )
-                        )
-                with open(loss_file_path, "rb") as loss_file:
-                    response = (
-                            supabase.storage
-                            .from_("PINN_LLM_STORAGE")
-                            .upload(
-                                file=loss_file,
-                                path="loss/loss_dinn_custom.py",
-                                file_options={"cache-control": "3600", "upsert": "true"}
-                            )
-                        )
-                # st.write(loss_file_path)
-                st.success("✅ Модель успешно сохранена в Storage!")
-            except Exception as e:
-                st.error(f"❌ Ошибка при сохранении модели: {str(e)}")
-    
-    download_temp_file(loss_file_path)
-    download_temp_file(filename)
+        st.button(
+            "💾 Сохранить модель в Storage",
+            use_container_width=True,
+            on_click=save_model_callback,
+            key="save_model_btn"
+        )
+
+    if 'save_status' in st.session_state:
+        st.write(st.session_state['save_status'])
+            
+    if st.session_state.mode == 'DEV':
+        download_temp_file(loss_file_path)
+        download_temp_file(filename)
 
     st.markdown("""
         <style>
@@ -386,4 +340,36 @@ def generate_model_page():
         </style>
         """, unsafe_allow_html=True)
 
+def save_model_callback():
+    try:
+        supabase = st.session_state['supabase']
+        filename = st.session_state.current_model_path
+        loss_file_path = st.session_state.get('current_loss_path')
 
+        with open(filename, "rb") as model_file:
+            response = (
+                supabase.storage
+                .from_("PINN_LLM_STORAGE")
+                .upload(
+                    file=model_file,
+                    path="NEW_MODEL_dinn_cuda_2.pth",
+                    file_options={"cache-control": "3600", "upsert": "true"}
+                )
+            )
+
+        with open(loss_file_path, "rb") as loss_file:
+            response = (
+                supabase.storage
+                .from_("PINN_LLM_STORAGE")
+                .upload(
+                    file=loss_file,
+                    path="loss/loss_dinn_custom.py",
+                    file_options={"cache-control": "3600", "upsert": "true"}
+                )
+            )
+
+        st.success("✅ Модель успешно сохранена!")
+        st.session_state.current_page = "main"
+        # Можно не менять current_page, тогда страница не "переедет"
+    except Exception as e:
+        st.error(f"❌ Ошибка при сохранении модели: {str(e)}")
