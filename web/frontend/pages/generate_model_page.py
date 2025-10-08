@@ -10,8 +10,11 @@ from huggingface_hub import InferenceClient
 import sys
 import matplotlib.pyplot as plt
 from lib.create_file import *
+from lib.TensorBoardExperimentLogger import TensorBoardExperimentLogger
 
-client = InferenceClient(model="meta-llama/Meta-Llama-3.1-8B-Instruct",
+# LLM_MODEL_NAME = "deepseek-ai/DeepSeek-V3.1"
+LLM_MODEL_NAME = "meta-llama/Meta-Llama-3.1-8B-Instruct"
+client = InferenceClient(model=LLM_MODEL_NAME,
                          token=st.secrets['HUGGINGFACE_HUB_TOKEN'])
 
 
@@ -61,6 +64,7 @@ def generate_model_page():
 
     loss_filepath = load_python_file_to_tmp(response)
     code = get_loss_func_as_str(loss_filepath)
+    loss_before = code
     create_get_loss_based_on_recommendation_prompt(
         PROMPT_FILE_PATH, comment_class, comment_subclass, EXPERT_COMMENT, code)
     progress_bar.progress(10)
@@ -78,6 +82,7 @@ def generate_model_page():
     details_container.text("Извлечение кода из ответа")
     json_text = load_text_to_json(ANSWER_FILE_PATH)
     code = llm_answer_to_python_code(json_text)
+    loss_after = code
     # print(code)
     if st.session_state.mode == 'DEV':
         details_container.text(f"Полученный код:\n```python\n{code}\n```")
@@ -96,19 +101,15 @@ def generate_model_page():
     # RUN_TESTER_COMMAND[2] = code
     file_path, content = create_file_in_tmp(code, LOSS_CHECK_FILE_NAME,
                                          LOSS_CHECK_START_FILE_PATH, LOSS_CHECK_END_FILE_PATH)
-    # output = subprocess.run(RUN_TESTER_COMMAND, capture_output=True, text=True)
     output = subprocess.run(
         [f"{sys.executable}", file_path, code], capture_output=True)
     print(output.stdout)
-    # t =  eval(output.stdout)
-    # return
 
     if "True" in str(output.stdout):
         t = (True, '')
         print(f"Результат: {t}")
     else:
         t = (False, str(output.stdout))
-    # return
     is_correct = t[0]
     status_text.text(is_correct)
     print(is_correct)
@@ -143,6 +144,7 @@ def generate_model_page():
             json_text = load_text_to_json(ANSWER_FIX_ERROR_FILE_PATH)
 
         code = llm_answer_to_python_code(json_text)
+        loss_after = code
         loss_file_path, content = save_py(LOSS_FILE_PATH, code)
 
         # Проверка исправленного кода
@@ -167,15 +169,20 @@ def generate_model_page():
             progress_bar.progress(80)
 
     # return
+    experiment_logger = TensorBoardExperimentLogger(log_dir="./runs/")
+    experiment_logger.save_expert_comment(EXPERT_COMMENT)
+    experiment_logger.save_loss_func(loss_before, loss_after)
+    experiment_logger.save_LLM_model_name(LLM_MODEL_NAME)
     # Если превышено максимальное количество попыток
     if not is_correct:
+        experiment_logger.save_loss_function_error_counter(error_counter=error_counter, is_fixed = False)
         status_text.text(
             "❌ Не удалось исправить ошибки после нескольких попыток")
         error_container.error(f"Последняя ошибка: {error}")
         progress_bar.progress(100)
         st.error("Процесс остановлен из-за непреодолимых ошибок. Пожалуйста, обновите страницу")
         return
-
+    experiment_logger.save_loss_function_error_counter(error_counter=error_counter, is_fixed = True)
     # Шаг 6: Запуск обучения PINN
     status_text.text("🏃‍♂️ Запуск обучения PINN модели...")
     details_container.text(
@@ -222,15 +229,19 @@ def generate_model_page():
     if st.session_state.model_type == "CUSTOM":
         response = supabase.storage.from_("PINN_LLM_STORAGE").download("NEW_MODEL_dinn_cuda_2.pth")
     else:
-        response = supabase.storage.from_("PINN_LLM_STORAGE").download("dinn_cuda.pth")
+        response = supabase.storage.from_("PINN_LLM_STORAGE").download("dinn_cuda_03_10.pth")
 
     
     filepath = load_model_to_tmp(response)
+    train_size = 180
     loaded_dinn = load_model(filepath,
-                             timesteps, susceptible, infected, dead, recovered)
+                             timesteps, susceptible, infected, dead, recovered, train_size)
     
     loaded_dinn_new = load_model(filename,
-                                 timesteps, susceptible, infected, dead, recovered)
+                                 timesteps, susceptible, infected, dead, recovered, train_size)
+    
+    
+    experiment_logger.save_model(loaded_dinn_new)
     
     S_pred, I_pred, D_pred, R_pred, alpha_pred = loaded_dinn.predict()
 
@@ -246,9 +257,9 @@ def generate_model_page():
             fig_s = plot_S_comparison(timesteps, x, susceptible, S_pred, S_pred_new)
             st.plotly_chart(fig_s)
             st.write("📊 Метрики моделей для S")
-            metrics_I = calculate_metrics(susceptible[x:x+30], S_pred[x:x+30])
-            metrics_II = calculate_metrics(susceptible[x:x+30], S_pred_new[x:x+30])
-            comparison_table = compare_metrics(metrics_I, metrics_II, OLD_MODEL_NAME, NEW_MODEL_NAME)
+            metrics_S = calculate_metrics(susceptible[x:x+30], S_pred[x:x+30])
+            metrics_SS = calculate_metrics(susceptible[x:x+30], S_pred_new[x:x+30])
+            comparison_table = compare_metrics(metrics_S, metrics_SS, OLD_MODEL_NAME, NEW_MODEL_NAME)
 
     with col2:
         with st.expander("🦠 Infected (I) - Развернуть/Свернуть", expanded=True):
@@ -264,19 +275,23 @@ def generate_model_page():
             fig_r = plot_R_comparison(timesteps, x, recovered, R_pred, R_pred_new)
             st.plotly_chart(fig_r)
             st.write("📊 Метрики моделей для R")
-            metrics_I = calculate_metrics(recovered[x:x+30], R_pred[x:x+30])
-            metrics_II = calculate_metrics(recovered[x:x+30], R_pred_new[x:x+30])
-            comparison_table = compare_metrics(metrics_I, metrics_II, OLD_MODEL_NAME, NEW_MODEL_NAME)
+            metrics_R = calculate_metrics(recovered[x:x+30], R_pred[x:x+30])
+            metrics_RR = calculate_metrics(recovered[x:x+30], R_pred_new[x:x+30])
+            comparison_table = compare_metrics(metrics_R, metrics_RR, OLD_MODEL_NAME, NEW_MODEL_NAME)
 
     with col2:
         with st.expander("⚰️ Dead (D) - Развернуть/Свернуть", expanded=True):
             fig_d = plot_D_comparison(timesteps, x, dead, D_pred, D_pred_new)
             st.plotly_chart(fig_d)
             st.write("📊 Метрики моделей для D")
-            metrics_I = calculate_metrics(dead[x:x+30], D_pred[x:x+30])
-            metrics_II = calculate_metrics(dead[x:x+30], D_pred_new[x:x+30])
-            comparison_table = compare_metrics(metrics_I, metrics_II, OLD_MODEL_NAME, NEW_MODEL_NAME)
-                    
+            metrics_D = calculate_metrics(dead[x:x+30], D_pred[x:x+30])
+            metrics_DD = calculate_metrics(dead[x:x+30], D_pred_new[x:x+30])
+            comparison_table = compare_metrics(metrics_D, metrics_DD, OLD_MODEL_NAME, NEW_MODEL_NAME)
+    
+    experiment_logger.save_metrics(metrics_SS, metrics_II, metrics_RR, metrics_DD)
+    experiment_logger.save_comparing_graph(fig_s, fig_i, fig_r, fig_d)
+    
+
     st.subheader("Эпид.параметры")
     r0_value = get_R0(S_pred_new, I_pred_new, R_pred_new, D_pred_new, timesteps).numpy()
     st.metric("R0 (basic reproduction number)", f"{r0_value:.3f}")

@@ -108,16 +108,63 @@ def predict_class_and_sub_class(text):
     model = load_model()
     tokenizer = load_tokenizer()
     top_indices, top_probs, all_probs = predict_text(model, tokenizer, text)
-    # print(top_indices)
+    print("Raw predictions:", top_indices)
+    
+    
+    
+    # Проверяем, что два топовых предсказания образуют пару класс-подкласс
+    if len(top_indices) >= 2:
+        pred1, pred2 = top_indices[0], top_indices[1]
+        is_valid = validate_prediction(pred1, pred2)
+        
+        if not is_valid:
+            print("ВНИМАНИЕ: Предсказанные классы не образуют корректную иерархию!")
+            top_indices[0] = 1  # класс по умолчанию
+            top_indices[1] = 1  # подкласс по умолчанию
+        else:
+            print("Предсказания образуют корректную иерархию классов")
+
+    # Преобразуем индексы в метки уровней
     for i in range(len(top_indices)):
         top_indices[i] = labels_level_main[top_indices[i]]
-    return top_indices, top_probs
+    
+    print("After level mapping:", top_indices)
+    
+    return top_indices, top_probs, is_valid
 
+# Вспомогательные функции (добавьте их в ваш код)
+class_hierarchy = {
+    0: [1, 2, 3, 4],
+    5: [6, 7, 8],
+    9: [10, 11],
+    12: [13, 14]
+}
 
-# print(predict_class_and_sub_class(
-#     "The effect of quarantine is not reflected after day"))
+def check_class_subclass(pred1, pred2):
+    """
+    Проверяет, что два предсказанных значения составляют класс и подкласс
+    """
+    # Проверяем, является ли pred1 классом для pred2
+    if pred1 in class_hierarchy and pred2 in class_hierarchy[pred1]:
+        return True
+    
+    # Проверяем, является ли pred2 классом для pred1
+    if pred2 in class_hierarchy and pred1 in class_hierarchy[pred2]:
+        return True
+    
+    return False
 
-
-# print("Top predicted classes:")
-# for idx, prob in zip(top_indices, top_probs):
-#     print(f"Class {idx}: {prob:.4f}")
+def validate_prediction(pred1, pred2):
+    """
+    Проверяет валидность пары предсказаний и выводит ошибку при необходимости
+    """
+    if not check_class_subclass(pred1, pred2):
+        print(f"ОШИБКА: значения {pred1} и {pred2} не образуют пару класс-подкласс")
+        print(f"Допустимые пары:")
+        for main_class, subclasses in class_hierarchy.items():
+            for subclass in subclasses:
+                print(f"  {main_class} -> {subclass}")
+        return False
+    else:
+        print(f"✓ Корректная пара: {pred1} и {pred2} образуют класс и подкласс")
+        return True

@@ -2,7 +2,6 @@ import streamlit as st
 from web.frontend import pages as pg
 from web.backend.database_connection.SupabaseEngine import SupabaseEngine
 
-
 # Настройка страницы
 st.set_page_config(page_title="Анализ модели", layout="wide")
 

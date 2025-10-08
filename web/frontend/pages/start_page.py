@@ -24,7 +24,7 @@ def start_page():
         response = supabase.storage.from_("PINN_LLM_STORAGE").download("NEW_MODEL_dinn_cuda_2.pth")
         st.session_state.model_type = "CUSTOM"
     else:
-        response = supabase.storage.from_("PINN_LLM_STORAGE").download("dinn_cuda.pth")
+        response = supabase.storage.from_("PINN_LLM_STORAGE").download("dinn_cuda_03_10.pth")
         st.session_state.model_type = "LTS"
 
     selected_model = st.sidebar.selectbox("Выберите режим работы", ["Пользователь (по умолчанию)", "Разработчик"])
@@ -33,13 +33,15 @@ def start_page():
         st.session_state.mode = "DEV"
     else:
         st.session_state.mode = "USER"
+        # st.session_state.mode = "DEV"
 
     show_mode_indicator()
 
         
     filepath = load_model_to_tmp(response)
+    train_size = 180
     loaded_dinn = load_model(filepath,
-                             timesteps, susceptible, infected, dead, recovered)
+                             timesteps, susceptible, infected, dead, recovered, train_size)
     S_pred, I_pred, D_pred, R_pred, alpha_pred = loaded_dinn.predict()
 
 
@@ -63,7 +65,7 @@ def start_page():
             I_pred=I_pred,
             D_pred=D_pred,
             R_pred=R_pred,
-            start_day='2020-03-01'
+            start_day='2020-05-07'
         )
 
         # Отображение в Streamlit

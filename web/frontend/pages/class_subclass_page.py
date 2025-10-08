@@ -50,66 +50,73 @@ def class_subclass_page():
 
     # analysis = st.session_state.comment_analysis
     comment = st.session_state.user_comment
-    top_indices, top_probs = predict_class_and_sub_class(comment)
+    top_indices, top_probs, is_valid = predict_class_and_sub_class(comment)
     comment_class = str(top_indices[0])
     comment_subclass = str(top_indices[1])
     st.session_state.user_comment_class = comment_class
     st.session_state.user_comment_subclass = comment_subclass
     print(comment_class)
     print(comment_subclass)
-    # Отображение исходного комментария
+    if is_valid==False:
+            if st.session_state.mode == 'DEV':
+                st.error("❌ Некорректная иерархия классов")
+                st.warning("Предсказанные классы не образуют валидную пару класс-подкласс")
+            st.write("⚠️ Перейдите, пожалуйста, на главную страницу... Нужно переформулировать комментарий (указание для модели), так как модель не смогла однозначно определить темы комментария", icon="⚠️")
+    # else:        
+    #     st.write("⚠️ Перейдите, пожалуйста, на главную страницу... Нужно переформулировать комментарий (указание для модели), так как модель не смогла однозначно определить темы комментария", icon="⚠️")
+        # Отображение исходного комментария
     st.subheader("Ваш комментарий (указание для модели):")
     st.info(f'"{st.session_state.comment_primary}"')
     supabase = st.session_state['supabase']
     response = insert_expert_comment(supabase, comment=st.session_state.comment_primary,
-                                     class_num=comment_class, 
-                                     subclass_num=comment_subclass,
-                                     approved=False)
-    # st.write()
+                                        class_num=comment_class, 
+                                        subclass_num=comment_subclass,
+                                        approved=False)
+        # st.write()
     st.session_state.comment_id = response.data[0]['id']
-    # Разделение на колонки для результатов
+        # Разделение на колонки для результатов
     col1 = st.columns(1)
 
     with col1[0]:
-        st.subheader("Программа определила, что Ваш комментарий относится к следующим темам:")
-        st.info(f"**{CLASS_TYPE_INFO[comment_class][0]}**", icon="📋")
-        st.info(f"**{CLASS_TYPE_INFO[comment_class][1][comment_subclass]}**", icon="📋")
+            st.subheader("Программа определила, что Ваш комментарий относится к следующим темам:")
+            st.info(f"**{CLASS_TYPE_INFO[comment_class][0]}**", icon="📋")
+            st.info(f"**{CLASS_TYPE_INFO[comment_class][1][comment_subclass]}**", icon="📋")
 
-        if st.session_state.mode == 'DEV':
-            # Дополнительная информация о результате
-            with st.expander("Детали выполнения"):
-                st.write(f"**🎯 Основной класс:** {comment_class}")
-                st.caption(CLASS_TYPE_INFO[comment_class][0])
-                st.write(f"Уверенность в классе: {round(top_probs[0] * 100)}%")
-                
-                st.write(f"**🔍 Подкласс:** {comment_subclass}")
-                st.caption(CLASS_TYPE_INFO[comment_class][1][comment_subclass])
-                st.write(f"Уверенность в подклассе: {round(top_probs[1] * 100)}%")
+            if st.session_state.mode == 'DEV':
+                # Дополнительная информация о результате
+                with st.expander("Детали выполнения"):
+                    st.write(f"**🎯 Основной класс:** {comment_class}")
+                    st.caption(CLASS_TYPE_INFO[comment_class][0])
+                    st.write(f"Уверенность в классе: {round(top_probs[0] * 100)}%")
+                    
+                    st.write(f"**🔍 Подкласс:** {comment_subclass}")
+                    st.caption(CLASS_TYPE_INFO[comment_class][1][comment_subclass])
+                    st.write(f"Уверенность в подклассе: {round(top_probs[1] * 100)}%")
 
-        # Время анализа
-        # st.write(f"**Время анализа:** {datetime.now().strftime(" % Y-%m-%d % H: % M: % S")}")
+            # Время анализа
+            # st.write(f"**Время анализа:** {datetime.now().strftime(" % Y-%m-%d % H: % M: % S")}")
 
     st.subheader("Подходят ли предложенные темы под ваш комментарий?")
     st.write("После подтверждения программа попытается адаптировать прогноз по Вашему комментарию")
-    # st.write("Подходят ли предложенные класс и подкласс под ваш комментарий?")
+        # st.write("Подходят ли предложенные класс и подкласс под ваш комментарий?")
 
     col_confirm1, col_confirm2 = st.columns(2)
 
     with col_confirm1:
-        if st.button("✅ Да, подходят", 
-             type="primary", 
-             width='stretch',
-             on_click=confirm_classification_callback ):
-            pass
+            if st.button("✅ Да, подходят", 
+                type="primary", 
+                width='stretch',
+                on_click=confirm_classification_callback ):
+                pass
 
     with col_confirm2:
-        if st.button("❌ Нет, не подходят", 
-             type="secondary", 
-             width='stretch',
-             on_click=reject_classification_callback):
-            pass
+            if st.button("❌ Нет, не подходят", 
+                type="secondary", 
+                width='stretch',
+                on_click=reject_classification_callback):
+                pass
 
-    # Разделитель
+        # Разделитель
     st.divider()
 
     # Кнопки для навигации
