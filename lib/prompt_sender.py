@@ -2,21 +2,21 @@ import json
 import requests
 
 
-def send_prompt(prompt_path, LLM_url, client, file_path_to_save=None):
+def send_prompt(prompt_path, llm_model_name, client, file_path_to_save=None, temperature = 0):
     with open(prompt_path) as f:
         prompt = json.load(f)
 
-    url = LLM_url
+    # url = LLM_url
     # answer = requests.post(url, json=prompt)
 
 
     # answer = client.chat.completions.create(prompt)
     print(prompt['messages'])
     completion = client.chat.completions.create(
-        model="meta-llama/Meta-Llama-3.1-8B-Instruct",
+        model=llm_model_name,
         messages=[{"role": "user", "content": str(prompt["messages"])}],
         max_tokens=1024,
-        temperature=1.0
+        temperature=temperature
     )
     print(completion)
 

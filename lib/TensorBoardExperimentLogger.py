@@ -10,9 +10,10 @@ class TensorBoardExperimentLogger:
             experiment_name = f"dinn_experiment_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
         
         if log_dir is None:
-            log_dir = os.path.join("../runs/", experiment_name)
+            log_dir = os.path.join("./runs/", experiment_name)
         else:
-            log_dir = os.path.join(log_dir, experiment_name)
+            log_dir = os.path.join("./runs/"+log_dir, experiment_name)
+            # log_dir = os.path.join(log_dir, experiment_name)
         os.makedirs(log_dir, exist_ok=True)
         
         self.writer = SummaryWriter(log_dir=log_dir)
@@ -193,5 +194,6 @@ class TensorBoardExperimentLogger:
         self.writer.add_text('loss_function_errors/network_info', 
                         f'Fixed: {is_fixed}, Errors: {error_counter}',0)
         
-    def save_LLM_model_name(self, model_name):
+    def save_LLM_model_name(self, model_name, model_temperature):
         self.writer.add_text("Training/LLM_model_name", model_name, 0)
+        self.writer.add_text("Training/LLM_model_temperature", str(model_temperature), 0)

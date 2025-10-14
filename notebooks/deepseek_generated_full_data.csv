@@ -1,0 +1,2112 @@
+,class,comment,full_class,subclass
+0,1,The infection curve is too steep; real-world transmission rates suggest a more gradual rise.,1.1,1
+1,1,The peak is too narrow—superspreading events would create a more prolonged peak.,1.1,1
+2,1,The decline post-peak is too abrupt; residual transmission should extend the tail.,1.1,1
+3,1,"The curve assumes uniform transmission, but heterogeneity in contact rates would flatten the peak.",1.1,1
+4,1,The initial growth rate is implausibly high given baseline R0 estimates.,1.1,1
+5,1,The curve lacks secondary waves; reinfections or variant emergence should create fluctuations.,1.1,1
+6,1,The symmetry of the curve is unrealistic—the descent should be slower than the ascent.,1.1,1
+7,1,"The model ignores seasonality effects, which would modulate infection rates over time.",1.1,1
+8,1,"The curve doesn't account for behavioral changes during the peak (e.g., voluntary distancing).",1.1,1
+9,1,The infection surge is too sudden; empirical data shows smoother exponential growth.,1.1,1
+10,1,The tail of the epidemic is too short—long-term reservoirs of infection are neglected.,1.1,1
+11,1,"The curve assumes perfect immunity post-infection, ignoring waning immunity effects.",1.1,1
+12,1,The initial cases are undercounted; the true curve should have a higher baseline.,1.1,1
+13,1,The peak timing is inconsistent with observed incubation periods and serial intervals.,1.1,1
+14,1,The curve lacks subpeaks from localized outbreaks or clustered transmission.,1.1,1
+15,1,"The decline phase is linear, but real epidemics exhibit nonlinear decay due to immunity.",1.1,1
+16,1,The model overestimates synchrony in infections; regional variability should smear the peak.,1.1,1
+17,1,"The curve doesn't reflect testing capacity constraints, which flatten observed peaks.",1.1,1
+18,1,The rebound after the first wave is missing—relaxed measures would cause resurgence.,1.1,1
+19,1,The curve assumes homogeneous population mixing; age-structured contacts would alter the shape.,1.1,1
+20,1,The susceptible depletion is too rapid—herd immunity thresholds are reached unrealistically fast.,1.2,2
+21,1,"The curve drops to near zero, ignoring residual susceptible pockets in the population.",1.2,2
+22,1,The decline in susceptibles is linear; real data shows slowing depletion as immunity builds.,1.2,2
+23,1,"The model assumes no replenishment of susceptibles (e.g., births or waning immunity).",1.2,2
+24,1,The initial susceptible pool is overestimated—prior immunity should lower the starting point.,1.2,2
+25,1,"The curve doesn't account for variable susceptibility (e.g., age-dependent risk).",1.2,2
+26,1,"The depletion rate is constant, but behavioral changes would slow transmission over time.",1.2,2
+27,1,The model ignores geographic heterogeneity in susceptible distribution.,1.2,2
+28,1,"The curve assumes perfect vaccine coverage, leaving no unvaccinated subgroups.",1.2,2
+29,1,The susceptible count should plateau higher due to vaccine hesitancy or inaccessibility.,1.2,2
+30,1,The decline lacks stair-step patterns from phased vaccination campaigns.,1.2,2
+31,1,The curve overestimates cross-immunity from other pathogens.,1.2,2
+32,1,"The model doesn't reflect dynamic population changes (e.g., migration or aging).",1.2,2
+33,1,The susceptible curve should show intermittent replenishment from waning immunity.,1.2,2
+34,1,The depletion is too uniform; superspreaders would leave uneven immunity gaps.,1.2,2
+35,1,The curve assumes no natural immunity from asymptomatic infections.,1.2,2
+36,1,"The model neglects temporal spikes in susceptibility (e.g., holiday gatherings).",1.2,2
+37,1,The initial susceptible fraction is misaligned with seroprevalence studies.,1.2,2
+38,1,The curve doesn't account for differential susceptibility by socioeconomic factors.,1.2,2
+39,1,The recovery curve lags too far behind infections—average recovery time is overestimated.,1.3,3
+40,1,The recovery rate plateaus too early; long-term cases should extend the tail.,1.3,3
+41,1,"The model assumes no reinfections, causing recoveries to be overcounted.",1.3,3
+42,1,The recovery trajectory is too smooth; real data shows variability by age and health status.,1.3,3
+43,1,The curve doesn't reflect delays in recovery reporting or data lags.,1.3,3
+44,1,The initial recovery rate is implausibly high given typical disease durations.,1.3,3
+45,1,"The model ignores partial immunity, which would accelerate later recoveries.",1.3,3
+46,1,The recovery curve should show stepped increases from improved treatments over time.,1.3,3
+47,1,The cumulative recoveries exceed plausible bounds given case fatality rates.,1.3,3
+48,1,"The curve assumes uniform recovery rates, ignoring comorbidities or healthcare access.",1.3,3
+49,1,The recovery phase lacks correlation with hospitalization data.,1.3,3
+50,1,The model doesn't account for post-acute sequelae (long-term cases).,1.3,3
+51,1,The recovery rate is too linear; real-world data shows nonlinear saturation.,1.3,3
+52,1,"The curve should reflect seasonal improvements in recovery (e.g., summer vitamin D effects).",1.3,3
+53,1,The model overestimates recovery speed for severe cases requiring extended care.,1.3,3
+54,1,The recovery tail is too short; chronic cases would prolong the decline.,1.3,3
+55,1,The curve assumes no reinfection-driven recoveries (immune boosting).,1.3,3
+56,1,The recovery trajectory doesn't align with clinical trial data for treatment efficacy.,1.3,3
+57,1,"The model neglects recovery disparities by variant (e.g., Delta vs. Omicron).",1.3,3
+58,1,The fatality curve is too steep initially; reporting delays would smooth the rise.,1.4,4
+59,1,The decline in deaths is abrupt; residual fatalities from long COVID should extend the tail.,1.4,4
+60,1,The cumulative deaths plateau too early; underreporting or delayed mortality is likely.,1.4,4
+61,1,"The curve assumes constant CFR, ignoring improvements in treatment over time.",1.4,4
+62,1,The deaths are misaligned with hospital capacity constraints during the peak.,1.4,4
+63,1,The model ignores fatalities from disrupted healthcare for non-COVID conditions.,1.4,4
+64,1,The death toll should correlate more closely with ICU admissions data.,1.4,4
+65,1,The curve lacks secondary mortality waves from variant surges.,1.4,4
+66,1,The initial fatalities are undercounted; excess mortality data suggests a higher baseline.,1.4,4
+67,1,"The model underestimates deaths in vulnerable subgroups (e.g., elderly or unvaccinated).",1.4,4
+68,1,The fatality rate declines too sharply post-peak; lingering cases would prolong deaths.,1.4,4
+69,1,"The curve doesn't account for fatalities from post-acute complications (e.g., organ damage).",1.4,4
+70,1,The deaths are too synchronized with infections; typical lags are 2–4 weeks.,1.4,4
+71,1,The model overestimates early deaths due to incomplete baseline data.,1.4,4
+72,1,The fatality tail should show intermittent spikes from delayed reporting.,1.4,4
+73,1,"The curve assumes uniform healthcare quality, ignoring regional mortality disparities.",1.4,4
+74,1,The deaths plateau unrealistically; endemic phases still show baseline mortality.,1.4,4
+75,1,The model neglects fatalities from vaccine breakthrough infections.,1.4,4
+76,1,"The curve should reflect mortality displacement (e.g., harvesting effects).",1.4,4
+77,2,The impact of school closures appears too early; behavioral shifts take 10–14 days.,2.1,1
+78,2,Vaccination started on day 45—where is the curve flattening after 3–4 weeks?,2.1,1
+79,2,"The model assumes immediate mask compliance, but adoption is gradual over 1–2 weeks.",2.1,1
+80,2,The effect of travel bans is misaligned with empirical latency periods.,2.1,1
+81,2,"Quarantine measures show instant impact, but case isolation delays would delay effects.",2.1,1
+82,2,The curve doesn't reflect the 2-week lag for testing and reporting delays.,2.1,1
+83,2,The vaccination campaign's effect is mistimed; immunity builds over 3+ weeks.,2.1,1
+84,2,The model ignores the delay between policy announcements and public adherence.,2.1,1
+85,2,The suppression from lockdowns is too abrupt; phased compliance would smooth the decline.,2.1,1
+86,2,The curve should show staggered effects from regional policy rollouts.,2.1,1
+87,2,The impact of booster doses is misplaced—antibody maturation takes 7–10 days.,2.1,1
+88,2,"The model assumes testing surges immediately affect case counts, but reporting lags exist.",2.1,1
+89,2,The effect of curfews is misaligned with nighttime transmission dynamics.,2.1,1
+90,2,The curve doesn't account for the delay in contact tracing effectiveness.,2.1,1
+91,2,The antiviral rollout's impact is too early; treatment delays are typical.,2.1,1
+92,2,The model overlooks the lag between infection spikes and policy responses.,2.1,1
+93,2,The curve should reflect the delay in mask mandates reducing community spread.,2.1,1
+94,2,"The effect of public awareness campaigns is immediate, but behavior changes gradually.",2.1,1
+95,2,"The model assumes instant compliance with gathering limits, which is unrealistic.",2.1,1
+96,2,The curve doesn't show the expected 2-week delay for workplace closure impacts.,2.1,1
+97,2,The suppression from social distancing is underestimated—R should drop further.,2.2,2
+98,2,The curve overestimates mask efficacy given real-world adherence rates.,2.2,2
+99,2,"The model ignores the additive effect of combined measures (e.g., masks + ventilation).",2.2,2
+100,2,The quarantine impact is too weak—empirical data shows sharper declines.,2.2,2
+101,2,The curve doesn't reflect the synergistic effect of vaccines and NPIs.,2.2,2
+102,2,The model underestimates the reduction in superspreading events from venue closures.,2.2,2
+103,2,The impact of border controls is overstated given leaky enforcement.,2.2,2
+104,2,The curve should show stronger suppression from test-trace-isolate programs.,2.2,2
+105,2,The model overestimates the durability of lockdown effects without compliance fatigue.,2.2,2
+106,2,The curve doesn't account for the nonlinear impact of high-risk group vaccinations.,2.2,2
+107,2,The suppression from indoor dining bans is misaligned with transmission studies.,2.2,2
+108,2,"The model ignores the differential impact of measures by variant (e.g., Delta vs. Omicron).",2.2,2
+109,2,The curve overestimates the effect of public transport restrictions.,2.2,2
+110,2,The impact of workplace remote policies is understated given commute patterns.,2.2,2
+111,2,The model doesn't reflect the reduced efficacy of measures during holidays.,2.2,2
+112,2,The curve should show stronger declines from targeted rather than blanket measures.,2.2,2
+113,2,The model underestimates the effect of improved treatment protocols on case severity.,2.2,2
+114,2,The curve doesn't capture the impact of local vs. national policy variations.,2.2,2
+115,2,The model overestimates the effect of one-time interventions without sustained enforcement.,2.2,2
+116,2,The curve doesn't reflect the new mask mandates introduced last week.,2.3,3
+117,2,The model ignores the vaccination campaign targeting high-risk groups this month.,2.3,3
+118,2,The impact of the latest lockdown is missing from the projections.,2.3,3
+119,2,The curve doesn't account for the antiviral rollout starting next week.,2.3,3
+120,2,The model overlooks the school reopening policies enacted yesterday.,2.3,3
+121,2,The effect of the test-to-stay program in workplaces isn't incorporated.,2.3,3
+122,2,The curve should show the influence of the new quarantine guidelines.,2.3,3
+123,2,The model doesn't reflect the updated travel testing requirements.,2.3,3
+124,2,The impact of the public health ad campaign is absent from the forecast.,2.3,3
+125,2,The curve ignores the superspreader event bans announced recently.,2.3,3
+126,2,The model doesn't include the new hospital triage protocols.,2.3,3
+127,2,The effect of the booster dose expansion isn't visible in the trajectory.,2.3,3
+128,2,The curve should reflect the contact tracing app's launch last Monday.,2.3,3
+129,2,The model overlooks the mask mandate exemption for vaccinated individuals.,2.3,3
+130,2,The impact of the new sick leave policy isn't accounted for.,2.3,3
+131,2,The curve doesn't capture the influence of the latest variant-specific vaccines.,2.3,3
+132,2,The model ignores the updated guidelines on gathering sizes.,2.3,3
+133,2,The effect of the wastewater surveillance program isn't incorporated.,2.3,3
+134,2,The curve should show the expected drop from the new rapid test distribution.,2.3,3
+135,3,"Hospitalizations peak on day 30, but deaths lag by 10–14 days—this isn't reflected.",3.1,1
+136,3,The epidemic cannot end by day 90; historical data suggests 5–8-month durations.,3.1,1
+137,3,"The model assumes simultaneous peaks in cases and deaths, but deaths lag by 3 weeks.",3.1,1
+138,3,The rebound in cases is misaligned with typical inter-wave intervals of 2–3 months.,3.1,1
+139,3,"The curve shows a 10-day delay between measures and impact, but 14 days is more realistic.",3.1,1
+140,3,The testing positivity peak precedes case counts by 1 week—this timing is off.,3.1,1
+141,3,"The model assumes vaccine immunity starts day 1, but protection takes 14+ days.",3.1,1
+142,3,The secondary wave arrives too soon; immunity gaps suggest a 4-month delay.,3.1,1
+143,3,The curve doesn't align with the typical 5–7-day serial interval for this pathogen.,3.1,1
+144,3,The peak timing contradicts mobility data showing slower transmission growth.,3.1,1
+145,3,The model ignores the 2-week delay between infection surges and ICU overflow.,3.1,1
+146,3,"The curve assumes testing ramps up instantly, but capacity builds over 3+ weeks.",3.1,1
+147,3,The deaths plateau too early; long-term care fatalities extend for months.,3.1,1
+148,3,The reinfection wave is mistimed—waning immunity typically occurs at 6–12 months.,3.1,1
+149,3,The curve shows weekend reporting dips but doesn't align with actual reporting cycles.,3.1,1
+150,3,"The model assumes variant emergence every 60 days, but real intervals are longer.",3.1,1
+151,3,The peaks are too regular; real epidemics have variable inter-peak timing.,3.1,1
+152,3,The curve doesn't reflect the 10-day delay between symptom onset and death reporting.,3.1,1
+153,3,The model misaligns school terms with case surges (holidays reduce transmission).,3.1,1
+154,3,"The curve assumes immediate behavioral change, but fear-driven responses take 1–2 weeks.",3.1,1
+155,3,"The modeled CFR is 2.5%, but empirical data suggests 1.2–1.8% for this variant.",3.2,2
+156,3,"The peak caseload is 50,000/day, but test positivity implies 30,000–35,000.",3.2,2
+157,3,"The recovery rate is 10%/day, but hospital data shows 5–7%.",3.2,2
+158,3,"The model assumes 90% vaccine efficacy, but recent studies show 70–75% for Omicron.",3.2,2
+159,3,"The reinfection rate is 5%, but seroprevalence suggests 15–20%.",3.2,2
+160,3,"The curve projects 80% masking compliance, but surveys indicate 50–60%.",3.2,2
+161,3,"The hospitalization rate is 10%, but current admissions data shows 6–8%.",3.2,2
+162,3,The model underestimates asymptomatic cases—true infections are 2–3× higher.,3.2,2
+163,3,"The deaths/day peak at 1,000, but excess mortality caps at 600–800.",3.2,2
+164,3,"The curve assumes 70% booster uptake, but actual rates are 50–55%.",3.2,2
+165,3,"The R0 is set at 3.5, but wastewater data suggests 2.8–3.2.",3.2,2
+166,3,The model overestimates long COVID prevalence by 2× compared to cohort studies.,3.2,2
+167,3,"The curve projects 30% pediatric cases, but school reports show 15–20%.",3.2,2
+168,3,"The ICU utilization is 90%, but bed capacity limits at 75–80%.",3.2,2
+169,3,"The model assumes 95% testing sensitivity, but real-world estimates are 85–90%.",3.2,2
+170,3,"The curve underestimates household secondary attack rates (should be 20–25%, not 15%).",3.2,2
+171,3,"The reinfection interval is 180 days, but data shows 120–150 days for this variant.",3.2,2
+172,3,The model overestimates vaccine waning—antibody decay is slower in reality.,3.2,2
+173,3,"The curve assumes 100% case detection, but 30–40% are typically missed.",3.2,2
+174,3,"The fatality rate in >80-year-olds is 15%, but recent data shows 8–10% with boosters.",3.2,2
+175,4,The peak arrives too soon—current mobility data suggests a later surge.,4.1,1
+176,4,Immunity from prior waves should delay the peak by 4–6 weeks.,4.1,1
+177,4,The peak timing contradicts the observed doubling time of cases.,4.1,1
+178,4,Quarantine measures were introduced late—the peak should shift right by 10–14 days.,4.1,1
+179,4,The model ignores seasonality; the peak should align with indoor gathering periods.,4.1,1
+180,4,The peak is mistimed with school reopenings—expect a 2-week delay in case surges.,4.1,1
+181,4,Vaccine rollout acceleration will push the peak 3–4 weeks later than projected.,4.1,1
+182,4,"The curve assumes uniform transmission, but regional variability will stagger the peak.",4.1,1
+183,4,The peak is too early given the current test positivity trendline.,4.1,1
+184,4,"Behavioral fatigue will prolong the ascent, delaying the peak by 1–2 months.",4.1,1
+185,4,"The model doesn't account for variant competition, which could delay dominance.",4.1,1
+186,4,"The peak aligns with holidays, but travel reductions will blunt and delay it.",4.1,1
+187,4,The curve underestimates the impact of prior immunity on peak timing.,4.1,1
+188,4,The peak should coincide with the typical winter respiratory virus season.,4.1,1
+189,4,The model ignores the delay from infection to hospitalization peaks (2–3 weeks).,4.1,1
+190,4,"The curve assumes immediate NPIs, but phased measures will flatten and delay the peak.",4.1,1
+191,4,The peak is misaligned with the expected timeline of booster effectiveness.,4.1,1
+192,4,The model doesn't reflect the lag between case peaks and seroprevalence peaks.,4.1,1
+193,4,The curve should show a later peak due to incomplete baseline immunity.,4.1,1
+194,4,The peak timing doesn't match the empirical serial interval for this variant.,4.1,1
+195,4,The peak caseload is overestimated—current doubling time suggests a lower maximum.,4.2,2
+196,4,"The model ignores test capacity limits, which will cap observed peak cases.",4.2,2
+197,4,The peak ICU demand exceeds historical bed availability by 30%.,4.2,2
+198,4,"The curve assumes uniform attack rates, but real peaks are lower due to heterogeneity.",4.2,2
+199,4,The peak deaths/day are 2× higher than empirical data from comparable regions.,4.2,2
+200,4,The model overestimates peak prevalence given current wastewater viral loads.,4.2,2
+201,4,The curve doesn't account for underreporting during surges (true peak is higher).,4.2,2
+202,4,The peak hospitalizations exceed staffed bed capacity by 40%—this is unrealistic.,4.2,2
+203,4,"The model assumes no behavioral change during peaks, which would lower caseloads.",4.2,2
+204,4,The peak should be 20% lower due to prior immunity from undocumented infections.,4.2,2
+205,4,The curve overestimates peak transmission given observed contact rate reductions.,4.2,2
+206,4,The model ignores the dampening effect of hybrid immunity on peak severity.,4.2,2
+207,4,The peak cases are misaligned with the expected vaccine coverage at that time.,4.2,2
+208,4,The curve doesn't reflect the expected drop in peak size from antiviral use.,4.2,2
+209,4,"The model assumes no triage protocols, which would artificially lower peak deaths.",4.2,2
+210,4,The peak should account for the 15–20% of cases never detected by testing.,4.2,2
+211,4,The curve overestimates peak fatalities given improved treatments since last wave.,4.2,2
+212,4,The model doesn't incorporate the predicted peak suppression from booster campaigns.,4.2,2
+213,4,The curve should show a lower peak due to differential vulnerability in the population.,4.2,2
+214,4,The peak caseload contradicts the observed decline in superspreading events.,4.2,2
+0,1,The curve's ascent is too steep; real-world spread is more gradual due to varying contact rates.,1.1,1
+1,1,The decline post-peak is too abrupt; residual transmission chains should prolong the tail.,1.1,1
+2,1,The peak is too narrow; infections occur over a broader period in reality.,1.1,1
+3,1,"The curve is perfectly symmetrical, but real epidemics have asymmetric growth and decay phases.",1.1,1
+4,1,The initial growth phase is linear; exponential spread is more likely in early stages.,1.1,1
+5,1,Secondary waves are missing; relaxations in measures often cause resurgences.,1.1,1
+6,1,The curve assumes homogeneous mixing; geographic clustering would flatten the peak.,1.1,1
+7,1,"Super-spreader events are not accounted for, causing irregular spikes in cases.",1.1,1
+8,1,"The baseline transmission rate is constant, but seasonal effects should modulate it.",1.1,1
+9,1,The curve lacks 'shoulders'—real data often shows plateaus due to intermittent interventions.,1.1,1
+10,1,Susceptible depletion is too rapid; herd immunity thresholds are approached more gradually.,1.2,2
+11,1,"The curve drops to near-zero, but pockets of susceptibles remain in isolated populations.",1.2,2
+12,1,"The decline is linear; in reality, depletion slows as fewer susceptible individuals remain.",1.2,2
+13,1,No rebound in susceptibles is shown; waning immunity or births would replenish this group.,1.2,2
+14,1,The model ignores demographic turnover—new susceptibles enter the population over time.,1.2,2
+15,1,The curve assumes uniform susceptibility; age-stratified risks would alter the depletion rate.,1.2,2
+16,1,"No accounting for cross-immunity from related pathogens, which would reduce susceptibles.",1.2,2
+17,1,The decline is too smooth; real data shows step-like drops correlated with interventions.,1.2,2
+18,1,The susceptible pool is overestimated due to unaccounted pre-existing immunity.,1.2,2
+19,1,The curve doesn't reflect regional variability in susceptibility rates.,1.2,2
+20,1,Recoveries lag infections too uniformly; variation in disease duration should scatter the curve.,1.3,3
+21,1,The recovery rate plateaus abruptly; long-term cases should create a tapered tail.,1.3,3
+22,1,Reinfections are not modeled—recovered individuals should re-enter the susceptible pool over time.,1.3,3
+23,1,The curve assumes 100% recovery; fatalities and chronic cases should reduce final counts.,1.3,3
+24,1,Recovery is instantaneous post-infection; real-world convalescence delays the peak.,1.3,3
+25,1,Immunity duration is infinite; waning immunity would cause recoveries to decline after a period.,1.3,3
+26,1,The recovery curve is too smooth; hospitalization bottlenecks create irregular surges.,1.3,3
+27,1,No stratification by severity—mild vs. severe cases have different recovery trajectories.,1.3,3
+28,1,"The model ignores reintegration delays (e.g., testing delays before marking recoveries).",1.3,3
+29,1,Recoveries are overestimated due to unaccounted for post-acute sequelae (long COVID).,1.3,3
+30,1,The fatality curve is too front-loaded; deaths should accumulate more gradually.,1.4,4
+31,1,The decline in deaths is too sharp; residual mortality from complications extends the tail.,1.4,4
+32,1,Deaths plateau too early; delayed reporting and undercounting prolong the curve.,1.4,4
+33,1,The curve lacks correlation with hospitalizations—death surges should lag ICU admissions by weeks.,1.4,4
+34,1,No mortality from post-recovery complications is included.,1.4,4
+35,1,The fatality rate is constant; improvements in treatment should reduce later deaths.,1.4,4
+36,1,"Demographic shifts (e.g., aging populations) are ignored, skewing death distributions.",1.4,4
+37,1,The curve assumes uniform healthcare capacity; overwhelmed systems increase fatality spikes.,1.4,4
+38,1,"No accounting for excess mortality indirectly caused by the epidemic (e.g., delayed care).",1.4,4
+39,1,The model underestimates fatalities due to uncounted community deaths.,1.4,4
+40,2,The impact of lockdown appears on day 5; behavioral changes take at least 14 days.,2.1,1
+41,2,Vaccination effects are immediate; immune response requires 2-3 weeks to reduce transmission.,2.1,1
+42,2,"School closures are modeled to cut cases instantly, but household transmission delays the effect.",2.1,1
+43,2,The curve shows mask mandates working overnight; adherence builds gradually over days.,2.1,1
+44,2,Travel bans are reflected too early; imported cases continue to seed outbreaks for weeks.,2.1,1
+45,2,"Testing ramp-up is assumed to immediately lower transmission, but contact tracing takes time.",2.1,1
+46,2,Quarantine compliance is overestimated—real-world delays weaken early impact.,2.1,1
+47,2,"The model ignores the incubation period, making measures seem effective prematurely.",2.1,1
+48,2,"Curve shows distancing measures flattening cases instantly, but social networks adapt slowly.",2.1,1
+49,2,"Antiviral rollout is modeled to reduce deaths immediately, but treatment courses take days.",2.1,1
+50,2,The suppression from lockdown is overstated—essential workers sustain transmission.,2.2,2
+51,2,"Mask mandates are modeled as 100% effective, ignoring imperfect compliance.",2.2,2
+52,2,"The curve assumes full vaccination stops transmission, but breakthrough infections are likely.",2.2,2
+53,2,Contact tracing is modeled as perfect; real-world inefficiencies reduce its impact.,2.2,2
+54,2,The model overestimates the effect of border closures due to illegal crossings.,2.2,2
+55,2,Curfew effects are oversimplified; night-time gatherings offset daytime restrictions.,2.2,2
+56,2,"The curve shows school closures reducing R0 to 0.5, but household clusters compensate.",2.2,2
+57,2,The model ignores fatigue—public adherence to measures wanes over time.,2.2,2
+58,2,"Telework policies are assumed to eliminate workplace spread, but home transmissions rise.",2.2,2
+59,2,Hospital triage protocols are not reflected; deaths spike when ICU capacity is exceeded.,2.2,2
+60,2,The curve doesn't reflect the new quarantine policy starting next week.,2.3,3
+61,2,Vaccination campaigns are omitted despite 20% coverage already achieved.,2.3,3
+62,2,"No adjustment for improved testing capacity, which would detect more mild cases.",2.3,3
+63,2,The model ignores seasonal humidity changes that typically suppress transmission.,2.3,3
+64,2,"Air filtration upgrades in public spaces aren't included, though they reduce aerosol spread.",2.3,3
+65,2,The curve doesn't account for the new fast-spreading variant identified last month.,2.3,3
+66,2,"No reflection of mandated sick leave policies, which reduce workplace outbreaks.",2.3,3
+67,2,The model overlooks community-led mask distribution programs in high-risk areas.,2.3,3
+68,2,Antibody therapies are available but not factored into hospitalization reductions.,2.3,3
+69,2,"The curve assumes no public messaging campaigns, though they've improved compliance.",2.3,3
+70,3,Deaths peak simultaneously with cases; real data shows a 2-3 week lag.,3.1,1
+71,3,Hospitalizations are misaligned—ICU admissions typically trail infections by 10 days.,3.1,1
+72,3,The epidemic ends abruptly at day 100; tail periods usually last months.,3.1,1
+73,3,The second wave starts too soon; immunity from the first wave should delay resurgence.,3.1,1
+74,3,Case reporting spikes overnight; real surveillance systems show smoother accrual.,3.1,1
+75,3,The model assumes immediate case isolation; testing delays create lags in containment.,3.1,1
+76,3,Vaccination timelines are compressed—dose intervals stretch rollout durations.,3.1,1
+77,3,"The curve shows weekend reporting dips, but real data is aggregated weekly.",3.1,1
+78,3,"Asymptomatic testing backlog isn't modeled, causing unrealistic case spikes.",3.1,1
+79,3,The epidemic's start date is off—seroprevalence data suggests earlier undetected spread.,3.1,1
+80,3,"Case fatality rate is 10%, but community serosurveys suggest <1%.",3.2,2
+81,3,The model assumes 90% vaccine efficacy; real-world data shows 70% against current variants.,3.2,2
+82,3,Hospitalization rates are double historical averages for this age group.,3.2,2
+83,3,"The curve underestimates pediatric cases, which comprise 20% of infections now.",3.2,2
+84,3,"Reinfection rates are set to zero, but new variants evade prior immunity.",3.2,2
+85,3,Asymptomatic cases are undercounted—studies show they represent 40% of transmissions.,3.2,2
+86,3,The model overestimates deaths by ignoring improved treatment protocols.,3.2,2
+87,3,"Test positivity rates in the forecast are 5%, but current data shows 15%.",3.2,2
+88,3,"The R0 is fixed at 3.0, but regional variations range from 1.5 to 4.0.",3.2,2
+89,3,"Vaccine coverage targets 80%, but hesitancy limits uptake to 60% in key regions.",3.2,2
+90,4,"The peak arrives in 30 days, but mobility data suggests slower spread (50+ days).",4.1,1
+91,4,Immunity from prior waves delays the peak by at least a month.,4.1,1
+92,4,The peak is too early—current Reff >1 implies further growth.,4.1,1
+93,4,The model misses a dual peak from staggered regional outbreaks.,4.1,1
+94,4,The peak timing assumes uniform climate; seasonal variations will shift it regionally.,4.1,1
+95,4,"Behavioral changes pre-peak (e.g., voluntary distancing) are ignored, flattening the curve earlier.",4.1,1
+96,4,The peak is delayed by 10 days due to late importation of a faster-spreading variant.,4.1,1
+97,4,Vaccine rollout pace is unrealistic—supply constraints push the peak back by weeks.,4.1,1
+98,4,"The peak aligns with holidays, but gathering restrictions will blunt its height.",4.1,1
+99,4,The curve assumes no pre-peak NPIs; real-world reactive measures will delay it.,4.1,1
+100,4,"Peak caseload is 50K/day, but test capacity caps detection at 30K.",4.2,2
+101,4,The peak's height ignores underreporting—true cases are likely 3x higher.,4.2,2
+102,4,"Hospitalizations at peak exceed ICU beds by 200%, which is unsustainable.",4.2,2
+103,4,The model underestimates peak deaths due to uncounted nursing home outbreaks.,4.2,2
+104,4,Peak infections are too low—current wastewater data suggests 2x higher community spread.,4.2,2
+105,4,"The peak's shape assumes no interventions, but emergency measures will flatten it.",4.2,2
+106,4,"Super-spreader events are omitted, causing unrealistic peak smoothness.",4.2,2
+107,4,"The peak caseload doesn't account for test positivity rates >20%, indicating undetected spread.",4.2,2
+108,4,The model overestimates peak severity due to outdated contact rate assumptions.,4.2,2
+109,4,"Peak timing coincides with vaccine coverage, reducing expected case numbers.",4.2,2
+0,1,The curve's ascent is too steep; real-world transmission would show a more gradual increase.,1.1,1
+1,1,The peak is too narrow; infections should spread over a longer period.,1.1,1
+2,1,The decline phase is too symmetrical; real epidemics have a longer tail.,1.1,1
+3,1,The initial growth rate is unrealistic given observed contact patterns.,1.1,1
+4,1,The curve lacks secondary waves; consider seasonality or behavioral changes.,1.1,1
+5,1,The post-peak decline is too abrupt; residual transmission should persist.,1.1,1
+6,1,"The curve assumes homogeneous mixing, ignoring superspreading events.",1.1,1
+7,1,The inflection point is too sharp; interventions usually have a gradual effect.,1.1,1
+8,1,The curve does not account for regional variations in transmission rates.,1.1,1
+9,1,The plateau phase is missing; real epidemics often stabilize before declining.,1.1,1
+10,1,The susceptible population depletes too quickly; herd immunity is not yet reached.,1.2,2
+11,1,"The curve drops linearly; in reality, depletion slows as immunity builds.",1.2,2
+12,1,"The model assumes 100% susceptibility, ignoring pre-existing immunity.",1.2,2
+13,1,The decline is too uniform; some subgroups retain higher susceptibility.,1.2,2
+14,1,The curve should account for demographic heterogeneity in exposure.,1.2,2
+15,1,The susceptible pool is exhausted prematurely; reinfections are not considered.,1.2,2
+16,1,"The decline should be sigmoidal, not exponential.",1.2,2
+17,1,"The model ignores population turnover (births, migration).",1.2,2
+18,1,The curve does not reflect partial immunity from cross-reactive responses.,1.2,2
+19,1,The depletion rate is inconsistent with observed infection rates.,1.2,2
+20,1,The recovery curve is too steep; typical illness durations are longer.,1.3,3
+21,1,Recoveries plateau too early; long-term cases should extend the tail.,1.3,3
+22,1,The lag between infections and recoveries is underestimated.,1.3,3
+23,1,The curve does not account for reinfections or waning immunity.,1.3,3
+24,1,Recoveries should increase more slowly due to chronic cases.,1.3,3
+25,1,"The recovery rate is constant, but real-world data shows variability.",1.3,3
+26,1,The model ignores differential recovery rates by age group.,1.3,3
+27,1,"The curve assumes all cases resolve, ignoring persistent symptoms.",1.3,3
+28,1,Recoveries are too synchronized; real-world recovery times are dispersed.,1.3,3
+29,1,The recovery trajectory should align with hospitalization discharge rates.,1.3,3
+30,1,The fatality curve is too abrupt; deaths should accumulate more gradually.,1.4,4
+31,1,The decline in deaths is too sharp; residual mortality should persist.,1.4,4
+32,1,The curve does not reflect reporting delays in mortality data.,1.4,4
+33,1,Deaths plateau too early; consider underreporting or delayed outcomes.,1.4,4
+34,1,The initial mortality spike is unrealistic without a surge in severe cases.,1.4,4
+35,1,The fatality rate is inconsistent with observed ICU admissions.,1.4,4
+36,1,The curve lacks a long tail from post-acute complications.,1.4,4
+37,1,Deaths should lag behind infections by at least 2-3 weeks.,1.4,4
+38,1,The model ignores excess mortality from healthcare system strain.,1.4,4
+39,1,"The cumulative deaths curve should be smoother, reflecting reporting lags.",1.4,4
+40,2,The lockdown effect appears too early; behavioral changes take 2-3 weeks.,2.1,1
+41,2,"Vaccination started on day 30, but immunity buildup isn’t visible by day 45.",2.1,1
+42,2,"School closures should impact transmission after a 10-day delay, not immediately.",2.1,1
+43,2,The curve shows an instant drop after mask mandates; real effects are gradual.,2.1,1
+44,2,Travel restrictions take time to reduce importation—no effect is visible yet.,2.1,1
+45,2,The modeled quarantine impact is misaligned with empirical delay patterns.,2.1,1
+46,2,"Testing campaigns began on day 20, but case detection hasn’t increased.",2.1,1
+47,2,The curve doesn’t reflect the 14-day lag between interventions and case decline.,2.1,1
+48,2,"Contact tracing was implemented, but no reduction in transmission is seen.",2.1,1
+49,2,"The effect of public awareness campaigns should appear later, not immediately.",2.1,1
+50,2,The suppression from social distancing is underestimated.,2.2,2
+51,2,The curve doesn’t reflect the expected reduction from increased testing.,2.2,2
+52,2,The impact of workplace closures is overestimated given compliance rates.,2.2,2
+53,2,"The model assumes perfect mask adherence, which is unrealistic.",2.2,2
+54,2,The curve should show a steeper decline after stay-at-home orders.,2.2,2
+55,2,The effect of vaccination is too linear; real-world rollout has bottlenecks.,2.2,2
+56,2,The reduction in transmission from hygiene measures is missing.,2.2,2
+57,2,The curve doesn’t account for fatigue reducing intervention effectiveness.,2.2,2
+58,2,The model overestimates the speed of immunity from natural infection.,2.2,2
+59,2,The impact of border controls is not visible in the imported cases curve.,2.2,2
+60,2,The graph doesn’t show the expected flattening from mask mandates.,2.3,3
+61,2,"Quarantine policies were updated, but the curve remains unchanged.",2.3,3
+62,2,No visible impact from the vaccination campaign launched last month.,2.3,3
+63,2,The curve ignores the effect of superspreader event restrictions.,2.3,3
+64,2,"Testing capacity doubled, but case detection rates didn’t increase.",2.3,3
+65,2,The model doesn’t incorporate reduced mobility data.,2.3,3
+66,2,The curve doesn’t reflect the new isolation guidelines for mild cases.,2.3,3
+67,2,No adjustment for the delayed reporting of weekend data.,2.3,3
+68,2,The impact of school reopenings isn’t captured in the trajectory.,2.3,3
+69,2,The graph doesn’t account for the recent surge in at-home testing.,2.3,3
+70,3,"Hospitalizations peak simultaneously with cases, but typically lag by 1-2 weeks.",3.1,1
+71,3,The epidemic ends too abruptly; tail periods usually last weeks to months.,3.1,1
+72,3,Deaths spike on day 50 without a corresponding rise in severe cases.,3.1,1
+73,3,"The model assumes immediate immunity after vaccination, ignoring the 2-week delay.",3.1,1
+74,3,The second wave starts too soon after the first; immunity should delay it.,3.1,1
+75,3,"The curve shows a 7-day incubation period, but median is 5 days.",3.1,1
+76,3,Recoveries begin too early; average illness duration is longer.,3.1,1
+77,3,"The peak occurs in 30 days, but current Rt values suggest a later peak.",3.1,1
+78,3,The seasonal uptick is misaligned with historical weather patterns.,3.1,1
+79,3,The forecasted decline starts before interventions could plausibly take effect.,3.1,1
+80,3,"The modeled CFR is 5%, but local data suggests 1-2%.",3.2,2
+81,3,Asymptomatic cases are undercounted; true infections are likely 3x higher.,3.2,2
+82,3,"The recovery rate implies 7-day illnesses, but median is 14 days.",3.2,2
+83,3,Hospitalization rates are overestimated given current age distribution.,3.2,2
+84,3,"The forecast assumes 90% vaccine efficacy, but variants reduce it to 70%.",3.2,2
+85,3,"The reinfection rate is set to 0%, but emerging data shows 5-10%.",3.2,2
+86,3,The model underestimates long-term cases by 50%.,3.2,2
+87,3,The infection rate is too high for the observed test positivity.,3.2,2
+88,3,"The curve projects 1M deaths, but seroprevalence suggests lower IFR.",3.2,2
+89,3,The forecast ignores regional disparities in healthcare access.,3.2,2
+90,4,The peak arrives too early given current doubling times.,4.1,1
+91,4,Immunity from prior waves should delay the peak by 4-6 weeks.,4.1,1
+92,4,The peak is misaligned with seasonal respiratory virus patterns.,4.1,1
+93,4,"With current Rt values, the peak should occur 20 days later.",4.1,1
+94,4,"The model projects a peak in summer, but most outbreaks peak in winter.",4.1,1
+95,4,The peak timing doesn’t account for delayed intervention effects.,4.1,1
+96,4,Behavioral changes will likely push the peak further out.,4.1,1
+97,4,The peak is too early for the observed vaccine rollout speed.,4.1,1
+98,4,"The curve assumes a single peak, but bimodal peaks are more likely.",4.1,1
+99,4,The peak should align with the historical lag after school reopenings.,4.1,1
+100,4,Peak caseload is overestimated given current testing coverage.,4.2,2
+101,4,"The peak ICU admissions exceed total bed capacity, which is unrealistic.",4.2,2
+102,4,The model underestimates peak infections due to untested mild cases.,4.2,2
+103,4,Peak deaths are too high for the age-stratified IFR.,4.2,2
+104,4,The peak should be lower due to pre-existing cross-immunity.,4.2,2
+105,4,The forecasted peak cases contradict wastewater surveillance data.,4.2,2
+106,4,Peak hospitalizations are inconsistent with vaccination coverage.,4.2,2
+107,4,The peak caseload doesn’t reflect the impact of prior infections.,4.2,2
+108,4,The model overestimates peak transmission due to ignored NPIs.,4.2,2
+109,4,Peak fatalities are misaligned with historical age-specific mortality.,4.2,2
+0,1,The infection curve is too steep; real-world transmission is more gradual.,1.1,1
+1,1,The decline post-peak is too abrupt—expect a longer tail due to residual transmission.,1.1,1
+2,1,The peak is too narrow; infections should spread over a wider period.,1.1,1
+3,1,The curve is too symmetrical—ascending and descending phases should differ.,1.1,1
+4,1,The initial growth rate is too slow; consider higher early transmission.,1.1,1
+5,1,The infection wave lacks secondary peaks; reinfections or variants should cause fluctuations.,1.1,1
+6,1,The curve plateaus too early; sustained transmission should extend the peak.,1.1,1
+7,1,The rebound after decline is missing—seasonal effects or behavior changes could cause it.,1.1,1
+8,1,The curve does not account for superspreading events—expect more variability.,1.1,1
+9,1,The initial exponential growth phase is too prolonged—interventions should bend it sooner.,1.1,1
+10,1,The curve assumes uniform transmission—geographical heterogeneity should create multiple sub-peaks.,1.1,1
+11,1,The decline phase is too smooth—real data often shows stepwise drops due to interventions.,1.1,1
+12,1,The curve lacks a 'shoulder' before the peak—behavioral changes often slow growth early.,1.1,1
+13,1,The infection wave ends too abruptly—long-term endemic circulation should be considered.,1.1,1
+14,1,The curve underestimates asymptomatic spread—true infections are likely higher.,1.1,1
+15,1,The model assumes constant transmission—seasonality should modulate the curve.,1.1,1
+16,1,The infection peak is too sharp—real-world contact networks create smoother transitions.,1.1,1
+17,1,The curve does not reflect testing capacity constraints—true peaks may be obscured.,1.1,1
+18,1,The decline phase is too linear—immunity accumulation should accelerate it.,1.1,1
+19,1,The curve assumes homogeneous immunity—waning or partial immunity would alter dynamics.,1.1,1
+20,1,The susceptible depletion is too rapid—real populations have heterogeneous mixing.,1.2,2
+21,1,The susceptible curve drops to near zero—this is unrealistic due to immune escape.,1.2,2
+22,1,The decline in susceptibles is linear—expect slowing depletion as herd immunity nears.,1.2,2
+23,1,The model ignores demographic turnover—new susceptibles enter over time.,1.2,2
+24,1,The curve assumes perfect immunity—reinfection should slow depletion.,1.2,2
+25,1,The susceptible pool is exhausted too early—geographical variation delays full depletion.,1.2,2
+26,1,The decline lacks inflection points—behavior changes should alter contact rates.,1.2,2
+27,1,The curve does not account for age-stratified susceptibility—some groups remain unexposed longer.,1.2,2
+28,1,The model overestimates homogeneous mixing—clustered networks slow depletion.,1.2,2
+29,1,The susceptible count rebounds too slowly—waning immunity would accelerate replenishment.,1.2,2
+30,1,The curve assumes static population size—births and migration add susceptibles.,1.2,2
+31,1,The decline is too smooth—interventions create stepwise drops in exposure.,1.2,2
+32,1,The model ignores cross-immunity—prior infections may protect against new variants.,1.2,2
+33,1,The susceptible curve plateaus too high—some subgroups may remain permanently exposed.,1.2,2
+34,1,The depletion rate is constant—behavioral adaptation should slow exposure over time.,1.2,2
+35,1,The curve does not reflect vaccine hesitancy—pockets of susceptibles persist.,1.2,2
+36,1,The model assumes uniform susceptibility—risk heterogeneity alters depletion patterns.,1.2,2
+37,1,The decline lacks regional variation—some areas deplete susceptibles faster.,1.2,2
+38,1,The curve underestimates immune evasion—variants can reset susceptibility.,1.2,2
+39,1,The recovery curve lags too far behind infections—typical delays are shorter.,1.3,3
+40,1,The recovery rate plateaus too early—long-term convalescence extends the tail.,1.3,3
+41,1,The model does not account for reinfections—some 'recovered' re-enter the susceptible pool.,1.3,3
+42,1,The recovery curve is too smooth—hospital discharge policies create stepwise increases.,1.3,3
+43,1,The initial recovery rate is too high—mild cases resolve faster than severe ones.,1.3,3
+44,1,The cumulative recoveries exceed the infected count—data reconciliation is needed.,1.3,3
+45,1,The recovery trajectory ignores post-acute sequelae—some cases never fully recover.,1.3,3
+46,1,The curve assumes constant recovery rates—healthcare strain can prolong illness duration.,1.3,3
+47,1,The model overlooks asymptomatic recoveries—true recoveries are underreported.,1.3,3
+48,1,The recovery phase lacks regional variation—areas with better care recover faster.,1.3,3
+49,1,The curve does not reflect seasonality—recovery rates may vary with healthcare capacity.,1.3,3
+50,1,The recovery count is too low—consider undercounting of mild or untested cases.,1.3,3
+51,1,The model ignores partial immunity—some recoveries confer only temporary protection.,1.3,3
+52,1,The recovery rate decreases unnaturally—strained systems may slow discharges.,1.3,3
+53,1,The curve assumes uniform recovery—age and comorbidities create variability.,1.3,3
+54,1,The recovery trajectory is too linear—waves of infections create overlapping recovery phases.,1.3,3
+55,1,The model does not account for treatment improvements—recovery rates should increase over time.,1.3,3
+56,1,The recovery curve lacks rebound—reinfections or variants can reduce the recovered pool.,1.3,3
+57,1,The fatality curve is too steep initially—healthcare adaptation flattens early mortality.,1.4,4
+58,1,The decline in deaths is abrupt—long-term complications extend fatalities.,1.4,4
+59,1,The cumulative deaths plateau too early—delayed reporting or excess mortality is missing.,1.4,4
+60,1,The deaths curve lacks age stratification—older populations drive early mortality.,1.4,4
+61,1,The fatality rate is constant—improved treatments should reduce deaths over time.,1.4,4
+62,1,The model ignores healthcare collapse—mortality spikes during system overload.,1.4,4
+63,1,The deaths curve is too smooth—reporting delays create weekly patterns.,1.4,4
+64,1,The cumulative deaths are underestimated—non-hospital deaths are often missed.,1.4,4
+65,1,The fatality decline mirrors infections too closely—ICU lag creates a delayed drop.,1.4,4
+66,1,The curve does not reflect variant virulence—some strains increase lethality.,1.4,4
+67,1,The deaths peak precedes the infections peak—this contradicts typical ICU delays.,1.4,4
+68,1,The model assumes uniform CFR—regional healthcare quality alters fatality rates.,1.4,4
+69,1,The curve lacks secondary waves—new variants or immunity waning can reignite deaths.,1.4,4
+70,1,The deaths decline too rapidly—legacy cases and complications prolong the tail.,1.4,4
+71,1,The fatality trajectory ignores comorbidities—underlying conditions amplify mortality.,1.4,4
+72,1,The model does not account for vaccination—deaths should decouple from cases over time.,1.4,4
+73,1,The deaths curve is too symmetrical—asymmetric healthcare responses skew the decline.,1.4,4
+74,1,The cumulative deaths are overestimated—later revisions often downward-adjust figures.,1.4,4
+75,1,The curve assumes perfect death reporting—undercounting is common in early waves.,1.4,4
+76,2,The lockdown impact appears too early—behavioral changes take 2-3 weeks.,2.1,1
+77,2,"Vaccination started on day 30, but curve smoothing should appear by day 45.",2.1,1
+78,2,"School closures are modeled immediately—realistically, household transmission continues for weeks.",2.1,1
+79,2,The mask mandate’s effect is visible too soon—population compliance builds gradually.,2.1,1
+80,2,Travel bans show instant effect—imported cases should decline over 1-2 incubation periods.,2.1,1
+81,2,The curve reflects testing expansion immediately—diagnostic delays create lags.,2.1,1
+82,2,"Quarantine’s impact is modeled day 1—realistically, index cases take time to isolate.",2.1,1
+83,2,The contact tracing effect is instantaneous—operational delays create a 1-week lag.,2.1,1
+84,2,The antiviral rollout reduces deaths immediately—clinical deployment takes weeks.,2.1,1
+85,2,Curfew effects appear overnight—behavioral adaptation takes days.,2.1,1
+86,2,The border closure’s impact is immediate—residual travel and illegal crossings persist.,2.1,1
+87,2,The superspreader event ban lacks delay—existing gatherings cause short-term spikes.,2.1,1
+88,2,Vaccine boosters show same-week effects—immune response requires 10-14 days.,2.1,1
+89,2,The telework policy reduces transmission instantly—workplace clusters resolve over time.,2.1,1
+90,2,The nursing home lockdown effect is immediate—staff transmission continues for days.,2.1,1
+91,2,The hospital triage protocol reduces deaths too soon—ICU outcomes lag by weeks.,2.1,1
+92,2,The hygiene campaign’s impact is day 1—public awareness builds slowly.,2.1,1
+93,2,The quarantine effect is modeled linearly—real-world compliance decays over time.,2.1,1
+94,2,The testing surge’s effect is immediate—results and isolation take 3-5 days.,2.1,1
+95,2,The variant-specific vaccine shows instant protection—antibody development takes time.,2.1,1
+96,2,The mask mandate’s suppression is overestimated—compliance is partial.,2.2,2
+97,2,The quarantine impact is understated—household transmission should drop further.,2.2,2
+98,2,The vaccination effect is too strong—breakthrough infections are missing.,2.2,2
+99,2,The contact tracing efficiency is overstated—real-world uptake is lower.,2.2,2
+100,2,The school closure impact is underestimated—child-to-adult transmission is significant.,2.2,2
+101,2,The border control effect is oversimplified—leaks and exemptions dilute impact.,2.2,2
+102,2,The lockdown stringency is misrepresented—essential workers sustain transmission.,2.2,2
+103,2,The antiviral distribution is too uniform—access disparities reduce overall efficacy.,2.2,2
+104,2,The superspreader event ban is under-modeled—these drive disproportionate spread.,2.2,2
+105,2,The testing policy’s sensitivity is too high—false negatives dilute effectiveness.,2.2,2
+106,2,The hygiene campaign’s impact is exaggerated—behavior change is inconsistent.,2.2,2
+107,2,The telework reduction in transmission is too optimistic—household contacts remain.,2.2,2
+108,2,The nursing home protection is overestimated—staff are vectors.,2.2,2
+109,2,The vaccine prioritization is misaligned—high-risk groups were missed.,2.2,2
+110,2,The ICU expansion’s mortality reduction is overstated—outcomes depend on staffing.,2.2,2
+111,2,The quarantine compliance is idealized—non-adherence reduces effectiveness.,2.2,2
+112,2,"The mask quality is uniformly high—in reality, cloth masks offer limited protection.",2.2,2
+113,2,The travel ban’s leakiness is ignored—essential travel sustains importation.,2.2,2
+114,2,The testing turnaround is unrealistic—delays reduce isolation efficacy.,2.2,2
+115,2,The curve does not reflect the new testing policy—cases should rise initially.,2.3,3
+116,2,Vaccination rollout is missing—expect a decoupling of cases and deaths.,2.3,3
+117,2,No impact from the new quarantine guidelines—household transmission should drop.,2.3,3
+118,2,The mask mandate is not modeled—transmission rates should decrease.,2.3,3
+119,2,The antiviral availability is ignored—high-risk mortality should decline.,2.3,3
+120,2,The seasonal behavior change is missing—summer outdoor activity reduces spread.,2.3,3
+121,2,The school reopening impact is absent—pediatric cases should increase.,2.3,3
+122,2,The booster campaign is not included—waning immunity should be offset.,2.3,3
+123,2,The nursing home vaccination is missing—deaths in elderly should plummet.,2.3,3
+124,2,The contact tracing rollout is omitted—cluster transmission should decline.,2.3,3
+125,2,The hospital triage protocol is not modeled—mortality spikes during surges.,2.3,3
+126,2,The public transport restrictions are ignored—workplace transmission persists.,2.3,3
+127,2,The diagnostic accuracy improvement is missing—case detection should rise.,2.3,3
+128,2,The variant-specific vaccine update is absent—new waves should be blunted.,2.3,3
+129,2,The excess mortality reporting is not included—true deaths are higher.,2.3,3
+130,2,The behavioral fatigue effect is missing—compliance wanes over time.,2.3,3
+131,2,The wastewater surveillance is not modeled—early detection should flatten curves.,2.3,3
+132,2,The heterologous vaccination effect is ignored—immunity breadth is broader.,2.3,3
+133,2,The nosocomial infection control is absent—hospital-acquired cases persist.,2.3,3
+134,3,The mortality peak lags cases by only 1 week—typically it’s 2-3 weeks.,3.1,1
+135,3,The epidemic ends by day 60—historical waves last 4-5 months.,3.1,1
+136,3,Hospitalizations peak simultaneously with cases—ICU admissions lag by 10 days.,3.1,1
+137,3,The seroprevalence rise is too slow—antibodies appear within 2 weeks post-infection.,3.1,1
+138,3,The testing positivity drop is instantaneous—real-world reporting has delays.,3.1,1
+139,3,The reinfection wave starts too soon—natural immunity lasts at least 3 months.,3.1,1
+140,3,The vaccination effect begins day 1—immune response takes 14 days.,3.1,1
+141,3,The lockdown lifting causes an immediate surge—transmission resumes gradually.,3.1,1
+142,3,The variant emergence is too abrupt—genomic surveillance takes weeks.,3.1,1
+143,3,The excess deaths timeline is misaligned—non-COVID mortality lags.,3.1,1
+144,3,The school holiday dip is missing—seasonal breaks reduce transmission.,3.1,1
+145,3,The booster campaign’s timing is off—antibody decay takes months.,3.1,1
+146,3,The testing ramp-up’s effect is immediate—capacity constraints create lags.,3.1,1
+147,3,The antiviral delivery coincides with prescriptions—distribution takes weeks.,3.1,1
+148,3,The mask mandate relaxation’s impact is day 1—behavior shifts are gradual.,3.1,1
+149,3,The superspreader event’s aftermath is truncated—secondary cases take time.,3.1,1
+150,3,The serosurvey results are instantaneous—lab processing creates delays.,3.1,1
+151,3,The travel restriction lift causes instant importation—flight resumptions are phased.,3.1,1
+152,3,The nosocomial outbreak peaks too early—hospital transmission cascades.,3.1,1
+153,3,The post-peak decline is linear—immunity and behavior create nonlinearity.,3.1,1
+154,3,The case fatality rate is 5%—expected range is 1-2% with vaccination.,3.2,2
+155,3,The reinfection rate is 1%—omicron data suggests 5-10%.,3.2,2
+156,3,The hospitalization rate is 20%—current variants average 5-8%.,3.2,2
+157,3,"The R₀ is 2.5—given immunity, effective R should be below 1.5.",3.2,2
+158,3,The testing coverage is 90%—realistic maximum is 60-70%.,3.2,2
+159,3,The vaccine efficacy is 95%—waning and variants reduce to 70-80%.,3.2,2
+160,3,The asymptomatic proportion is 10%—recent studies show 30-40%.,3.2,2
+161,3,The ICU mortality is 50%—improved care lowers to 20-30%.,3.2,2
+162,3,The serial interval is 7 days—omicron data suggests 3-4 days.,3.2,2
+163,3,The herd immunity threshold is 70%—immune escape variants raise to 85-90%.,3.2,2
+164,3,The contact tracing coverage is 80%—operational limits cap at 50%.,3.2,2
+165,3,The mask effectiveness is 90%—cloth masks provide 50-60%.,3.2,2
+166,3,The antiviral coverage is 100%—real-world access limits to 60-70%.,3.2,2
+167,3,The nosocomial transmission rate is 5%—overwhelmed hospitals reach 15-20%.,3.2,2
+168,3,The long COVID prevalence is 5%—meta-analyses suggest 10-20%.,3.2,2
+169,3,The booster uptake is 95%—hesitancy limits to 60-70%.,3.2,2
+170,3,The test sensitivity is 99%—rapid tests average 70-80%.,3.2,2
+171,3,The household secondary attack rate is 20%—unmitigated spreads reach 30-40%.,3.2,2
+172,3,The vaccine-induced antibody duration is 1 year—omicron data shows 4-6 months.,3.2,2
+173,3,The excess mortality multiplier is 1.2—true pandemic burden is 1.5-2x.,3.2,2
+174,4,The peak arrives too soon—mobility data indicates slower growth.,4.1,1
+175,4,The outbreak peak is delayed—immunity from prior waves slows spread.,4.1,1
+176,4,The peak is misaligned with school terms—reopenings accelerate transmission.,4.1,1
+177,4,The peak timing ignores seasonality—winter surges typically occur 2 weeks earlier.,4.1,1
+178,4,The model misses the dual-peak pattern—mitigation relaxations cause rebounds.,4.1,1
+179,4,The peak coincides with holidays—travel restrictions should delay it.,4.1,1
+180,4,The peak is too early for the vaccination rate—immune protection takes longer to build.,4.1,1
+181,4,The peak lags behind wastewater trends—viral shedding precedes cases by 1 week.,4.1,1
+182,4,The peak precedes the variant’s genomic dominance—strain transition takes time.,4.1,1
+183,4,The peak aligns with testing surges—case detection artifacts distort timing.,4.1,1
+184,4,The peak is delayed by NPIs—strict measures should push it back 10-14 days.,4.1,1
+185,4,The peak is too early given contact rates—social network data shows slower propagation.,4.1,1
+186,4,The peak misses the superspreader event’s impact—clusters accelerate timing.,4.1,1
+187,4,The peak coincides with a reporting backlog—true peak is earlier.,4.1,1
+188,4,The peak is misaligned with seroprevalence—antibody data suggests earlier spread.,4.1,1
+189,4,The peak timing ignores healthcare strain—ICU capacity limits alter transmission.,4.1,1
+190,4,The peak is too late for the observed growth rate—R₀ miscalibration suspected.,4.1,1
+191,4,The peak precedes behavioral changes—fear-driven NPIs typically lag by 1 week.,4.1,1
+192,4,The peak aligns with a data artifact—testing policy changes distort curves.,4.1,1
+193,4,Peak caseload is overestimated—test positivity suggests lower community spread.,4.2,2
+194,4,The peak hospitalizations exceed ICU capacity—real-world data shows rationing.,4.2,2
+195,4,The peak deaths are too low—excess mortality data implies undercounting.,4.2,2
+196,4,The peak cases are undercounted—testing bottlenecks suppress numbers.,4.2,2
+197,4,The peak’s magnitude ignores immunity—prior infections should blunt it.,4.2,2
+198,4,The peak caseload lacks geographic variation—hotspots drive disproportional spread.,4.2,2
+199,4,The peak hospitalizations mismatch bed counts—real systems have finite capacity.,4.2,2
+200,4,The peak deaths align perfectly with cases—delays and reporting lags distort this.,4.2,2
+201,4,The peak’s shape is too narrow—superspreading elongates the curve.,4.2,2
+202,4,The peak cases exceed plausible attack rates—seroprevalence caps total infections.,4.2,2
+203,4,The peak’s secondary wave is missing—behavioral fatigue causes rebounds.,4.2,2
+204,4,The peak hospitalizations ignore staffing—real-world care degrades during surges.,4.2,2
+205,4,The peak deaths underestimate nursing homes—focused protection was incomplete.,4.2,2
+206,4,The peak caseload assumes uniform spread—cluster outbreaks create heterogeneity.,4.2,2
+207,4,The peak’s duration is too short—healthcare strain prolongs severe outcomes.,4.2,2
+208,4,The peak cases ignore asymptomatic spread—true infections are higher.,4.2,2
+209,4,The peak hospitalizations lack age stratification—older populations dominate.,4.2,2
+210,4,The peak deaths are misaligned with variants—some strains increase lethality.,4.2,2
+211,4,The peak caseload contradicts wastewater data—viral load suggests higher spread.,4.2,2
+212,4,The peak’s decline is too steep—long tails are typical post-peak.,4.2,2
+0,1,The infection curve is too steep; real-world transmission would show a more gradual incline.,1.1,1
+1,1,The peak is too narrow—superspreading events would create a wider plateau.,1.1,1
+2,1,The decline phase is too symmetrical; behavioral changes would skew it.,1.1,1
+3,1,Secondary waves are missing—consider seasonal reintroduction.,1.1,1
+4,1,The curve assumes homogeneous mixing; urban/rural differences would create step-offs.,1.1,1
+5,1,No 'shoulder' after initial surge—expected due to partial immunity effects.,1.1,1
+6,1,The tail is too short; residual community transmission would prolong it.,1.1,1
+7,1,The curve lacks 'sawtooth' patterns from weekend reporting artifacts.,1.1,1
+8,1,Asymptomatic carriers aren't reflected—peak should be flatter and broader.,1.1,1
+9,1,The rebound after restrictions lift is underestimated.,1.1,1
+10,1,Susceptible depletion is too linear—network effects would slow it nonlinearly.,1.2,2
+11,1,The model overestimates herd immunity threshold; regional clustering matters.,1.2,2
+12,1,"No accounting for demographic heterogeneity (e.g., age-stratified susceptibility).",1.2,2
+13,1,The curve drops to zero prematurely—pockets of unexposed populations remain.,1.2,2
+14,1,"Replenishment of susceptibles (e.g., births) isn't modeled.",1.2,2
+15,1,The decline ignores temporal variation in contact rates.,1.2,2
+16,1,Overestimation of cross-immunity from other pathogens.,1.2,2
+17,1,No reflection of 'shield immunity' from prior exposure to related strains.,1.2,2
+18,1,The slope assumes uniform risk-taking behavior; reality is more segmented.,1.2,2
+19,1,Vaccine hesitancy clusters aren't captured—susceptibles persist longer.,1.2,2
+20,1,Recovery rate is constant—should vary with healthcare system strain.,1.3,3
+21,1,No long-term immunity waning—recovereds should gradually rejoin susceptibles.,1.3,3
+22,1,The curve doesn't account for reinfection-driven oscillations.,1.3,3
+23,1,Plateau is too abrupt; chronic cases would delay full recovery.,1.3,3
+24,1,Recovered numbers lag infections by a fixed interval—real data shows variability.,1.3,3
+25,1,No distinction between natural and vaccine-induced immunity in the curve.,1.3,3
+26,1,"The recovery trajectory ignores post-acute sequelae (e.g., long COVID).",1.3,3
+27,1,Overly optimistic recovery rates—secondary infections depress the curve.,1.3,3
+28,1,The model assumes all infected eventually recover; fatal cases skew this.,1.3,3
+29,1,Recovery plateaus too early—consider delayed convalescence in elderly.,1.3,3
+30,1,"The fatality curve lacks the expected reporting delays (e.g., weekend undercounts).",1.4,4
+31,1,Death decline is too sharp—legacy cases from ICU overload would extend it.,1.4,4
+32,1,"No mortality 'echo waves' from post-infection complications (e.g., cardiac events).",1.4,4
+33,1,The curve ignores seasonal variations in healthcare capacity.,1.4,4
+34,1,Case fatality ratio (CFR) is static—should decrease with improved treatments.,1.4,4
+35,1,Deaths are perfectly synchronized with infections—real-world lag is 3-4 weeks.,1.4,4
+36,1,"No excess mortality from disrupted healthcare (e.g., deferred cancer screenings).",1.4,4
+37,1,The tail is too short—legacy deaths from long-term complications are missing.,1.4,4
+38,1,Underestimation of nursing home fatalities—these cluster early and steeply.,1.4,4
+39,1,The curve doesn't reflect mortality displacement (harvesting effect).,1.4,4
+40,2,School closures' impact appears instantaneously—should take 10-14 days.,2.1,1
+41,2,Vaccination ramp-up is modeled linearly—real-world delays create S-curve adoption.,2.1,1
+42,2,Travel bans show immediate effect; behavioral non-compliance delays impact by 1-2 weeks.,2.1,1
+43,2,The 7-day lockdown shows abrupt changes—compliance takes 3+ days to ramp up.,2.1,1
+44,2,Testing surge artifacts appear same-day—reporting lags would phase the effect.,2.1,1
+45,2,Mask mandates reduce transmission instantly—population adaptation takes 5+ days.,2.1,1
+46,2,Curve flattening from telework policies should lag policy start by 2 weeks.,2.1,1
+47,2,Vaccine immunity onset (2 weeks post-shot) isn't reflected in the timeline.,2.1,1
+48,2,Border closures' impact is immediate—imported cases would trail for 10+ days.,2.1,1
+49,2,Contact tracing reduces cases linearly—real-world efficiency decays over time.,2.1,1
+50,2,The model overestimates lockdown efficacy—essential workers maintain transmission.,2.2,2
+51,2,Curve assumes 100% mask compliance—empirical data suggests 60-70% adherence.,2.2,2
+52,2,Vaccination reduces transmission by 80% in model; real-world data shows 40-60%.,2.2,2
+53,2,Telework policies only affect 30% of workforce—model applies them universally.,2.2,2
+54,2,The 50% mobility reduction translates to 90% transmission drop—implausible.,2.2,2
+55,2,Quarantine reduces Re to 0.5—historical data suggests 0.7-0.9 with leakage.,2.2,2
+56,2,Model ignores that superspreading events bypass social distancing.,2.2,2
+57,2,Curve doesn't reflect that late-stage lockdowns have diminishing returns.,2.2,2
+58,2,Testing+isolation reduces spread by 70%—overestimated given asymptomatic transmission.,2.2,2
+59,2,The 8pm curfew's impact is overstated—most transmission occurs daytime.,2.2,2
+60,2,No visible effect from the 50% vaccination coverage milestone.,2.3,3
+61,2,Air filtration upgrades in schools aren't reflected in reduced child cases.,2.3,3
+62,2,The curve doesn't account for mandated sick leave reducing workplace outbreaks.,2.3,3
+63,2,No impact from the new rapid-testing program at airports.,2.3,3
+64,2,Boosters for high-risk groups show no divergence in hospitalizations.,2.3,3
+65,2,The model ignores the 20% test positivity threshold triggering stricter measures.,2.3,3
+66,2,Antiviral stockpiles should reduce deaths in 60+ cohort—no curve adjustment.,2.3,3
+67,2,No effect from the 'work from home if possible' advisory issued on Day 30.,2.3,3
+68,2,The 10-day isolation rule reduction isn't modeled in case trajectories.,2.3,3
+69,2,Free N95 distribution started on Day 45—expected 15% transmission drop missing.,2.3,3
+70,3,Hospitalizations peak 5 days after cases—should be 10-14 day lag.,3.1,1
+71,3,Immunity waning starts at 180 days—data suggests 90-120 days for this variant.,3.1,1
+72,3,The second wave arrives in 30 days—seroprevalence data predicts 60+ days.,3.1,1
+73,3,Testing delays aren't modeled—case peaks should precede reported peaks by 7 days.,3.1,1
+74,3,Mortality peaks align exactly with cases—ICU stays create 21-day offset.,3.1,1
+75,3,School reopening spikes cases after 7 days—empirical data shows 14-day delay.,3.1,1
+76,3,Vaccine rollout hits 70% coverage in 100 days—historical rates suggest 150+ days.,3.1,1
+77,3,Seasonal uptick begins in April—normally starts mid-May for this region.,3.1,1
+78,3,Travel-related cases surge immediately post-border reopening—expected 2-week delay.,3.1,1
+79,3,Boosters are modeled to take effect same-day—antibody rise requires 7+ days.,3.1,1
+80,3,Projected 1M cases at peak—wastewater data suggests 1.4-1.6M.,3.2,2
+81,3,30% asymptomatic rate used—recent studies indicate 40-50% for Omicron lineages.,3.2,2
+82,3,ICU capacity is 500 beds—real-world surge capacity adds 20%.,3.2,2
+83,3,Re=1.5 during restrictions—mobile data indicates Re~1.2.,3.2,2
+84,3,Child cases are 10% of total—school surveillance shows 15-18%.,3.2,2
+85,3,Vaccine effectiveness drops to 30% after 6 months—meta-analyses show 40-45%.,3.2,2
+86,3,20% reinfection rate modeled—variant-specific data suggests 25-30%.,3.2,2
+87,3,Test positivity peaks at 15%—emergency department data implies 22%.,3.2,2
+88,3,30% of recovereds have long-term symptoms—studies report 10-20%.,3.2,2
+89,3,50% of deaths are 80+—actual age distribution is 65% in this cohort.,3.2,2
+90,4,Peak is Day 45—mobility data suggests Day 60-70 with current restrictions.,4.1,1
+91,4,Winter surge peaks in January—typically occurs February in this climate.,4.1,1
+92,4,Double-peak pattern is missing—expected due to regional staggered outbreaks.,4.1,1
+93,4,Peak arrives too early given the slow vaccination uptake in rural areas.,4.1,1
+94,4,"Model shows summer peak—historically, respiratory viruses peak here in autumn.",4.1,1
+95,4,Peak timing assumes homogeneous immunity—clustered immunity delays it by 2 weeks.,4.1,1
+96,4,"The peak should align with the return of university students (Day 75), not Day 50.",4.1,1
+97,4,Peak is synchronized with holidays—behavioral changes would split it into two subpeaks.,4.1,1
+98,4,No peak shift from variant emergence—expected 14-day acceleration with this transmissibility.,4.1,1
+99,4,Peak coincides with nationwide event cancellation—should precede it by 10 days.,4.1,1
+100,4,"Peak caseload is 10,000/day—testing capacity constraints cap reports at 8,000.",4.2,2
+101,4,"Hospitalizations peak at 1,000—bed capacity limits would suppress to 750.",4.2,2
+102,4,Peak deaths are 200/day—excess mortality data suggests 250-300.,4.2,2
+103,4,Modeled peak positivity is 25%—specimen collection bottlenecks limit to 18%.,4.2,2
+104,4,Peak ICU demand exceeds staffed beds by 30%—real-world triage reduces to 10%.,4.2,2
+105,4,"Cases peak at 50% unvaccinated—cohort is 35% of population, so should be 60-65%.",4.2,2
+106,4,Pediatric hospitalizations are 5% of peak—ER data shows consistent 8%.,4.2,2
+107,4,Peak wastewater viral load implies 20% higher cases than reported.,4.2,2
+108,4,Peak ventilator use is 300—logistical constraints limit deployment to 250.,4.2,2
+109,4,Peak absenteeism is 10%—school closures would push to 15-18%.,4.2,2
+0,1,The infection curve is too steep; real-world transmission would show a more gradual increase.,1.1,1
+1,1,The peak is too narrow; infections should spread over a longer period.,1.1,1
+2,1,The decline post-peak is too rapid; residual transmission should prolong the tail.,1.1,1
+3,1,The curve is too symmetrical; the rise and fall should be asymmetric due to interventions.,1.1,1
+4,1,The initial growth rate is unrealistic; exponential growth should taper earlier.,1.1,1
+5,1,"The model assumes uniform transmission, but real-world spread is more clustered.",1.1,1
+6,1,The curve lacks secondary waves; reinfections or variants should cause fluctuations.,1.1,1
+7,1,The infection peak is too high; current testing capacity would cap detected cases.,1.1,1
+8,1,"The curve doesn't account for superspreader events, which create irregular spikes.",1.1,1
+9,1,The decline phase is too smooth; local outbreaks should create minor resurgences.,1.1,1
+10,1,The initial growth phase is too slow; early exponential spread should be steeper.,1.1,1
+11,1,The curve assumes no behavioral changes; real-world data shows adaptive responses.,1.1,1
+12,1,The model overestimates peak infections; testing limitations would underreport cases.,1.1,1
+13,1,The curve lacks seasonality effects; transmission rates vary with environmental factors.,1.1,1
+14,1,The post-peak decline is linear; real-world data shows a more gradual decrease.,1.1,1
+15,1,The curve doesn't reflect heterogeneous immunity; some groups resist infection longer.,1.1,1
+16,1,The peak is too early; current contact rates suggest a later surge.,1.1,1
+17,1,"The curve assumes constant R0; in reality, transmission declines with awareness.",1.1,1
+18,1,The model ignores asymptomatic spread; true infections should be higher.,1.1,1
+19,1,The curve doesn't account for testing delays; case reporting should lag actual infections.,1.1,1
+20,1,The susceptible depletion is too fast; herd immunity should slow the decline.,1.2,2
+21,1,The curve drops to near-zero; some population segments always remain susceptible.,1.2,2
+22,1,The decline is linear; real-world data shows a slowing rate as immunity builds.,1.2,2
+23,1,The model assumes uniform susceptibility; age stratification would alter the curve.,1.2,2
+24,1,The curve doesn't account for vaccine hesitancy; some groups remain unvaccinated.,1.2,2
+25,1,The susceptible pool depletes too early; reinfections should slow the decline.,1.2,2
+26,1,The curve ignores population turnover (births/migration); susceptibles never fully deplete.,1.2,2
+27,1,The decline is too smooth; local clusters with low immunity create plateaus.,1.2,2
+28,1,The model assumes perfect vaccine efficacy; breakthrough infections slow depletion.,1.2,2
+29,1,The curve doesn't reflect waning immunity; susceptibles should partially rebound.,1.2,2
+30,1,The initial drop is too sharp; behavioral changes slow exposure gradually.,1.2,2
+31,1,The curve assumes homogeneous mixing; real-world contact networks slow depletion.,1.2,2
+32,1,The model ignores prior immunity from other coronaviruses; baseline susceptibles are lower.,1.2,2
+33,1,The curve doesn't account for variable vaccine rollout; some regions retain susceptibles longer.,1.2,2
+34,1,The decline is too steep; partial immunity slows transmission before full depletion.,1.2,2
+35,1,The model assumes no natural immunity; recovered individuals reduce susceptibles faster.,1.2,2
+36,1,The curve ignores demographic differences; younger populations deplete susceptibles slower.,1.2,2
+37,1,The susceptible count drops unrealistically fast; testing gaps underreport true infections.,1.2,2
+38,1,The curve doesn't reflect travel-related reintroductions; imported cases sustain susceptibles.,1.2,2
+39,1,The recovery curve is too flat; recoveries should accelerate post-peak.,1.3,3
+40,1,The recovery lag is too short; typical illness duration would delay the rise.,1.3,3
+41,1,The model assumes constant recovery rates; severity waves would alter the curve.,1.3,3
+42,1,The curve plateaus too early; long-haul cases should extend the tail.,1.3,3
+43,1,The recovery rate is too high; real-world data shows prolonged convalescence.,1.3,3
+44,1,The curve doesn't account for reinfections; some recoveries are temporary.,1.3,3
+45,1,The model ignores treatment improvements; later recoveries should be faster.,1.3,3
+46,1,The recovery trajectory is too smooth; hospital strain causes variability.,1.3,3
+47,1,The curve assumes uniform recovery; age/comorbidities create divergent rates.,1.3,3
+48,1,The initial recovery rate is too low; mild cases resolve quickly.,1.3,3
+49,1,"The model doesn't reflect post-acute sequelae; some ""recovered"" remain ill.",1.3,3
+50,1,The curve lacks surges from improved therapies; later waves should see faster recoveries.,1.3,3
+51,1,The recovery peak aligns too closely with infections; reporting delays create a lag.,1.3,3
+52,1,The model ignores healthcare capacity; overwhelmed systems slow recoveries.,1.3,3
+53,1,The curve doesn't show seasonal effects; summer recoveries may accelerate.,1.3,3
+54,1,The recovery rate is underestimated; most cases are mild and resolve quickly.,1.3,3
+55,1,The model assumes no partial immunity; prior exposure speeds recovery.,1.3,3
+56,1,The curve doesn't account for false recoveries; relapses prolong the tail.,1.3,3
+57,1,The recovery trajectory is too linear; real-world data shows nonlinear dynamics.,1.3,3
+58,1,The fatality curve is too steep; deaths should lag infections by 2-3 weeks.,1.4,4
+59,1,The decline in deaths is abrupt; long-term complications extend mortality.,1.4,4
+60,1,The curve doesn't reflect reporting delays; death counts should smooth over time.,1.4,4
+61,1,The model assumes constant CFR; healthcare strain increases fatality rates.,1.4,4
+62,1,The initial deaths are too low; early underreporting is common.,1.4,4
+63,1,The curve lacks secondary mortality waves; variants or resource shortages cause resurgences.,1.4,4
+64,1,The deaths peak too early; ICU capacity constraints delay fatalities.,1.4,4
+65,1,The model ignores demographic risks; older populations skew mortality timing.,1.4,4
+66,1,The curve doesn't account for excess deaths; indirect pandemic effects are missing.,1.4,4
+67,1,The fatality rate is too high; improved treatments reduce later deaths.,1.4,4
+68,1,The deaths decline too rapidly; residual cases prolong fatalities.,1.4,4
+69,1,The model assumes uniform healthcare access; disparities create uneven mortality curves.,1.4,4
+70,1,The curve doesn't reflect seasonality; winter mortality surges are likely.,1.4,4
+71,1,The deaths plateau too early; post-acute complications increase long-term toll.,1.4,4
+72,1,The initial spike is unrealistic; death reporting typically ramps up gradually.,1.4,4
+73,1,The model ignores non-COVID mortality; competing risks alter the curve.,1.4,4
+74,1,The curve lacks noise; real-world death data has daily variability.,1.4,4
+75,1,The fatality trajectory is too smooth; superspreader events cause local spikes.,1.4,4
+76,1,The model underestimates late deaths; delayed reporting creates a longer tail.,1.4,4
+77,2,The lockdown effect appears too soon; behavioral changes take 2-3 weeks to impact transmission.,2.1,1
+78,2,"Vaccination started on day 30, but the curve should smooth after 2-3 weeks, not immediately.",2.1,1
+79,2,The mask mandate's effect is missing; compliance takes time to reduce spread.,2.1,1
+80,2,"School closures are modeled instantly, but cases would decline gradually over weeks.",2.1,1
+81,2,The curve shows an abrupt drop post-intervention; real effects are more gradual.,2.1,1
+82,2,The travel ban's impact is delayed; imported cases should taper slowly.,2.1,1
+83,2,The model assumes immediate compliance; public adherence to restrictions builds over time.,2.1,1
+84,2,The testing surge's effect is too rapid; case detection lags policy changes.,2.1,1
+85,2,The curve doesn't reflect phased reopenings; transmission rebounds are delayed.,2.1,1
+86,2,The quarantine effect is oversimplified; household transmission prolongs the tail.,2.1,1
+87,2,The intervention timing is off; seasonal effects would alter the expected delay.,2.1,1
+88,2,The curve ignores policy fatigue; measure efficacy wanes over time.,2.1,1
+89,2,The model assumes uniform policy rollout; regional variability creates staggered impacts.,2.1,1
+90,2,The effect of curfews is too immediate; nighttime transmission declines slowly.,2.1,1
+91,2,The curve doesn't account for preemptive behavior; people adapt before official measures.,2.1,1
+92,2,The vaccination campaign's impact is too sudden; immunity builds over weeks.,2.1,1
+93,2,The model ignores misinformation; delayed public trust slows intervention effects.,2.1,1
+94,2,The curve lacks rebound effects; premature relaxation causes secondary waves.,2.1,1
+95,2,"The testing policy change should reduce cases gradually, not abruptly.",2.1,1
+96,2,The model overestimates enforcement; real-world compliance is imperfect.,2.1,1
+97,2,The curve underestimates mask efficacy; documented studies show steeper declines.,2.2,2
+98,2,The quarantine impact is too weak; stricter enforcement would flatten the curve more.,2.2,2
+99,2,The model overestimates school reopening risks; pediatric transmission is lower.,2.2,2
+100,2,The vaccination effect is too strong; breakthrough infections dampen the decline.,2.2,2
+101,2,The curve doesn't reflect test-trace-isolate; effective contact tracing reduces spread.,2.2,2
+102,2,The lockdown suppression is exaggerated; essential workers sustain transmission.,2.2,2
+103,2,The model ignores outdoor transmission; open-air policies have minimal impact.,2.2,2
+104,2,The curve overstates travel bans; domestic spread dominates post-border closure.,2.2,2
+105,2,The workplace restrictions' effect is misaligned; remote work reduces cases more.,2.2,2
+106,2,The model underestimates superspreading; targeted interventions would work better.,2.2,2
+107,2,The curve doesn't account for tiered restrictions; localized measures alter dynamics.,2.2,2
+108,2,The vaccination prioritization is off; protecting elders should lower deaths faster.,2.2,2
+109,2,The model overestimates public compliance; measure efficacy is lower in reality.,2.2,2
+110,2,"The curve lacks nuance; some measures (e.g., ventilation) are underrepresented.",2.2,2
+111,2,The testing policy's impact is incorrect; increased testing raises case counts initially.,2.2,2
+112,2,The model assumes perfect isolation; leakage prolongs transmission.,2.2,2
+113,2,The curve doesn't reflect immune evasion; variants reduce intervention effectiveness.,2.2,2
+114,2,The contact tracing effect is missing; efficient tracing shortens the epidemic tail.,2.2,2
+115,2,The model overestimates vaccine coverage; hesitancy leaves pockets of susceptibility.,2.2,2
+116,2,The curve doesn't show the impact of the new mask mandate.,2.3,3
+117,2,The model ignores the recent testing expansion; cases should rise initially.,2.3,3
+118,2,The vaccination campaign isn't reflected; expect a decline in severe cases.,2.3,3
+119,2,The curve lacks the effect of indoor dining bans.,2.3,3
+120,2,The quarantine of hotspots is missing from the projections.,2.3,3
+121,2,The model doesn't account for the new travel testing requirements.,2.3,3
+122,2,The curve should reflect the school closure policy starting next week.,2.3,3
+123,2,The impact of the curfew is absent; nighttime mobility data shows compliance.,2.3,3
+124,2,The model omits the effect of workplace capacity limits.,2.3,3
+125,2,The curve doesn't include the anticipated vaccine booster rollout.,2.3,3
+126,2,The recent mask adherence surge isn't incorporated.,2.3,3
+127,2,The model misses the influence of the new variant surveillance program.,2.3,3
+128,2,The curve should show the expected effect of the test-to-stay policy.,2.3,3
+129,2,The impact of the vaccine passport system is not modeled.,2.3,3
+130,2,The model ignores the planned increase in ICU beds.,2.3,3
+131,2,The curve doesn't reflect the new antiviral treatment availability.,2.3,3
+132,2,The effect of the public awareness campaign is missing.,2.3,3
+133,2,The model omits the regional lockdowns implemented last week.,2.3,3
+134,2,The curve should account for the updated isolation guidelines.,2.3,3
+135,3,"The peak hospitalizations align with infections, but should lag by 10-14 days.",3.1,1
+136,3,"The epidemic is projected to end in 90 days, but historical data suggests 5-8 months.",3.1,1
+137,3,The mortality spike on day 45 is implausible without a variant or protocol change.,3.1,1
+138,3,"The recovery timeline is too short; median illness duration is 3 weeks, not 10 days.",3.1,1
+139,3,The model assumes simultaneous peaks across regions; real-world spread is staggered.,3.1,1
+140,3,The second wave arrives too soon; immunity should delay it by 4-6 months.,3.1,1
+141,3,"The testing positivity peak precedes case counts, but should coincide or lag slightly.",3.1,1
+142,3,"The curve shows deaths declining before hospitalizations, which is temporally inconsistent.",3.1,1
+143,3,The epidemic start is misaligned with seed case timing; initial growth should be slower.,3.1,1
+144,3,The superspreader event's impact is delayed; cases should surge within 1 incubation period.,3.1,1
+145,3,The model assumes fixed serial intervals; real-world data shows variability.,3.1,1
+146,3,The curve doesn't reflect reporting backlogs; case counts should smooth over weekends.,3.1,1
+147,3,The vaccination effect timing is off; full immunity takes 3-5 weeks post-second dose.,3.1,1
+148,3,The reinfection wave is too early; natural immunity typically lasts 6-9 months.,3.1,1
+149,3,The seasonal uptick is mistimed; respiratory viruses peak earlier in winter.,3.1,1
+150,3,"The curve shows a 7-day periodicity from reporting artifacts, but real cycles are longer.",3.1,1
+151,3,"The intervention's effect duration is unrealistic; measures taper over months, not weeks.",3.1,1
+152,3,The model ignores latency periods; some interventions take effect after 2 incubation cycles.,3.1,1
+153,3,The curve's tail is too short; endemic transmission would prolong low-level spread.,3.1,1
+154,3,"The deaths peak aligns exactly with cases, but CFR changes with healthcare strain.",3.1,1
+155,3,"The modeled CFR is 4%, but recent data suggests 1.5-2% with vaccination.",3.2,2
+156,3,The peak ICU demand exceeds available beds by 300%; realistic overflow caps at 150%.,3.2,2
+157,3,The reinfection rate is too low; Omicron data shows 5-10x higher breakthrough risk.,3.2,2
+158,3,The recovery count is inflated; 20% of cases have long-term symptoms.,3.2,2
+159,3,The model assumes 90% vaccine efficacy vs transmission; real-world estimates are 60-70%.,3.2,2
+160,3,The asymptomatic rate is underestimated; 30-40% of infections show no symptoms.,3.2,2
+161,3,"The hospitalization projection is 25%, but current variants admit only 5-8%.",3.2,2
+162,3,"The deaths/day peak at 500, but comparable regions max out at 200 with similar measures.",3.2,2
+163,3,The model ignores waning immunity; antibody levels drop 50% in 6 months.,3.2,2
+164,3,"The curve assumes 70% vaccination coverage, but hesitancy keeps actual rates at 55%.",3.2,2
+165,3,"The R0 is set at 3.5, but Delta/Omicron hybrids average 6-8.",3.2,2
+166,3,"The pediatric cases are undercounted; schools contribute 20-30% of spread, not 5%.",3.2,2
+167,3,"The test positivity peaks at 25%, but testing bottlenecks cap real-world rates at 15%.",3.2,2
+168,3,"The model overestimates mask efficacy; cloth masks reduce transmission by 30%, not 70%.",3.2,2
+169,3,"The curve projects 10% long COVID rate, but meta-analyses suggest 15-20%.",3.2,2
+170,3,"The superspreader contribution is too low; 10% of cases drive 80% of spread, not 20%.",3.2,2
+171,3,"The ICU stay duration is underestimated; average COVID ICU time is 2 weeks, not 7 days.",3.2,2
+172,3,The model assumes homogeneous susceptibility; 20-30% have pre-existing T-cell immunity.,3.2,2
+173,3,The curve underestimates nosocomial infections; hospitals account for 15% of spread.,3.2,2
+174,3,"The vaccine booster effect is overstated; efficacy increases by 20%, not 50%.",3.2,2
+175,4,The peak arrives too early; current mobility data suggests a later surge.,4.1,1
+176,4,The model misses the peak delay from prior immunity; expect a 3-4 week shift.,4.1,1
+177,4,The peak timing is inconsistent with wastewater viral load trends.,4.1,1
+178,4,"The curve shows a summer peak, but respiratory viruses typically surge in winter.",4.1,1
+179,4,The peak is misaligned with school terms; reopening should accelerate transmission.,4.1,1
+180,4,The projected peak precedes vaccine rollout completion by 2 months.,4.1,1
+181,4,The model ignores the holiday effect; gatherings will shift the peak by 1-2 weeks.,4.1,1
+182,4,The peak is too early for the observed doubling time of 5 days.,4.1,1
+183,4,The curve doesn't reflect the variant's slower incubation period; peak should delay.,4.1,1
+184,4,"The peak aligns with full lockdown, but measures take weeks to bend the curve.",4.1,1
+185,4,The model assumes uniform spread; rural-urban differences will stagger the peak.,4.1,1
+186,4,The curve's peak precedes the expected timeline for healthcare strain effects.,4.1,1
+187,4,The peak is mistimed with seroprevalence data showing slower buildup.,4.1,1
+188,4,The model overlooks travel restrictions; imported cases will delay local peaks.,4.1,1
+189,4,The peak is too early given the current test positivity trajectory.,4.1,1
+190,4,The curve doesn't account for pre-peak behavioral changes flattening growth.,4.1,1
+191,4,The peak timing contradicts contact tracing data on exposure events.,4.1,1
+192,4,The model ignores weather patterns; rainy season will accelerate indoor spread.,4.1,1
+193,4,The curve's peak precedes the expected waning of vaccine-derived immunity.,4.1,1
+194,4,"The peak caseload of 10,000/day is unrealistic given testing capacity constraints.",4.2,2
+195,4,The model overestimates peak hospitalizations; current protocols reduce admissions by 30%.,4.2,2
+196,4,The peak deaths are too high; vaccination coverage should cut mortality by half.,4.2,2
+197,4,The curve underestimates peak infections; asymptomatic cases double detected numbers.,4.2,2
+198,4,"The peak ICU demand exceeds pre-pandemic capacity, but surge beds were added.",4.2,2
+199,4,The model assumes uniform peak severity; prior immunity lowers overall caseload.,4.2,2
+200,4,The peak positivity rate of 40% is implausible; testing bottlenecks cap at 25%.,4.2,2
+201,4,The curve's peak is too low; underreporting in rural areas masks true spread.,4.2,2
+202,4,The model overestimates peak reinfections; hybrid immunity reduces recurrence.,4.2,2
+203,4,The peak pediatric cases are underestimated; schools are major transmission hubs.,4.2,2
+204,4,The curve's peak deaths don't account for improved treatments reducing CFR.,4.2,2
+205,4,The model ignores test availability; peak cases are higher but undetected.,4.2,2
+206,4,The peak hospital strain is miscalculated; triage protocols lower admission thresholds.,4.2,2
+207,4,The curve overestimates peak superspreading; current restrictions limit large events.,4.2,2
+208,4,The model underestimates peak long COVID cases; 20% of infections cause chronic symptoms.,4.2,2
+209,4,The peak's geographic concentration is missing; urban areas will drive most cases.,4.2,2
+210,4,The curve doesn't reflect peak staffing shortages; healthcare worker infections reduce capacity.,4.2,2
+211,4,The model overestimates peak vaccine efficacy; variants erode protection.,4.2,2
+212,4,"The peak's age distribution is off; elders are now protected, shifting cases younger.",4.2,2
+213,4,The curve ignores peak underreporting; home testing obscures true case counts.,4.2,2
+0,1,The infection curve is too steep; real-world transmission is more gradual due to heterogeneous contact rates.,1.1,1
+1,1,The peak is too narrow; superspreading events would create a more irregular shape.,1.1,1
+2,1,The descent post-peak is too smooth; residual clusters should cause minor spikes.,1.1,1
+3,1,The curve assumes uniform immunity acquisition; reality shows geographic variation.,1.1,1
+4,1,The initial exponential growth phase is underestimated; early outbreaks often accelerate faster.,1.1,1
+5,1,The curve lacks secondary waves; seasonal factors could reintroduce transmission.,1.1,1
+6,1,"The modeled peak is symmetrical, but real epidemics often have a longer decline phase.",1.1,1
+7,1,The infection curve plateaus too abruptly; consider persistent high-risk groups.,1.1,1
+8,1,"The graph ignores reinfections, which would extend the tail of the curve.",1.1,1
+9,1,The curve assumes perfect case detection; underreporting would flatten the observed peak.,1.1,1
+10,1,The descent phase is linear; behavioral fatigue would slow the decline rate.,1.1,1
+11,1,The curve doesn’t account for variant-driven waves; new strains could alter dynamics.,1.1,1
+12,1,The peak is too sharp; regional differences in transmission would broaden it.,1.1,1
+13,1,The initial rise is too slow; pre-symptomatic spread would accelerate early growth.,1.1,1
+14,1,The curve lacks stochastic noise; small outbreaks create jagged edges in real data.,1.1,1
+15,1,The post-peak decline assumes constant behavior; risk perception would modulate it.,1.1,1
+16,1,The curve overestimates synchrony; urban/rural differences would phase-shift peaks.,1.1,1
+17,1,"The model ignores 'long-haul' infections, which would prolong the tail.",1.1,1
+18,1,The peak timing is too precise; uncertainty in Rt should widen the possible range.,1.1,1
+19,1,The curve assumes homogeneous susceptibility; age stratification would alter the shape.,1.1,1
+20,1,The susceptible depletion is too rapid; immunity gaps persist in subpopulations.,1.2,2
+21,1,"The curve drops to zero, but non-immunizing infections leave residual susceptibles.",1.2,2
+22,1,The decline lacks inflection points; behavioral changes would temporarily slow depletion.,1.2,2
+23,1,"The model ignores birth rates, which reintroduce susceptibles over time.",1.2,2
+24,1,The curve assumes perfect vaccine coverage; hesitancy would slow depletion.,1.2,2
+25,1,The susceptible pool declines linearly; network effects would make it nonlinear.,1.2,2
+26,1,"The graph doesn’t account for waning immunity, which would replenish susceptibles.",1.2,2
+27,1,The curve overestimates cross-immunity; new variants could reset susceptibility.,1.2,2
+28,1,The depletion rate is constant; seasonal mobility changes would modulate it.,1.2,2
+29,1,"The model ignores demographic turnover (aging, migration).",1.2,2
+30,1,The curve assumes uniform mixing; clustered contacts leave 'pockets' of susceptibles.,1.2,2
+31,1,The decline is too smooth; localized outbreaks would create step-like drops.,1.2,2
+32,1,The graph doesn’t reflect seroprevalence data showing higher baseline immunity.,1.2,2
+33,1,The model underestimates pre-existing immunity from other coronaviruses.,1.2,2
+34,1,The curve assumes all infections confer immunity; asymptomatic cases may not.,1.2,2
+35,1,The depletion rate ignores 'shield immunity' from prior exposure.,1.2,2
+36,1,The graph lacks regional variation; some areas deplete susceptibles faster.,1.2,2
+37,1,The curve doesn’t account for variable vaccine efficacy across age groups.,1.2,2
+38,1,The model assumes static population size; deaths reduce susceptibles marginally.,1.2,2
+39,1,The recovery curve is too abrupt; long COVID cases delay full recovery tallies.,1.3,3
+40,1,The model assumes fixed recovery time; severity stratification would spread the curve.,1.3,3
+41,1,The recovery rate plateaus too early; reinfections would create secondary bumps.,1.3,3
+42,1,"The graph ignores partial immunity, which would blur the recovered/infected boundary.",1.3,3
+43,1,The curve lacks correlation with hospital discharge data.,1.3,3
+44,1,The recovery lag is underestimated; severe cases take weeks to resolve.,1.3,3
+45,1,The model doesn’t distinguish between clinical and serological recovery.,1.3,3
+46,1,The curve assumes all recoveries are durable; waning immunity would cause dips.,1.3,3
+47,1,The graph overestimates recovery verification; many cases are never tested post-infection.,1.3,3
+48,1,The recovery rate is too high early on; testing backlogs delay official counts.,1.3,3
+49,1,The curve doesn’t align with convalescent plasma donation trends.,1.3,3
+50,1,"The model ignores recovery heterogeneity (e.g., age, comorbidities).",1.3,3
+51,1,"The graph lacks nosocomial recoveries, which cluster in time.",1.3,3
+52,1,The recovery curve is too smooth; holiday reporting delays create artifacts.,1.3,3
+53,1,The model assumes recovery equals immunity; partial protection would alter dynamics.,1.3,3
+54,1,"The curve doesn’t account for recovery misclassification (e.g., PCR persistence).",1.3,3
+55,1,The recovery rate is inconsistent with serosurvey data on antibody duration.,1.3,3
+56,1,"The graph ignores recovered-but-infectious carriers (e.g., viral shedding).",1.3,3
+57,1,The curve assumes uniform healthcare access; disparities would spread recoveries.,1.3,3
+58,1,The fatality curve is too front-loaded; ICU capacity constraints delay deaths.,1.4,4
+59,1,The model underestimates 'excess deaths' not directly attributed to COVID.,1.4,4
+60,1,The decline in deaths is too sharp; residual mortality from complications extends the tail.,1.4,4
+61,1,"The curve ignores nursing home impacts, which concentrate early fatalities.",1.4,4
+62,1,"The graph lacks mortality displacement (e.g., harvested immunity reducing later deaths).",1.4,4
+63,1,The death reporting lag is unmodeled; surges take weeks to appear in statistics.,1.4,4
+64,1,The curve assumes constant CFR; healthcare strain increases lethality during peaks.,1.4,4
+65,1,The model doesn’t reflect weekend underreporting dips in death counts.,1.4,4
+66,1,The graph over-smooths; real death curves have daily volatility.,1.4,4
+67,1,"The curve underestimates indirect deaths (e.g., deferred care due to pandemic).",1.4,4
+68,1,The fatality rate is inconsistent with age-stratified IFR estimates.,1.4,4
+69,1,The model ignores variant-specific lethality changes.,1.4,4
+70,1,The death plateau is too flat; burial backlog reporting creates spikes.,1.4,4
+71,1,The curve doesn’t align with mortuary or cremation data.,1.4,4
+72,1,The graph lacks geographic variation in death reporting standards.,1.4,4
+73,1,The model assumes deaths are instantaneously reported; delays create lags.,1.4,4
+74,1,"The curve underestimates chronic-condition exacerbations (e.g., diabetes, COPD).",1.4,4
+75,1,The fatality decline mirrors cases too closely; death reporting lags by 2-3 weeks.,1.4,4
+76,1,"The graph ignores misattributed causes (e.g., pneumonia vs. COVID-19).",1.4,4
+77,2,The modeled lockdown impact is immediate; real-world compliance takes 5-10 days.,2.1,1
+78,2,School closures’ effect appears too early; household transmission continues initially.,2.1,1
+79,2,The curve doesn’t show the 2-week delay for quarantine measures to reduce hospitalizations.,2.1,1
+80,2,Vaccination effects are modeled from day 1; immune response takes 10-14 days.,2.1,1
+81,2,The travel ban’s impact is mis-timed; imported cases decline only after 1 incubation period.,2.1,1
+82,2,"Behavioral changes (e.g., mask adoption) lag policy announcements by a week.",2.1,1
+83,2,The curve shows testing surges immediately; capacity expansion takes days to implement.,2.1,1
+84,2,The model ignores the delay between infection acquisition and testing registration.,2.1,1
+85,2,The effect of curfews is misplaced; nighttime mobility drops precede daytime reductions.,2.1,1
+86,2,The graph assumes contact tracing is instant; real-world delays allow chains to propagate.,2.1,1
+87,2,The impact of business restrictions is too abrupt; phased closures create gradual effects.,2.1,1
+88,2,The curve doesn’t account for pre-policy stockpiling increasing contacts transiently.,2.1,1
+89,2,The model places vaccine boosters’ effect too early; antibody maturation requires weeks.,2.1,1
+90,2,The graph shows telehealth reducing deaths instantly; system integration takes months.,2.1,1
+91,2,The curve misaligns with seroprevalence shifts post-measure introduction.,2.1,1
+92,2,The model ignores the delay between policy communication and community adherence.,2.1,1
+93,2,The effect of public awareness campaigns is immediate; behavior change is gradual.,2.1,1
+94,2,The curve assumes uniform measure adoption; rural areas implement slower than urban.,2.1,1
+95,2,The graph doesn’t reflect the lag between case detection and isolation enforcement.,2.1,1
+96,2,The model misplaces the impact of border testing; imported case reduction lags by days.,2.1,1
+97,2,The curve underestimates mask efficacy; randomized trials show higher transmission reduction.,2.2,2
+98,2,The model overstates quarantine compliance; real-world adherence is partial.,2.2,2
+99,2,"The graph ignores the additive effect of layered interventions (e.g., masks + distancing).",2.2,2
+100,2,The curve assumes school closures have no impact; meta-analyses suggest 15-20% reduction.,2.2,2
+101,2,The model overestimates vaccine coverage in high-hesitancy regions.,2.2,2
+102,2,The graph doesn’t reflect the nonlinear impact of superspreader event bans.,2.2,2
+103,2,The curve misrepresents workplace distancing; essential workers sustain transmission.,2.2,2
+104,2,The model underestimates the effect of ventilation upgrades in reducing Rt.,2.2,2
+105,2,The graph overstates the impact of travel restrictions without local containment.,2.2,2
+106,2,The curve assumes perfect isolation of cases; household transmission continues.,2.2,2
+107,2,The model ignores the dose-response relationship in mask-wearing adherence.,2.2,2
+108,2,The graph underestimates test-trace-isolate programs’ impact in early outbreaks.,2.2,2
+109,2,The curve overestimates the durability of behavioral changes over months.,2.2,2
+110,2,The model misrepresents the efficacy of lockdowns in low-population-density areas.,2.2,2
+111,2,The graph doesn’t account for fatigue reducing long-term measure effectiveness.,2.2,2
+112,2,The curve assumes all regions implement measures equally; heterogeneity matters.,2.2,2
+113,2,The model overestimates the speed of vaccine-derived herd immunity.,2.2,2
+114,2,The graph ignores the role of misinformation in eroding measure efficacy.,2.2,2
+115,2,The curve underestimates the impact of targeted elderly protection measures.,2.2,2
+116,2,"The model doesn’t reflect seasonal interaction with measure effectiveness (e.g., winter).",2.2,2
+117,2,The curve doesn’t reflect the new mask mandate’s expected 20% transmission reduction.,2.3,3
+118,2,The model ignores the planned vaccination of high-risk groups next month.,2.3,3
+119,2,The graph lacks the anticipated effect of hospital surge capacity expansion.,2.3,3
+120,2,The curve omits the scheduled increase in testing frequency for schools.,2.3,3
+121,2,The model doesn’t incorporate the new variant-specific booster campaign.,2.3,3
+122,2,The graph fails to show the projected impact of wastewater surveillance scaling.,2.3,3
+123,2,The curve excludes the enforcement of vaccine passports in high-risk settings.,2.3,3
+124,2,The model overlooks the upcoming public health messaging blitz.,2.3,3
+125,2,The graph doesn’t account for the new antiviral rollout starting next quarter.,2.3,3
+126,2,The curve ignores the planned 50% increase in contact tracing staff.,2.3,3
+127,2,The model omits the effect of mandated air filtration in public buildings.,2.3,3
+128,2,The graph lacks the expected mortality reduction from monoclonal antibody availability.,2.3,3
+129,2,The curve doesn’t reflect the scheduled phased reopening criteria.,2.3,3
+130,2,The model ignores the new policy prioritizing rapid tests for symptomatic cases.,2.3,3
+131,2,The graph omits the impact of the post-recovery clinic network reducing long COVID.,2.3,3
+132,2,The curve doesn’t incorporate the nursing home visitation restriction updates.,2.3,3
+133,2,The model fails to include the cross-border coordination agreement’s effects.,2.3,3
+134,2,The graph overlooks the new sick leave policies for infected workers.,2.3,3
+135,2,The curve excludes the anticipated behavioral shift from risk communication changes.,2.3,3
+136,3,The model projects 100% vaccination in 60 days; historical rollout peaks at 1%/day.,3.1,1
+137,3,"The curve shows cases peaking in winter, but regional climate data suggests summer surge.",3.1,1
+138,3,The forecast assumes simultaneous peak across regions; real-world spread varies by 2-4 weeks.,3.1,1
+139,3,The graph has hospitalizations peaking with cases; real-world lag is 7-10 days.,3.1,1
+140,3,The model projects deaths declining before ICU occupancy; contradicts triage protocols.,3.1,1
+141,3,The curve assumes variant emergence every 90 days; genomic surveillance shows 120-day cycles.,3.1,1
+142,3,The forecast ignores the typical 3-week delay between policy change and mobility shifts.,3.1,1
+143,3,The graph shows test positivity dropping before testing increases; logically inconsistent.,3.1,1
+144,3,The model has school terms affecting transmission instantly; observed lags are 1-2 weeks.,3.1,1
+145,3,The curve assumes immediate waning of immunity post-vaccination; studies show 6-month durability.,3.1,1
+146,3,The forecast misaligns with historical seasonality patterns for similar viruses.,3.1,1
+147,3,The graph projects identical serial intervals across waves; variants alter generation time.,3.1,1
+148,3,The model ignores the 10-day reporting delay for mortality data.,3.1,1
+149,3,The curve has boosters impacting transmission before antibody maturation completes.,3.1,1
+150,3,The forecast assumes uniform incubation periods; new variants shorten it by 2 days.,3.1,1
+151,3,The graph shows Rt shifting instantly with measures; empirical data shows 5-day smoothing.,3.1,1
+152,3,The model projects identical time-to-peak across demographics; age stratification matters.,3.1,1
+153,3,The curve ignores the 2-week lag between infection surge and wastewater signal detection.,3.1,1
+154,3,The forecast doesn’t account for holiday-related testing delays distorting timelines.,3.1,1
+155,3,The graph assumes simultaneous importation across all regions; travel hubs seed earlier.,3.1,1
+156,3,The model underestimates peak ICU demand by 40%; adjust for current occupancy rates.,3.2,2
+157,3,The projected 70% attack rate contradicts seroprevalence studies showing 50% saturation.,3.2,2
+158,3,The forecast assumes 95% vaccine efficacy against infection; real-world data shows 60-80%.,3.2,2
+159,3,The curve overestimates pediatric cases by 2x; children have lower susceptibility.,3.2,2
+160,3,The model projects 1% CFR; age-adjusted IFR estimates suggest 0.5-0.7%.,3.2,2
+161,3,The graph underestimates asymptomatic cases by not incorporating testing biases.,3.2,2
+162,3,The forecast assumes 100% case detection; empirical estimates suggest 30-50% undercounting.,3.2,2
+163,3,The curve overestimates reinfections; current data shows <5% within 90 days.,3.2,2
+164,3,The model projects 90% mask compliance; observational studies indicate 60-70%.,3.2,2
+165,3,The graph underestimates nosocomial infections by ignoring staff-to-patient transmission.,3.2,2
+166,3,The forecast assumes linear vaccine rollout; production constraints create logistic curves.,3.2,2
+167,3,The curve overcounts superspreading events by assuming uniform dispersion factor.,3.2,2
+168,3,The model underestimates long COVID prevalence by ignoring mild-case sequelae.,3.2,2
+169,3,The graph projects unrealistic 99% test specificity at current prevalence rates.,3.2,2
+170,3,The forecast assumes constant transmissibility; humidity changes alter aerosol stability.,3.2,2
+171,3,The curve overestimates cross-immunity between variants by 20-30 percentage points.,3.2,2
+172,3,The model underestimates household secondary attack rates by using outdated studies.,3.2,2
+173,3,The graph ignores the 15-20% transmission reduction from improved ventilation standards.,3.2,2
+174,3,The forecast assumes uniform comorbidities; regional health disparities alter severity.,3.2,2
+175,3,The curve overestimates vaccine hesitancy in regions with high trust institutions.,3.2,2
+176,4,The peak arrives too early given current Rt=1.2; should shift right by 3-4 weeks.,4.1,1
+177,4,The model ignores pre-holiday contact patterns that will accelerate the peak timing.,4.1,1
+178,4,The projected peak aligns with school holidays when transmission typically drops 20%.,4.1,1
+179,4,The curve assumes peak synchrony across regions; urban centers should lead by 2 weeks.,4.1,1
+180,4,The forecast places peak before vaccine coverage reaches 50%; immune escape suggests delay.,4.1,1
+181,4,The graph doesn’t account for the 30-day delay from current wastewater surge signals.,4.1,1
+182,4,The peak timing contradicts mobility data showing sustained high contact rates.,4.1,1
+183,4,The model projects summer peak but omits UV radiation’s 15-20% transmission reduction.,4.1,1
+184,4,The curve ignores the planned mass gathering 10 days before projected peak.,4.1,1
+185,4,The forecast assumes immediate variant dominance; gradual takeover would flatten peak timing.,4.1,1
+186,4,The graph places peak before anticipated cold weather increases indoor mixing.,4.1,1
+187,4,The model doesn’t incorporate the 2-week delay from current test positivity doubling time.,4.1,1
+188,4,"The peak aligns with historical healthcare worker shortages, suggesting underestimation.",4.1,1
+189,4,The curve assumes stable generation time; new variant’s shorter interval would advance peak.,4.1,1
+190,4,The forecast ignores the typical 4-week lag between European and North American peaks.,4.1,1
+191,4,The graph projects peak before expected antiviral stockpile release.,4.1,1
+192,4,The model doesn’t reflect the 10-day earlier peak in neighboring regions’ importation pressure.,4.1,1
+193,4,The curve assumes uniform susceptibility; prior wave timing suggests later regional peaks.,4.1,1
+194,4,The forecast places peak after major festival but doesn’t show pre-event surge.,4.1,1
+195,4,The graph ignores the planned relaxation of measures 5 days before projected peak.,4.1,1
+196,4,The peak caseload exceeds ICU capacity by 200%; triage would suppress detected mortality.,4.2,2
+197,4,The model overestimates peak prevalence given current wastewater RNA concentrations.,4.2,2
+198,4,The projected peak hospitalizations are 3x higher than staffed bed availability.,4.2,2
+199,4,The curve underestimates peak deaths by ignoring ventilator shortages during surge.,4.2,2
+200,4,The forecast assumes 100% testing capacity during peak; reagent shortages typically reduce by 30%.,4.2,2
+201,4,The graph shows peak positivity at 25% but omits test-seeking behavior changes above 15%.,4.2,2
+202,4,The model projects peak transmission pre-vaccine but overestimates naive susceptibility.,4.2,2
+203,4,The curve underestimates peak pediatric cases by ignoring school reopening policies.,4.2,2
+204,4,The forecast overcounts peak infections by assuming constant ascertainment rate.,4.2,2
+205,4,The graph ignores the 40% case undercount typical during healthcare system overload.,4.2,2
+206,4,The model assumes peak deaths match cases; improved treatments reduce later-wave CFR.,4.2,2
+207,4,The curve overestimates peak transmissibility by ignoring residual distancing behavior.,4.2,2
+208,4,The forecast projects peak superspreading events despite venue capacity restrictions.,4.2,2
+209,4,The graph shows unrealistic peak synchrony across age groups given vaccination disparities.,4.2,2
+210,4,The model underestimates peak presymptomatic transmission by using outdated estimates.,4.2,2
+211,4,The curve assumes peak nosocomial infections scale linearly with community prevalence.,4.2,2
+212,4,The forecast ignores the 20% peak reduction expected from telework policies.,4.2,2
+213,4,The graph overestimates peak long-term care outbreaks given current staff immunity.,4.2,2
+214,4,The model projects peak R0=5 but ignores building ventilation upgrades reducing effective Rt.,4.2,2
+215,4,The curve underestimates peak airborne transmission by using droplet-based assumptions.,4.2,2
+0,1,The infection curve is too smooth; real outbreaks show more irregular spikes due to superspreading events.,1.1,1
+1,1,The initial growth phase is too steep—real-world transmission usually has a slower exponential onset.,1.1,1
+2,1,The post-peak decline is too abrupt; residual transmission chains should prolong the tail.,1.1,1
+3,1,"The curve lacks secondary waves, which are common after relaxation of restrictions.",1.1,1
+4,1,"The peak is too narrow; in reality, case distribution is more dispersed over time.",1.1,1
+5,1,"The graph assumes uniform transmission, but heterogeneity in population density should create regional sub-peaks.",1.1,1
+6,1,The rebound after the first wave is missing—seasonal effects or behavior changes often cause resurgences.,1.1,1
+7,1,"The curve implies perfect immunity post-infection, ignoring reinfections that would flatten the decline.",1.1,1
+8,1,The initial cases are too clustered; imported infections typically seed multiple independent clusters.,1.1,1
+9,1,The descent phase mirrors the ascent too closely; real epidemics often have asymmetric peaks due to interventions.,1.1,1
+10,1,The plateau phase is absent; sustained transmission at low levels is common before elimination.,1.1,1
+11,1,"The curve assumes constant testing capacity, but real case counts depend on variable detection rates.",1.1,1
+12,1,The modeled peak is too symmetrical; behavioral changes typically skew the curve’s shape.,1.1,1
+13,1,No 'shoulder' after initial growth—mitigation measures usually bend the curve before the peak.,1.1,1
+14,1,The decline phase is linear; empirical data shows logarithmic decay due to residual immunity.,1.1,1
+15,1,The curve doesn’t account for 'flare-ups' from isolated outbreaks in high-contact settings.,1.1,1
+16,1,The peak is too early given the modeled R0; doubling times suggest a later surge.,1.1,1
+17,1,The graph ignores 'long-haul' infections that would extend the tail of active cases.,1.1,1
+18,1,The initial growth rate is inconsistent with the modeled generation interval.,1.1,1
+19,1,The curve lacks stochastic noise—real epidemics show variability due to random transmission events.,1.1,1
+20,1,The susceptible depletion is too rapid; herd immunity thresholds are rarely reached this abruptly.,1.2,2
+21,1,"The curve assumes homogeneous mixing, but subpopulations with low contact rates retain susceptibles longer.",1.2,2
+22,1,The S-curve plateaus too high; residual susceptibility should persist even post-epidemic.,1.2,2
+23,1,"The decline lacks inflection points—real-world interventions (e.g., vaccinations) create step changes.",1.2,2
+24,1,The model overestimates cross-immunity; some demographics remain susceptible despite high overall immunity.,1.2,2
+25,1,"The susceptible pool drops to zero, ignoring births or migration that replenish it.",1.2,2
+26,1,"The curve doesn’t reflect age-stratified susceptibility, which slows depletion in less-affected groups.",1.2,2
+27,1,"The decline is monotonic; behavioral feedback (e.g., risk avoidance) would temporarily slow depletion.",1.2,2
+28,1,The graph assumes perfect vaccine uptake; hesitancy would leave a larger susceptible fraction.,1.2,2
+29,1,No accounting for waning immunity—susceptibles should gradually increase post-wave.,1.2,2
+30,1,"The curve implies uniform attack rates, but hotspots exhaust susceptibles faster than others.",1.2,2
+31,1,The model ignores 'shield immunity' from prior exposure to related pathogens.,1.2,2
+32,1,The decline is too linear; network effects typically cause nonlinear depletion as clusters are immunized.,1.2,2
+33,1,The graph doesn’t show the expected 'S-shape' from gradual saturation of transmission opportunities.,1.2,2
+34,1,The susceptible count rebounds too quickly; natural immunity lasts longer than modeled.,1.2,2
+35,1,"The curve underestimates the impact of asymptomatic cases, which silently immunize populations.",1.2,2
+36,1,"No stratification by risk groups—high-risk individuals (e.g., elderly) are depleted faster than modeled.",1.2,2
+37,1,The graph assumes closed populations; travel would reintroduce susceptibles over time.,1.2,2
+38,1,The model overestimates the speed of herd immunity given real-world contact heterogeneity.,1.2,2
+39,1,Recoveries plateau too early; long-term convalescence should extend the tail.,1.3,3
+40,1,"The recovery curve is too smooth; real data shows jumps from batch reporting (e.g., discharged cohorts).",1.3,3
+41,1,The lag between infections and recoveries is too short—median disease duration is underestimated.,1.3,3
+42,1,"The graph ignores reinfections, which would reduce the net recovered count over time.",1.3,3
+43,1,"The recovery rate is constant, but severe cases have longer hospitalization periods.",1.3,3
+44,1,No 'reinfection valley'—recovered numbers should dip slightly when reinfections outpace new recoveries.,1.3,3
+45,1,The curve assumes 100% recovery; fatal cases should proportionally reduce the recovered pool.,1.3,3
+46,1,"The recovery trajectory is logistic, but real-world discharge rates depend on healthcare capacity.",1.3,3
+47,1,"The graph doesn’t reflect post-acute sequelae (e.g., long COVID) that delay full recovery classifications.",1.3,3
+48,1,Recoveries are too synchronized; variability in disease severity should spread out the curve.,1.3,3
+49,1,The model underestimates recovery delays during peak hospital overload.,1.3,3
+50,1,The curve lacks secondary recovery waves from delayed convalescence in critical cases.,1.3,3
+51,1,The recovered count is overestimated—asymptomatic cases rarely enter official recovery tallies.,1.3,3
+52,1,"The graph ignores partial immunity, which would blur the boundary between S and R compartments.",1.3,3
+53,1,No adjustment for seasonality—recovery rates may improve in warmer months.,1.3,3
+54,1,"The recovery curve is detached from interventions (e.g., new treatments accelerating discharges).",1.3,3
+55,1,"The model assumes uniform recovery rates, but comorbidities prolong recovery times.",1.3,3
+56,1,The curve doesn’t account for 'recovered but infectious' carriers extending the epidemic tail.,1.3,3
+57,1,The recovered compartment grows too linearly; real data shows bursts from clearing backlogged cases.,1.3,3
+58,1,The deaths curve is too front-loaded; mortality typically lags cases by weeks.,1.4,4
+59,1,The cumulative deaths graph lacks plateaus—real reporting often has delays causing step increments.,1.4,4
+60,1,The decline in deaths is too sharp; residual fatalities from complications should create a longer tail.,1.4,4
+61,1,The curve ignores excess mortality indirectly caused by healthcare system strain.,1.4,4
+62,1,"The deaths peak aligns perfectly with cases, but treatment improvements should decouple them over time.",1.4,4
+63,1,"The graph underestimates nursing home fatalities, which often cluster early in outbreaks.",1.4,4
+64,1,No mortality rebound during hospital capacity crises—real data shows spikes when ICUs are overwhelmed.,1.4,4
+65,1,"The curve assumes constant CFR, but variants or improved care can alter lethality dynamically.",1.4,4
+66,1,The deaths decline mirrors cases too closely; life support withdrawals can prolong fatality trends.,1.4,4
+67,1,"The model ignores underreporting, especially in regions with limited death registration systems.",1.4,4
+68,1,"The graph lacks 'harvesting effects'—initial waves kill the most vulnerable, reducing later mortality.",1.4,4
+69,1,"The deaths curve is too smooth; real data shows weekly patterns (e.g., weekend underreporting).",1.4,4
+70,1,No adjustment for demographic shifts—aging populations may increase mortality in later waves.,1.4,4
+71,1,"The curve doesn’t reflect fatalities from delayed care (e.g., deferred cancer treatments during lockdowns).",1.4,4
+72,1,The model overestimates death reporting speed; some jurisdictions take months to attribute COVID-19 deaths.,1.4,4
+73,1,"The graph ignores co-morbidity interactions (e.g., flu co-infections increasing lethality).",1.4,4
+74,1,The deaths peak is too narrow; fatality duration varies widely by age and health status.,1.4,4
+75,1,"No accounting for funeral restrictions, which may temporarily depress death counts.",1.4,4
+76,1,"The curve assumes uniform healthcare access, but marginalized groups have higher preventable mortality.",1.4,4
+77,2,The modeled lockdown impact starts immediately; behavior change typically takes 10–14 days to affect transmission.,2.1,1
+78,2,Vaccination effects appear after 7 days—immune response requires at least 2 weeks for significant protection.,2.1,1
+79,2,The graph shows school closures reducing cases within 3 days; household mixing delays would delay this by a week.,2.1,1
+80,2,Travel bans’ effects are misaligned; imported variant introductions would continue for weeks due to enforcement lags.,2.1,1
+81,2,The curve implies instant compliance with mask mandates; population adaptation takes 5–10 days to reach steady adherence.,2.1,1
+82,2,The quarantine effect is too abrupt; case isolation slows transmission gradually as contacts are traced.,2.1,1
+83,2,The model ignores policy announcement delays—measures announced on Day X aren’t enforced until Day X+3.,2.1,1
+84,2,The work-from-home order’s impact is misplaced; corporate implementation timelines span 1–2 weeks.,2.1,1
+85,2,The curve doesn’t reflect the 10-day incubation period—cases detected after policy changes are pre-intervention infections.,2.1,1
+86,2,The testing surge’s effect is immediate; expanded detection actually increases reported cases before reducing them via isolation.,2.1,1
+87,2,The graph shows night curfews cutting transmission instantly; empirical data suggests negligible effects without daytime measures.,2.1,1
+88,2,The model assumes perfect border closure efficacy; imported cases typically decline over 3–4 weeks due to residual travel.,2.1,1
+89,2,"The vaccination curve inflection is too sharp; rollout logistics cause coverage to increase linearly, not exponentially.",2.1,1
+90,2,"The curve implies immediate behavior change after press conferences; fear-driven distancing emerges over days, not hours.",2.1,1
+91,2,The graph ignores the 2-week delay between infection reduction and ICU admission declines.,2.1,1
+92,2,The model misplaces the effect of superspreader event bans; transmission from prior events continues for 1–2 generations.,2.1,1
+93,2,The curve shows telemedicine reducing deaths instantly; healthcare system relief impacts mortality over months.,2.1,1
+94,2,The data doesn’t reflect the 5-day reporting lag for deaths—policy impacts on mortality appear later than modeled.,2.1,1
+95,2,The graph assumes contact tracing is instantaneous; real-world delays allow 1–2 transmission cycles before containment.,2.1,1
+96,2,The model overestimates the speed of therapeutic adoption; new treatments take weeks to scale even after approval.,2.1,1
+97,2,The curve underestimates the effect of indoor dining bans—empirical data shows 30–50% transmission reductions.,2.2,2
+98,2,"The graph overstates mask efficacy; cloth masks reduce transmission by 20–30%, not the modeled 50%.",2.2,2
+99,2,The model ignores that school reopenings with testing reduce community spread less than universal remote learning.,2.2,2
+100,2,"The curve doesn’t reflect that workplace alternating schedules only cut transmission by ~25%, not 50%.",2.2,2
+101,2,The graph assumes vaccination reduces transmission by 80%; real-world data suggests 40–60% for Delta.,2.2,2
+102,2,The model overestimates the impact of public awareness campaigns—behavior change plateaus after 2–3 weeks.,2.2,2
+103,2,The curve implies test-trace-isolate eliminates transmission; even 80% coverage leaves residual spread.,2.2,2
+104,2,The graph ignores that outdoor masking mandates have minimal added benefit over voluntary distancing.,2.2,2
+105,2,The model assumes lockdowns reduce R0 to 0.7; regional data shows 0.9–1.1 due to essential worker circulation.,2.2,2
+106,2,The curve overestimates the effect of airport testing—missed pre-symptomatic cases limit its impact to ~30% reduction.,2.2,2
+107,2,The graph doesn’t account for policy fatigue; later lockdowns have 20–30% lower compliance than initial ones.,2.2,2
+108,2,"The model assumes concert bans reduce R0 by 0.3, but household gatherings compensate for 50% of this.",2.2,2
+109,2,"The curve reflects full compliance with quarantine; real-world adherence is ~60%, blunting effects.",2.2,2
+110,2,"The graph overestimates the speed of variant containment; even travel bans slow Delta spread by weeks, not months.",2.2,2
+111,2,The model ignores that partial restaurant capacity restrictions only reduce dining transmission by ~40%.,2.2,2
+112,2,The curve assumes all regions implement measures uniformly; rural areas often have 1–2 weeks’ delay.,2.2,2
+113,2,The graph doesn’t reflect that workplace ventilation upgrades reduce transmission by just 10–15%.,2.2,2
+114,2,"The model overestimates the effect of curfews; mobility data shows night activity shifts to daytime, netting little reduction.",2.2,2
+115,2,The curve implies perfect vaccine prioritization; age-group leakage blunts mortality reductions by 20–30%.,2.2,2
+116,2,The graph doesn’t show the expected dip from the 14-day self-isolation order issued last week.,2.3,3
+117,2,The curve ignores the 50% capacity limit on public transport implemented 10 days ago.,2.3,3
+118,2,"The model omits the contact tracing app launched 3 weeks prior, which should’ve reduced undocumented spread.",2.3,3
+119,2,The graph doesn’t reflect the mandatory quarantine for international travelers introduced on Day 25.,2.3,3
+120,2,The curve lacks the expected inflection from the vaccination of high-risk groups (30% of pop.) completed 14 days back.,2.3,3
+121,2,The model excludes the effect of the 'work from home if possible' advisory in place since the epidemic’s start.,2.3,3
+122,2,"The graph shows no impact from the closure of nightclubs 5 days ago, which typically cuts youth transmission by 40%.",2.3,3
+123,2,The curve doesn’t account for the free mask distribution program that raised coverage from 40% to 65%.,2.3,3
+124,2,The model ignores the 10 PM–5 AM curfew enforced for the past 12 days in urban areas.,2.3,3
+125,2,The graph lacks the expected testing surge after the 'test-to-enter' policy for large venues began 8 days prior.,2.3,3
+126,2,"The curve omits the 7-day mandatory quarantine for contacts, which should’ve reduced secondary cases by now.",2.3,3
+127,2,The model doesn’t reflect the 80% telework adoption by corporations following the government’s 3-week-old directive.,2.3,3
+128,2,The graph shows no effect from the 1-meter distancing rule enforced in stores since Day 15.,2.3,3
+129,2,"The curve ignores the 70% vaccination coverage in nursing homes achieved 3 weeks ago, which should’ve lowered deaths.",2.3,3
+130,2,The model excludes the impact of the 3-week regional lockdown in the northern provinces.,2.3,3
+131,2,The graph doesn’t capture the 50% increase in testing capacity rolled out 10 days prior.,2.3,3
+132,2,The curve lacks the expected decline from the 14-day quarantine for symptomatic cases implemented 12 days ago.,2.3,3
+133,2,The model omits the effect of the public event size cap (50 people) in place since Day 20.,2.3,3
+134,2,The graph doesn’t reflect the 30% mobility reduction observed after the 'stay local' campaign launched 2 weeks back.,2.3,3
+135,3,"The model predicts 90% seroprevalence by Day 60, but real-world data suggests 6–9 months for such levels.",3.1,1
+136,3,"The curve shows hospitalizations peaking on Day 45, but ICU admissions typically lag by 7–10 days.",3.1,1
+137,3,"The graph implies test positivity drops below 5% by Day 30, yet current trends suggest Day 50–60.",3.1,1
+138,3,"The forecast has deaths plateauing on Day 70, but mortalities usually decline over 3–4 months post-peak.",3.1,1
+139,3,The model assumes cases double every 3 days early on; empirical doubling times are 5–7 days in this phase.,3.1,1
+140,3,"The curve shows R<1 sustained for 30 days post-peak, but seasonal fluctuations typically cause R≈1 oscillations.",3.1,1
+141,3,"The graph predicts 100% vaccine coverage by Day 90, but logistics limit real-world rates to 1%/day max.",3.1,1
+142,3,The forecast ignores the 2-week delay between seroconversion and detectable antibody protection.,3.1,1
+143,3,The model has school reopenings on Day 60 with no case rise; real data shows a 14–21-day lag before school-driven surges.,3.1,1
+144,3,The curve implies test turnaround is 1 day; reporting delays mean cases reported on Day X reflect infections from Day X-3.,3.1,1
+145,3,"The graph shows imported variant dominance in 2 weeks, but genomic surveillance typically detects transitions over 4–6 weeks.",3.1,1
+146,3,"The model assumes a fixed 5-day generation interval; emerging variants show 3–4-day generations, accelerating spread.",3.1,1
+147,3,The forecast has non-ICU hospital stays averaging 7 days; severe COVID-19 cases typically require 10–14 days.,3.1,1
+148,3,The curve implies mask mandates reduce transmission instantly; behavioral studies show 5–7 days for population-level adherence.,3.1,1
+149,3,"The graph predicts travel resumes fully on Day 120, but border reopenings are phased over months in reality.",3.1,1
+150,3,"The model ignores the 21-day gap between vaccine doses, which delays full immunity by 5–6 weeks.",3.1,1
+151,3,"The forecast shows deaths peaking with cases, but mortality curves typically lag by 2–3 weeks.",3.1,1
+152,3,The curve assumes a 14-day immunity onset post-vaccination; real protection builds over 21–28 days.,3.1,1
+153,3,"The graph omits the 10-day reporting lag for mortality data, making real-time death counts unreliable.",3.1,1
+154,3,"The model predicts 500K daily cases at peak, but current testing capacity caps detection at 200K.",3.2,2
+155,3,The curve shows 80% vaccine efficacy against infection; real-world data suggests 50–60% for Delta.,3.2,2
+156,3,The forecast assumes 10% asymptomatic rate; meta-analyses indicate 30–40% asymptomatic carriers.,3.2,2
+157,3,The graph implies 95% ICU survival; pre-vaccine data showed 60–70% survival in overloaded systems.,3.2,2
+158,3,"The model estimates 0.5% IFR, but age-adjusted calculations suggest 0.9–1.2% in this population.",3.2,2
+159,3,"The curve projects 1M recoveries by Day 50, but convalescence timelines limit realistic counts to 600K.",3.2,2
+160,3,The forecast assumes 70% vaccination reduces R0 to 0.8; empirical data shows R=1.1–1.3 with Delta.,3.2,2
+161,3,"The graph predicts 90% mask compliance, but observational studies measure 50–70% in public spaces.",3.2,2
+162,3,The model uses a 2% hospitalization rate; current variants hospitalize 5–8% of symptomatic cases.,3.2,2
+163,3,The curve shows 50% prior immunity from other coronaviruses; serological studies suggest <20% cross-protection.,3.2,2
+164,3,The forecast assumes 10% test positivity at peak; overwhelmed systems often hit 20–25%.,3.2,2
+165,3,The graph implies 100% case detection; empirical estimates suggest 30–40% of infections are caught.,3.2,2
+166,3,"The model projects 500 daily deaths at peak, but mortalities scale with cases at a 1.5% CFR—expect 800–1K.",3.2,2
+167,3,"The curve uses a 3-day serial interval; newer variants show 2–2.5-day intervals, increasing spread speed.",3.2,2
+168,3,The forecast assumes 60% vaccine uptake; hesitancy surveys predict 45–55% in this demographic.,3.2,2
+169,3,The graph shows 80% reduction in transmission from distancing; meta-analyses suggest 40–50% max.,3.2,2
+170,3,"The model estimates 30% of cases are pediatric, but school closures limit this to 10–15% in early waves.",3.2,2
+171,3,The curve predicts 5% reinfection rate; emerging data shows 10–15% after 6 months with waning immunity.,3.2,2
+172,3,"The forecast ignores that 20% of hospitalized patients require 30+ days of care, straining bed turnover.",3.2,2
+173,4,"The peak is projected for Day 40, but current mobility data suggests Day 50–55.",4.1,1
+174,4,"The curve implies an early peak due to lockdowns, but non-compliance will delay it by 2 weeks.",4.1,1
+175,4,"The model forecasts peak hospitalizations on Day 30, but ICU capacity constraints will stretch it to Day 40.",4.1,1
+176,4,"The graph shows a winter peak, but seasonality models suggest a later spring surge in this region.",4.1,1
+177,4,The forecast ignores that prior immunity from Beta wave will push the peak 3–4 weeks later.,4.1,1
+178,4,"The curve assumes the peak coincides with school holidays, which typically reduce transmission by 20%.",4.1,1
+179,4,"The model predicts a sharp peak, but multi-generational households will prolong the surge over 4–5 weeks.",4.1,1
+180,4,"The graph shows a summer peak, but heat-driven indoor crowding in this region accelerates spread in winter.",4.1,1
+181,4,"The forecast doesn’t account for variant competition, which could delay dominance and peak timing by 1–2 months.",4.1,1
+182,4,"The curve implies the peak aligns with vaccine rollout, but behavioral relaxation will create a secondary surge.",4.1,1
+183,4,"The model projects a peak before monsoon season, but humidity-driven behavior changes typically reduce transmission then.",4.1,1
+184,4,"The graph ignores that the peak will coincide with a major holiday, amplifying superspreading by 30–40%.",4.1,1
+185,4,"The forecast assumes uniform peak timing, but urban/rural differences will create staggered peaks over 6 weeks.",4.1,1
+186,4,"The curve shows a peak during harvest season, when agricultural labor mobility increases transmission risks.",4.1,1
+187,4,"The model doesn’t reflect that the peak will align with a mass protest event, adding 10–15% to case counts.",4.1,1
+188,4,"The graph predicts an early peak due to border closures, but undocumented travel will delay it by 3 weeks.",4.1,1
+189,4,The forecast ignores that the healthcare strike during the projected peak will increase fatalities by 20%.,4.1,1
+190,4,"The curve assumes the peak occurs before the rainy season, but flood-related displacement will prolong spread.",4.1,1
+191,4,"The model doesn’t account for the 2-week election campaign during the peak, which increases gatherings.",4.1,1
+192,4,The peak caseload of 50K/day is unrealistic given current test positivity rates (suggesting 30–35K).,4.2,2
+193,4,"The model overestimates peak ICU demand at 1,000 beds; surge capacity limits would cap utilization at 700.",4.2,2
+194,4,"The curve shows 20% positivity at peak, but testing bottlenecks will undercount cases, showing 30–35%.",4.2,2
+195,4,"The graph implies 500 peak deaths/day, but age-stratified CFR predicts 700–800 given the case mix.",4.2,2
+196,4,"The forecast assumes 80% vaccine coverage at peak, but supply constraints will limit it to 60%.",4.2,2
+197,4,"The model projects 10% pediatric cases at peak, but school closures will suppress this to 5%.",4.2,2
+198,4,The curve underestimates peak hospitalizations by 30%—it ignores the variant’s increased severity.,4.2,2
+199,4,"The graph shows peak R0=3, but contact tracing data suggests R0=4.5 for this variant.",4.2,2
+200,4,"The forecast assumes 90% case detection at peak, but system overload will reduce it to 50–60%.",4.2,2
+201,4,The model overestimates peak mask compliance (80%); fatigue will lower adherence to 50% by then.,4.2,2
+202,4,"The curve implies 70% household attack rates at peak, but real-world clusters max out at 40–50%.",4.2,2
+203,4,"The graph predicts 1M cumulative cases by peak, but seroprevalence data suggests 1.5–2M undetected.",4.2,2
+204,4,The forecast ignores that peak fatalities will be 20% higher due to oxygen shortages.,4.2,2
+205,4,"The model underestimates peak transmission in prisons/jails, adding 5–10% to total cases.",4.2,2
+206,4,"The curve shows 30% peak workforce absenteeism, but essential industries will maintain 80% attendance.",4.2,2
+207,4,"The graph assumes peak test turnaround of 1 day; reality will be 3–4 days, undercounting by 20%.",4.2,2
+208,4,The forecast doesn’t reflect that peak deaths will include 15–20% from delayed COVID complications.,4.2,2
+209,4,The model overestimates peak vaccine efficacy at 90%; waning immunity will lower it to 70%.,4.2,2
+210,4,The curve ignores that peak wastewater viral loads suggest 30% higher community spread than reported.,4.2,2
+0,1,The infection curve is too steep; real-world transmission is more gradual due to heterogeneous contact rates.,1.1,1
+1,1,The peak is too narrow; infections should spread over a longer period.,1.1,1
+2,1,The decline post-peak is too abrupt; residual transmission should create a longer tail.,1.1,1
+3,1,"The curve is perfectly symmetrical, but real epidemics have asymmetric growth and decline phases.",1.1,1
+4,1,The initial growth rate is too slow given the estimated R0.,1.1,1
+5,1,Secondary waves are missing; consider reinfections or variant-driven surges.,1.1,1
+6,1,The plateau phase is too flat; localized outbreaks should create fluctuations.,1.1,1
+7,1,"The curve assumes homogeneous mixing, but superspreading events would create spikes.",1.1,1
+8,1,The decline phase should show stepwise drops corresponding to intervention phases.,1.1,1
+9,1,"The curve lacks seasonality effects, which would modulate transmission rates.",1.1,1
+10,1,The initial exponential phase is too prolonged; saturation effects should appear earlier.,1.1,1
+11,1,The curve doesn't account for behavioral changes during high prevalence.,1.1,1
+12,1,The rebound after restrictions lift is missing; mobility data suggests a resurgence.,1.1,1
+13,1,"The curve implies perfect case detection, but underreporting would flatten observed peaks.",1.1,1
+14,1,"The decline is linear, but empirical data usually shows exponential decay.",1.1,1
+15,1,The curve doesn't reflect spatial heterogeneity—urban vs. rural spread differs.,1.1,1
+16,1,The peak is too high; current contact tracing suggests lower superspreading potential.,1.1,1
+17,1,The curve lacks a 'shoulder' from partial immunity effects.,1.1,1
+18,1,The growth phase is too smooth; stochasticity should introduce more variability.,1.1,1
+19,1,"The curve assumes constant transmission rates, but behavior adapts dynamically.",1.1,1
+20,1,The susceptible depletion is too rapid; herd immunity thresholds are approached more slowly.,1.2,2
+21,1,"The curve drops to near-zero, but some populations remain unexposed due to isolation.",1.2,2
+22,1,"The decline is linear, but real-world depletion slows as susceptible pools shrink.",1.2,2
+23,1,The model assumes uniform susceptibility; age-stratified risks would alter the curve.,1.2,2
+24,1,"No replenishment of susceptibles is considered (e.g., births or waning immunity).",1.2,2
+25,1,The curve doesn't account for variable exposure risks across professions.,1.2,2
+26,1,The decline is too smooth; clustering would create irregular depletion patterns.,1.2,2
+27,1,The susceptible pool is exhausted too early given the observed infection rates.,1.2,2
+28,1,The curve ignores cross-immunity from related pathogens.,1.2,2
+29,1,The model overestimates depletion in rural areas with lower contact rates.,1.2,2
+30,1,The curve assumes perfect immunity post-infection; partial protection would slow depletion.,1.2,2
+31,1,The decline doesn't reflect targeted vaccination of high-risk groups.,1.2,2
+32,1,The curve should show stepwise drops corresponding to mass vaccination campaigns.,1.2,2
+33,1,The susceptible population is underestimated due to unaccounted prior immunity.,1.2,2
+34,1,"The depletion rate is constant, but behavioral changes would modulate exposure.",1.2,2
+35,1,The curve doesn't account for demographic variability in susceptibility.,1.2,2
+36,1,The model assumes homogeneous mixing; network effects would delay depletion.,1.2,2
+37,1,The decline is too abrupt; residual susceptibles remain in isolated communities.,1.2,2
+38,1,The curve lacks replenishment from waning immunity over time.,1.2,2
+39,1,The model ignores migration effects on local susceptible pools.,1.2,2
+40,1,The recovery curve is too linear; real-world recovery rates vary by healthcare capacity.,1.3,3
+41,1,The recovery lag is underestimated; severe cases take weeks to resolve.,1.3,3
+42,1,The curve plateaus too early; long-term recoveries should extend the tail.,1.3,3
+43,1,"The model assumes fixed recovery rates, but hospital overload would delay discharges.",1.3,3
+44,1,"Reinfections are not considered, leading to overestimation of recovered individuals.",1.3,3
+45,1,"The curve doesn't reflect post-acute sequelae (e.g., long COVID) delaying full recovery.",1.3,3
+46,1,The recovery rate is too high given observed hospitalization durations.,1.3,3
+47,1,The curve lacks surges from improved treatment protocols over time.,1.3,3
+48,1,The model ignores partial recoveries where individuals remain symptomatic.,1.3,3
+49,1,The recovery trajectory is too smooth; real data shows variability by age group.,1.3,3
+50,1,"The curve assumes uniform healthcare access, neglecting regional disparities.",1.3,3
+51,1,The plateau is too abrupt; tail-end recoveries should taper gradually.,1.3,3
+52,1,The model doesn't account for recovery acceleration due to therapeutic advances.,1.3,3
+53,1,The curve overestimates recoveries early in the epidemic when diagnostics were limited.,1.3,3
+54,1,The recovery rate doesn't correlate with observed case-fatality ratios.,1.3,3
+55,1,The curve should reflect delays in recovery reporting from overwhelmed systems.,1.3,3
+56,1,"The model assumes all infected recover, but some cases become chronic.",1.3,3
+57,1,The recovery phase lacks oscillations from intermittent healthcare access.,1.3,3
+58,1,The curve doesn't align with seroprevalence data on actual immunity levels.,1.3,3
+59,1,The model ignores reinfection-driven fluctuations in recovered counts.,1.3,3
+60,1,The fatality curve is too front-loaded; deaths should lag infections by 2-3 weeks.,1.4,4
+61,1,The decline in deaths is too sharp; residual mortality from complications extends the tail.,1.4,4
+62,1,The curve lacks correlation with hospitalization peaks.,1.4,4
+63,1,Deaths plateau too early; delayed reporting and post-acute mortality are missing.,1.4,4
+64,1,The model underestimates fatalities during healthcare system overload.,1.4,4
+65,1,The curve doesn't reflect mortality displacement from vulnerable populations.,1.4,4
+66,1,"The fatality rate is constant, but improved treatments should reduce later deaths.",1.4,4
+67,1,The curve ignores excess mortality indirectly caused by the epidemic.,1.4,4
+68,1,The decline phase is too smooth; real data shows variability from reporting delays.,1.4,4
+69,1,"The model assumes uniform CFR, but age-specific risks create uneven distributions.",1.4,4
+70,1,The curve lacks secondary mortality waves from variant emergence.,1.4,4
+71,1,Deaths are overestimated early on due to unadjusted testing biases.,1.4,4
+72,1,The fatality trajectory doesn't align with ICU admission trends.,1.4,4
+73,1,"The model ignores seasonal effects on mortality (e.g., winter surges).",1.4,4
+74,1,The curve should show stepwise drops from vaccination rollout in high-risk groups.,1.4,4
+75,1,The plateau is unrealistic; long-term follow-up shows extended mortality tails.,1.4,4
+76,1,The model underestimates deaths in marginalized populations with limited access to care.,1.4,4
+77,1,The curve doesn't account for changes in death certification protocols.,1.4,4
+78,1,The fatality rate is too low given the observed severity profile.,1.4,4
+79,1,The model ignores fatalities from disrupted healthcare for non-COVID conditions.,1.4,4
+80,2,"The curve shows immediate lockdown effects, but behavioral changes take 10-14 days.",2.1,1
+81,2,Vaccination impacts appear too early; immune response requires 2-3 weeks post-dose.,2.1,1
+82,2,The model doesn't account for gradual compliance with mask mandates over 7 days.,2.1,1
+83,2,Travel restrictions' effects are misaligned with incubation period dynamics.,2.1,1
+84,2,School closures should impact transmission after a generational interval (~1 week).,2.1,1
+85,2,"The curve reflects testing surges instantly, but reporting lags by 3-5 days.",2.1,1
+86,2,Antiviral rollout effects are misplaced; treatment courses take 5-7 days.,2.1,1
+87,2,"The model assumes immediate telework adoption, but workforce adaptation takes time.",2.1,1
+88,2,Border controls' effects appear too late given the 3-day incubation lag.,2.1,1
+89,2,The curve doesn't reflect the 2-week delay in seroconversion post-infection.,2.1,1
+90,2,Quarantine effects are oversimplified; contact tracing delays create phased impacts.,2.1,1
+91,2,The model ignores the 10-day delay between case detection and hospitalization peaks.,2.1,1
+92,2,Curve adjustments from public awareness campaigns should emerge gradually over weeks.,2.1,1
+93,2,"The impact of superspreader event bans is immediate, but transmission chains take days to resolve.",2.1,1
+94,2,"The model misplaces vaccine booster effects, which require 7-10 days for full protection.",2.1,1
+95,2,"The curve shows instant NPIs effects, but population adherence builds over time.",2.1,1
+96,2,Testing capacity expansions should reduce detection bias with a 1-week lag.,2.1,1
+97,2,"The model assumes immediate immunity from vaccines, ignoring the 14-day antibody ramp-up.",2.1,1
+98,2,The curve doesn't reflect the 5-day delay between symptom onset and self-isolation.,2.1,1
+99,2,The impact of ventilation standards is misplaced; retrofitting buildings takes weeks.,2.1,1
+100,2,The curve underestimates the suppression effect of indoor mask mandates.,2.2,2
+101,2,The model overstates the impact of school closures on adult transmission.,2.2,2
+102,2,The curve doesn't reflect the multiplicative effect of layered interventions.,2.2,2
+103,2,"Vaccination is modeled as 100% effective, ignoring breakthrough infections.",2.2,2
+104,2,The curve overestimates the durability of lockdown effects without compliance decay.,2.2,2
+105,2,"The model ignores the differential impact of NPIs by variant (e.g., Delta vs. Omicron).",2.2,2
+106,2,The curve assumes uniform NPI adherence across demographics.,2.2,2
+107,2,The model overestimates the speed of vaccine-derived herd immunity.,2.2,2
+108,2,The curve doesn't account for the nonlinear effects of superspreading suppression.,2.2,2
+109,2,The impact of test-trace-isolate is oversimplified; real-world efficiency varies.,2.2,2
+110,2,The model underestimates the rebound effect after restriction lifting.,2.2,2
+111,2,The curve overstates the effect of travel bans given pre-existing local transmission.,2.2,2
+112,2,The model ignores the diminishing returns of repeated lockdowns.,2.2,2
+113,2,The curve doesn't reflect the regional heterogeneity in intervention efficacy.,2.2,2
+114,2,"The model assumes perfect NPI compliance, ignoring fatigue over time.",2.2,2
+115,2,The curve overestimates the impact of curfews without concurrent mobility reductions.,2.2,2
+116,2,The model ignores the lag between policy announcements and enforcement.,2.2,2
+117,2,The curve doesn't account for compensatory behavior reducing intervention effects.,2.2,2
+118,2,The model overstates the effect of public messaging without tangible policy changes.,2.2,2
+119,2,The curve doesn't reflect the 20% transmission reduction from mask mandates.,2.3,3
+120,2,The model ignores the 30% case decline expected post-vaccination of elderly.,2.3,3
+121,2,The curve lacks the expected 2-week delay from quarantine implementation.,2.3,3
+122,2,No adjustment for the 50% mobility reduction due to stay-at-home orders.,2.3,3
+123,2,The model doesn't incorporate the 15% test positivity threshold triggering restrictions.,2.3,3
+124,2,The curve omits the impact of ventilation upgrades in high-risk settings.,2.3,3
+125,2,No reflection of the 40% seroprevalence ceiling delaying further waves.,2.3,3
+126,2,The model ignores the 10-day isolation period's effect on workforce transmission.,2.3,3
+127,2,The curve doesn't show the expected 25% drop from telework policies.,2.3,3
+128,2,No accounting for the 60% vaccine coverage needed to slow community spread.,2.3,3
+129,2,The model omits the 5-day incubation period in contact tracing efficacy.,2.3,3
+130,2,The curve lacks the 70% efficacy reduction against emerging variants.,2.3,3
+131,2,No adjustment for the 3x higher transmissibility in congregate settings.,2.3,3
+132,2,The model doesn't reflect the 50% case underreporting in early epidemic stages.,2.3,3
+133,2,The curve ignores the 2-week lag between infection surges and hospitalization peaks.,2.3,3
+134,2,No incorporation of the 80% protection threshold for herd immunity.,2.3,3
+135,2,The model omits the 10% weekly waning of immunity post-infection.,2.3,3
+136,2,The curve doesn't account for the 4-day serial interval in transmission modeling.,2.3,3
+137,2,No reflection of the 20% asymptomatic rate flattening observed curves.,2.3,3
+138,3,The peak is misaligned by 7 days based on current doubling times.,3.1,1
+139,3,"Hospitalizations should lag cases by 10-14 days, not 5.",3.1,1
+140,3,"The model assumes 21-day immunity waning, but data suggests 90-120 days.",3.1,1
+141,3,The second wave arrives too early given the 6-month variant emergence cycle.,3.1,1
+142,3,"The curve assumes 3-day serial intervals, but Omicron averages 2.5 days.",3.1,1
+143,3,The decline phase is compressed; historical analogs show 8-week tails.,3.1,1
+144,3,The model ignores the 14-day delay between vaccination campaigns and case declines.,3.1,1
+145,3,The rebound starts too late given mobility data suggesting earlier resurgence.,3.1,1
+146,3,The curve misplaces the 30-day interval between infection surges in neighboring regions.,3.1,1
+147,3,"The model assumes 5-day incubation, but latest variants show 3-day medians.",3.1,1
+148,3,The peak timing contradicts wastewater surveillance trends by 10 days.,3.1,1
+149,3,The curve doesn't align with the 21-day interval between policy changes and impact.,3.1,1
+150,3,The model ignores the 45-day delay between seed cases and community transmission.,3.1,1
+151,3,The second wave should start 60 days post-peak based on immunity decay rates.,3.1,1
+152,3,"The curve assumes 7-day reporting lags, but current systems have 3-day delays.",3.1,1
+153,3,The model misplaces the 10-day gap between case detection and death reporting.,3.1,1
+154,3,The rebound timing contradicts cell phone mobility data by 2 weeks.,3.1,1
+155,3,The curve ignores the 28-day cycle of restriction easing and resurgence.,3.1,1
+156,3,The model assumes 14-day quarantine periods despite updated 5-day guidelines.,3.1,1
+157,3,The peak alignment is inconsistent with the 9-day generation time of the dominant variant.,3.1,1
+158,3,The model overestimates peak hospitalizations by 40% given current ICU capacity.,3.2,2
+159,3,"The curve assumes 80% vaccine efficacy, but latest variants show 50% protection.",3.2,2
+160,3,The attack rate is too high given the 60% seroprevalence from prior waves.,3.2,2
+161,3,The model underestimates deaths by 30% due to uncounted post-acute mortality.,3.2,2
+162,3,"The reinfection rate is set at 5%, but emerging data suggests 15-20%.",3.2,2
+163,3,The curve overprojects cases by 2x compared to wastewater RNA concentrations.,3.2,2
+164,3,"The model assumes 95% testing coverage, but real-world estimates are 70-80%.",3.2,2
+165,3,"The fatality ratio is 1.8%, inconsistent with the 0.5% IFR for this age distribution.",3.2,2
+166,3,The curve underestimates pediatric cases by 50% given school transmission rates.,3.2,2
+167,3,The model overestimates R0 as 6 when empirical estimates suggest 4.5.,3.2,2
+168,3,"The hospitalization rate is 15%, but current variants show 8-10% severity.",3.2,2
+169,3,"The curve projects 90% vaccine uptake, but hesitancy limits to 75% achievable.",3.2,2
+170,3,The model ignores the 20% underreporting factor in early epidemic data.,3.2,2
+171,3,The reinfection rate should be higher given the variant's immune escape profile.,3.2,2
+172,3,"The curve assumes 100% case detection, but asymptomatic spread suggests 50% capture.",3.2,2
+173,3,The model overestimates airborne transmission by neglecting outdoor dilution effects.,3.2,2
+174,3,The fatality count is inconsistent with excess mortality statistics by 25%.,3.2,2
+175,3,The curve underestimates booster dose efficacy by 15 percentage points.,3.2,2
+176,3,The model assumes uniform susceptibility despite 30% cross-reactive immunity.,3.2,2
+177,3,The hospitalization projection ignores the 40% reduction from antiviral treatments.,3.2,2
+178,4,The peak arrives 14 days too early given current doubling times.,4.1,1
+179,4,Immunity from prior infection should delay the peak by 3-4 weeks.,4.1,1
+180,4,The peak timing contradicts mobility data suggesting slower spread.,4.1,1
+181,4,Seasonality effects are missing—the peak should align with winter months.,4.1,1
+182,4,The model underestimates the 10-day peak delay from booster campaigns.,4.1,1
+183,4,The peak is too early given the 21-day vaccine rollout ramp-up period.,4.1,1
+184,4,The curve ignores the 2-week peak shift expected from school reopening delays.,4.1,1
+185,4,The peak should occur 30 days later based on neighboring region trajectories.,4.1,1
+186,4,The model misplaces the peak relative to the variant's 9-day generation time.,4.1,1
+187,4,The peak alignment contradicts wastewater viral load trends by 12 days.,4.1,1
+188,4,The curve doesn't account for the 14-day peak delay from telework policies.,4.1,1
+189,4,The peak is too late given the variant's shorter serial interval.,4.1,1
+190,4,The model ignores the 7-day earlier peak expected from superspreader events.,4.1,1
+191,4,The curve misaligns the peak with the 10-day testing backlog pattern.,4.1,1
+192,4,The peak should be bimodal due to staggered regional outbreaks.,4.1,1
+193,4,The model underestimates the 5-day peak acceleration from decreased masking.,4.1,1
+194,4,The curve doesn't reflect the 3-week peak delay from border controls.,4.1,1
+195,4,The peak timing is inconsistent with the observed 14-day case doubling rate.,4.1,1
+196,4,The model ignores the 10-day earlier peak expected in high-density urban areas.,4.1,1
+197,4,Peak hospitalizations are overestimated by 200 beds given current surge capacity.,4.2,2
+198,4,The peak caseload should be 30% lower due to pre-existing immunity.,4.2,2
+199,4,The model overestimates peak deaths by 40% given improved treatments.,4.2,2
+200,4,Peak ICU demand exceeds actual capacity by 150%—adjust for field hospitals.,4.2,2
+201,4,The curve overprojects peak cases by 2.5x compared to test positivity trends.,4.2,2
+202,4,Peak transmission is too high given the 60% reduction from NPIs.,4.2,2
+203,4,The model underestimates peak pediatric cases by 35%.,4.2,2
+204,4,Peak fatalities should be 20% lower accounting for vaccination prioritization.,4.2,2
+205,4,The curve overestimates peak prevalence given the 50% asymptomatic rate.,4.2,2
+206,4,Peak hospitalizations ignore the 30% reduction from monoclonal antibodies.,4.2,2
+207,4,The model overstates peak R(t) as 1.8 when empirical data shows 1.4.,4.2,2
+208,4,Peak cases should be 15% higher due to undetected community transmission.,4.2,2
+209,4,The curve underestimates peak demand for antivirals by 50%.,4.2,2
+210,4,Peak ICU admissions are misaligned with ventilator availability by 25%.,4.2,2
+211,4,The model overprojects peak wastewater viral loads by 3 standard deviations.,4.2,2
+212,4,Peak fatalities don't account for the 40% underreporting in rural areas.,4.2,2
+213,4,The curve underestimates peak absenteeism rates by 20 percentage points.,4.2,2
+214,4,Peak hospitalizations should account for the 15% staff shortage factor.,4.2,2
+215,4,The model ignores the 10% peak reduction from voluntary behavior change.,4.2,2
+216,4,Peak cases are inconsistent with the observed 70% household attack rate.,4.2,2
+0,1,The infection curve is too steep; real-world transmission shows a more gradual increase.,1.1,1
+1,1,The decline post-peak is too abrupt; a longer tail is expected due to heterogeneous transmission.,1.1,1
+2,1,The peak is too narrow; infections should spread over a wider timeframe.,1.1,1
+3,1,"The curve is perfectly symmetrical, but in reality, the descent is slower than the ascent.",1.1,1
+4,1,The initial growth rate is underestimated; the doubling time should be shorter.,1.1,1
+5,1,The susceptible population declines too quickly; herd immunity should slow the depletion.,1.2,2
+6,1,"The curve suggests near-zero susceptibles, but reinfections and births prevent full depletion.",1.2,2
+7,1,"The decline in susceptibles is linear, but it should follow a logistic curve.",1.2,2
+8,1,The model ignores demographic replenishment of susceptibles over time.,1.2,2
+9,1,The susceptible curve doesn't account for waning immunity.,1.2,2
+10,1,The recovery curve is too delayed; median recovery time is shorter in empirical data.,1.3,3
+11,1,Recoveries plateau too early; long-term cases should extend the tail.,1.3,3
+12,1,"The model assumes 100% recovery, ignoring chronic outcomes.",1.3,3
+13,1,Reinfection is not considered; recovered individuals should re-enter the susceptible pool.,1.3,3
+14,1,"The recovery rate is constant, but it should vary with healthcare capacity.",1.3,3
+15,1,The fatality curve spikes too early; deaths typically lag infections by weeks.,1.4,4
+16,1,Deaths decline too sharply; residual mortality from severe cases should prolong the tail.,1.4,4
+17,1,The cumulative death curve doesn’t reflect underreporting in later stages.,1.4,4
+18,1,The CFR is overestimated; real data suggests a slower increase in deaths.,1.4,4
+19,1,Deaths are misaligned with hospitalizations; peaks should coincide with ICU saturation.,1.4,4
+20,2,The effect of lockdown appears instantly; behavioral changes take 2-3 weeks to impact transmission.,2.1,1
+21,2,"Vaccination started on day 30, but case decline should begin only after day 45.",2.1,1
+22,2,"School closures are modeled with immediate effect, but household transmission delays the impact.",2.1,1
+23,2,The mask mandate’s effect is visible too early; adherence takes time to ramp up.,2.1,1
+24,2,"Travel restrictions show an abrupt drop in cases, but imported infections should linger.",2.1,1
+25,2,The model overestimates the impact of social distancing; mobility data shows partial compliance.,2.2,2
+26,2,"Quarantine measures should reduce Rt below 1, but the curve only flattens.",2.2,2
+27,2,The curve doesn’t reflect the added benefit of workplace closures.,2.2,2
+28,2,"Testing expansion is ignored; case detection should improve, altering the curve.",2.2,2
+29,2,The model assumes perfect vaccine efficacy; real-world protection is lower.,2.2,2
+30,2,The graph doesn’t show the expected dip from the new testing policy.,2.3,3
+31,2,No adjustment for the contact-tracing program launched last week.,2.3,3
+32,2,"The curve ignores seasonal effects, which typically suppress transmission.",2.3,3
+33,2,Antiviral treatments were introduced but aren’t reflected in reduced severe outcomes.,2.3,3
+34,2,The impact of booster vaccinations is missing from the recovery trajectory.,2.3,3
+35,3,"Deaths peak on day 50, but hospitalizations peak on day 40—this lag is unrealistic.",3.1,1
+36,3,"The epidemic ends by day 60, but historical waves last 90+ days.",3.1,1
+37,3,"The model assumes simultaneous peaks across regions, but geographic spread creates waves.",3.1,1
+38,3,Case counts spike overnight on day 20; reporting delays should smooth this.,3.1,1
+39,3,The rebound after restrictions lift is too fast; residual immunity slows re-emergence.,3.1,1
+40,3,"The recovery count is too high for early dates; median illness duration is 14 days, not 7.",3.2,2
+41,3,"The model assumes 5% asymptomatic rate, but studies suggest 30-40%.",3.2,2
+42,3,Hospitalizations are overestimated; current ICU capacity limits would cap the curve.,3.2,2
+43,3,The death toll exceeds the expected IFR given age-stratified risks.,3.2,2
+44,3,Vaccination coverage reaches 80% too quickly; supply constraints limit daily doses.,3.2,2
+45,4,"The peak is projected for day 30, but mobility data suggests day 45-50.",4.1,1
+46,4,Immunity from prior waves delays the peak by at least 3 weeks.,4.1,1
+47,4,The peak arrives too late; current Rt values indicate faster spread.,4.1,1
+48,4,The shift to remote work should push the peak 10-14 days later.,4.1,1
+49,4,"The peak timing ignores holiday gatherings, which accelerate transmission.",4.1,1
+50,4,"Peak caseload is 10,000/day, but test positivity rates suggest half that.",4.2,2
+51,4,The peak overestimates severity; seroprevalence data implies milder spread.,4.2,2
+52,4,Deaths at peak are underestimated given hospital bed shortages.,4.2,2
+53,4,The model underestimates peak cases due to uncounted home testing.,4.2,2
+54,4,Peak ICU admissions exceed documented capacity; adjust downward.,4.2,2
+0,1,The infection curve is too steep; real-world transmission shows a more gradual increase.,1.1,1
+1,1,The peak is too narrow; infections should spread over a longer period.,1.1,1
+2,1,The decline phase is too abrupt; residual transmission should create a longer tail.,1.1,1
+3,1,The curve is too symmetrical; the rise and fall should have different slopes.,1.1,1
+4,1,The initial growth rate is unrealistic given current mobility data.,1.1,1
+5,1,"The graph assumes uniform transmission, but superspreading events create irregularities.",1.1,1
+6,1,The curve does not account for seasonal variations in transmission.,1.1,1
+7,1,The modeled reinfection rate is too low; waves should overlap more.,1.1,1
+8,1,The tail of the epidemic is missing; long-term cases are not represented.,1.1,1
+9,1,The second wave is not visible; immunity waning should cause a resurgence.,1.1,1
+10,1,The susceptible population declines too quickly; herd immunity is not reached that fast.,1.2,2
+11,1,"The curve assumes 100% susceptibility, but prior immunity exists.",1.2,2
+12,1,The depletion rate is linear; it should slow as fewer susceptibles remain.,1.2,2
+13,1,"The model ignores demographic turnover (births, aging, migration).",1.2,2
+14,1,"The susceptible pool drops to zero, which is unrealistic.",1.2,2
+15,1,No accounting for partial immunity reducing susceptibility.,1.2,2
+16,1,The curve should show regional variability in susceptibility.,1.2,2
+17,1,The decline is too smooth; real data has jumps due to localized outbreaks.,1.2,2
+18,1,The model assumes uniform susceptibility; age stratification is needed.,1.2,2
+19,1,The rebound in susceptibles (due to waning immunity) is missing.,1.2,2
+20,1,Recoveries lag too far behind infections; median recovery time is shorter.,1.3,3
+21,1,The recovery curve plateaus too early; long-term cases are omitted.,1.3,3
+22,1,Reinfection is not modeled; recoveries should decrease over time.,1.3,3
+23,1,"The recovery rate is constant, but severity varies by age group.",1.3,3
+24,1,The curve does not account for post-acute sequelae (long COVID).,1.3,3
+25,1,Recoveries are too synchronized; real-world data shows dispersion.,1.3,3
+26,1,The model ignores immunity waning; recoveries should eventually re-enter susceptible pool.,1.3,3
+27,1,The recovery rate is overestimated for severe cases.,1.3,3
+28,1,No distinction between partial and full recovery.,1.3,3
+29,1,The curve should reflect vaccination-boosted recoveries.,1.3,3
+30,1,The fatality curve is too steep initially; reporting delays smooth real data.,1.4,4
+31,1,Deaths decline too abruptly; residual mortality from complications is missing.,1.4,4
+32,1,The cumulative death curve plateaus too early; underreporting is likely.,1.4,4
+33,1,The model ignores fatalities from overwhelmed healthcare systems.,1.4,4
+34,1,Deaths are not lagged correctly behind infections.,1.4,4
+35,1,The curve does not account for excess mortality from indirect effects.,1.4,4
+36,1,"Fatality rates are uniform, but age stratification would show variability.",1.4,4
+37,1,The decline phase assumes no new variants with higher lethality.,1.4,4
+38,1,The curve misses secondary peaks from delayed complications.,1.4,4
+39,1,Deaths are overestimated early; improved treatments reduce later mortality.,1.4,4
+40,2,Lockdown effects appear instantly; behavioral changes take 2-3 weeks.,2.1,1
+41,2,Vaccination impact is immediate; immune response requires 14+ days.,2.1,1
+42,2,The mask mandate’s effect is visible too early.,2.1,1
+43,2,School closures should affect transmission after a generational interval (5-7 days).,2.1,1
+44,2,Travel restrictions show no delay; imported cases should decline gradually.,2.1,1
+45,2,The curve reflects testing ramp-up instantly; real data has reporting lags.,2.1,1
+46,2,Quarantine compliance is assumed immediate; adherence builds over time.,2.1,1
+47,2,The model ignores the incubation period when measuring intervention effects.,2.1,1
+48,2,Behavioral fatigue reduces intervention efficacy over time—not modeled.,2.1,1
+49,2,The effect of contact tracing is instantaneous; real-world delays exist.,2.1,1
+50,2,Social distancing reduces transmission more than shown.,2.2,2
+51,2,The model underestimates the impact of workplace closures.,2.2,2
+52,2,Vaccination reduces severe cases disproportionately; not reflected.,2.2,2
+53,2,The curve overestimates mask efficacy without compliance adjustments.,2.2,2
+54,2,"Border controls are modeled as 100% effective, which is unrealistic.",2.2,2
+55,2,The effect of public awareness campaigns is missing.,2.2,2
+56,2,The model assumes perfect isolation of cases; leakage is likely.,2.2,2
+57,2,Testing capacity limits are not incorporated.,2.2,2
+58,2,The curve does not reflect phased reopening policies.,2.2,2
+59,2,Seasonal effects amplify measures in winter but are ignored.,2.2,2
+60,2,No visible impact from the new testing policy.,2.3,3
+61,2,The curve does not account for the latest travel bans.,2.3,3
+62,2,Vaccine rollout started but cases are not declining as expected.,2.3,3
+63,2,No change in slope after superspreader event restrictions.,2.3,3
+64,2,The model ignores the impact of booster doses.,2.3,3
+65,2,"Quarantine rules were tightened, but the curve is unchanged.",2.3,3
+66,2,The graph shows no effect from increased telehealth utilization.,2.3,3
+67,2,No adjustment for improved treatment protocols reducing fatalities.,2.3,3
+68,2,The curve does not reflect regional differences in policy adherence.,2.3,3
+69,2,"Antiviral stockpiles were distributed, but no impact on hospitalizations.",2.3,3
+70,3,"The peak occurs on day 30, but mobility data suggests day 45-50.",3.1,1
+71,3,"Hospitalizations peak before cases, which is impossible.",3.1,1
+72,3,Deaths spike on the same day as infections; lag should be 2-3 weeks.,3.1,1
+73,3,The second wave starts too soon after the first; immunity lasts longer.,3.1,1
+74,3,The epidemic ends abruptly at day 100; tails typically last months.,3.1,1
+75,3,School reopening effects appear instantly; should take 1-2 incubation periods.,3.1,1
+76,3,Vaccination coverage reaches 70% by day 60—unrealistically fast.,3.1,1
+77,3,The model assumes immediate case detection; real data has reporting delays.,3.1,1
+78,3,Seasonal resurgence is misaligned with weather patterns.,3.1,1
+79,3,The curve ignores delays in death certificate reporting.,3.1,1
+80,3,"Case fatality rate is 5%, but local data suggests 1.2%.",3.2,2
+81,3,The model assumes 100% symptomatic cases; asymptomatics are missing.,3.2,2
+82,3,Hospitalization rates are double empirical estimates.,3.2,2
+83,3,"Reinfection rate is set to 0%, but studies show 10-15%.",3.2,2
+84,3,"Vaccine efficacy is modeled at 95%, but variants reduce it to 80%.",3.2,2
+85,3,The curve underestimates pediatric cases.,3.2,2
+86,3,Testing capacity limits are ignored; detected cases are overestimated.,3.2,2
+87,3,The model assumes uniform attack rates; hotspots have higher incidence.,3.2,2
+88,3,The number of superspreader events is underestimated.,3.2,2
+89,3,Long COVID cases are not quantified.,3.2,2
+90,4,The peak arrives too early given current Rt values.,4.1,1
+91,4,Immunity from prior waves delays the peak; adjust timing.,4.1,1
+92,4,"The peak should occur after the holiday season, not before.",4.1,1
+93,4,"With current measures, the peak should be 3 weeks later.",4.1,1
+94,4,The model misses a double peak due to variant emergence.,4.1,1
+95,4,Peak timing assumes homogeneous mixing; urban/rural differences matter.,4.1,1
+96,4,The peak is too late for the observed growth rate.,4.1,1
+97,4,"Behavioral changes will flatten the curve, delaying the peak.",4.1,1
+98,4,The peak coincides with a planned mass gathering; unlikely.,4.1,1
+99,4,Vaccine rollout pace shifts the peak by 10-14 days.,4.1,1
+100,4,Peak caseload is overestimated given test positivity trends.,4.2,2
+101,4,The model underestimates peak hospitalizations.,4.2,2
+102,4,Peak deaths are too high for the age-stratified IFR.,4.2,2
+103,4,The curve misses the peak’s asymmetry due to interventions.,4.2,2
+104,4,Peak cases should be higher due to undetected asymptomatics.,4.2,2
+105,4,Superimposed waves create a higher peak than modeled.,4.2,2
+106,4,The peak is too low for the estimated Rt of 1.5.,4.2,2
+107,4,Healthcare capacity limits truncate the real peak; adjust.,4.2,2
+108,4,Peak timing and magnitude are inconsistent with mobility data.,4.2,2
+109,4,The model ignores peak widening from heterogeneous compliance.,4.2,2
+0,1,The infection curve is too symmetrical; real-world spread has a longer tail.,1.1,1
+1,1,The peak is too narrow; infections should be more spread out over time.,1.1,1
+2,1,The decline phase is too abrupt; residual transmission should prolong the tail.,1.1,1
+3,1,The initial growth is too steep; real-world data shows a slower exponential rise.,1.1,1
+4,1,The curve lacks secondary waves; consider seasonality or behavioral changes.,1.1,1
+5,1,The plateau after the peak is too flat; heterogeneity in immunity should create fluctuations.,1.1,1
+6,1,The curve assumes homogeneous mixing; clusters should create multiple sub-peaks.,1.1,1
+7,1,The infection rate drops too sharply post-peak; consider lingering superspreader events.,1.1,1
+8,1,The initial cases are too clustered; imported cases should create a more dispersed onset.,1.1,1
+9,1,The curve doesn't account for reinfections; expect a slower decline in later stages.,1.1,1
+10,1,The susceptible depletion is too rapid; real-world data shows a slower decline.,1.2,2
+11,1,The curve drops to near-zero too soon; herd immunity should leave some susceptibles.,1.2,2
+12,1,The decline is linear; it should slow as immunity builds up.,1.2,2
+13,1,No accounting for demographic heterogeneity; some groups remain susceptible longer.,1.2,2
+14,1,The curve doesn't reflect waning immunity; susceptibles should gradually increase again.,1.2,2
+15,1,The initial drop is too steep; consider partial protection from prior exposure.,1.2,2
+16,1,The model assumes uniform susceptibility; age stratification would slow depletion.,1.2,2
+17,1,No rebound in susceptibles; immunity loss or births should be factored in.,1.2,2
+18,1,The curve plateaus too early; behavioral changes can reintroduce susceptibles.,1.2,2
+19,1,The decline misses regional variation; some areas retain higher susceptibility.,1.2,2
+20,1,Recoveries lag too far behind infections; median recovery time is shorter.,1.3,3
+21,1,The recovery curve is too smooth; real-world data shows irregular discharges.,1.3,3
+22,1,The plateau is too abrupt; long-term recoveries should taper slowly.,1.3,3
+23,1,No reinfections are modeled; recovered cases should eventually re-enter susceptible pool.,1.3,3
+24,1,The recovery rate is constant; severe cases should have longer convalescence.,1.3,3
+25,1,The curve doesn’t reflect healthcare strain; recovery slows during peak hospital load.,1.3,3
+26,1,Recoveries are overestimated early on; mild cases are often undercounted.,1.3,3
+27,1,No accounting for post-recovery deaths; some 'recovered' cases later fatally deteriorate.,1.3,3
+28,1,The curve assumes 100% recovery; chronic cases should leave some permanently removed.,1.3,3
+29,1,Recovery plateaus too early; delayed complications extend the tail.,1.3,3
+30,1,The fatality curve is too front-loaded; deaths should lag infections by weeks.,1.4,4
+31,1,The decline in deaths is too sharp; residual mortality from severe cases should linger.,1.4,4
+32,1,Cumulative deaths plateau too soon; underreporting or delayed attribution is likely.,1.4,4
+33,1,The curve misses nursing home impacts; expect a secondary mortality wave in high-risk settings.,1.4,4
+34,1,Deaths are too synchronized with cases; ICU delays create a longer tail.,1.4,4
+35,1,No excess mortality is reflected; indirect deaths from healthcare strain are missing.,1.4,4
+36,1,The initial spike is unrealistic; fatality reporting typically ramps up gradually.,1.4,4
+37,1,The curve doesn’t account for variant virulence; later waves may have higher CFR.,1.4,4
+38,1,"Deaths drop to zero too fast; long-term complications (e.g., post-COVID fibrosis) are ignored.",1.4,4
+39,1,The mortality rate is static; improvements in treatment should reduce later deaths.,1.4,4
+40,2,Lockdown effects appear too soon; behavioral changes take 2-3 weeks to impact transmission.,2.1,1
+41,2,Vaccination rollout started on day 30; immune response takes 14+ days to affect cases.,2.1,1
+42,2,The curve shows immediate mask mandate effects; adherence builds gradually over days.,2.1,1
+43,2,School closures’ impact is misaligned; family clusters emerge 1-2 weeks later.,2.1,1
+44,2,Travel bans are modeled instantly; imported cases should decline over weeks.,2.1,1
+45,2,Testing expansion on day 20; case detection lags should appear later.,2.1,1
+46,2,"The model assumes perfect compliance; real-world measures have delayed, partial effects.",2.1,1
+47,2,Curve shows sharp post-lockdown drop; residual transmission should slow the decline.,2.1,1
+48,2,Antiviral distribution began on day 45; mortality effects should lag by 1-2 weeks.,2.1,1
+49,2,Contact tracing is modeled instantly; implementation delays create a phased effect.,2.1,1
+50,2,Mask compliance is overestimated; the curve should show slower suppression.,2.2,2
+51,2,Quarantine reduces transmission more than shown; current R0 drop is too modest.,2.2,2
+52,2,The model underweights super-spreader events; localized outbreaks should persist.,2.2,2
+53,2,Vaccine efficacy is oversimplified; breakthrough cases should flatten the decline.,2.2,2
+54,2,The curve ignores seasonal effects; winter resurgence should appear post-measures.,2.2,2
+55,2,Telework policies are under-modeled; urban transmission should drop faster.,2.2,2
+56,2,Border controls are too effective in the model; imported variants should cause spikes.,2.2,2
+57,2,The curve assumes uniform distancing; rural/urban differences should create divergence.,2.2,2
+58,2,Vaccine prioritization isn’t reflected; elderly protection should lower deaths sooner.,2.2,2
+59,2,The model overestimates NPIs; real-world fatigue reduces long-term impact.,2.2,2
+60,2,No visible effect from the new testing policy; cases should rise with increased detection.,2.3,3
+61,2,The curve doesn’t reflect the latest travel restrictions; imported cases should decline.,2.3,3
+62,2,Vaccination campaigns are missing from the model; expect a slower growth phase.,2.3,3
+63,2,No impact from hospital triage protocols; mortality should shift with ICU saturation.,2.3,3
+64,2,The graph ignores mandated boosters; waning immunity should be counteracted.,2.3,3
+65,2,"Behavioral changes (e.g., hygiene) aren’t modeled; initial R0 is likely overstated.",2.3,3
+66,2,No adjustment for variant emergence; transmissibility jumps should appear.,2.3,3
+67,2,The curve omits school reopening; pediatric cases should rise after 3-4 weeks.,2.3,3
+68,2,Quarantine policies aren’t integrated; expect sharper drops in workplace transmissions.,2.3,3
+69,2,The model misses test-and-isolate programs; symptomatic spread should decline faster.,2.3,3
+70,3,Deaths peak 10 days after cases in the model; real-world lag is typically 2-3 weeks.,3.1,1
+71,3,The epidemic ends by day 90; endemicity or resurgences are more likely.,3.1,1
+72,3,Hospitalizations peak simultaneously with cases; ICU admissions usually lag by 7-10 days.,3.1,1
+73,3,The model assumes immediate immunity; seroconversion takes 10-14 days post-infection.,3.1,1
+74,3,Vaccine immunity is instant; protective effects ramp up over 14-28 days.,3.1,1
+75,3,Case reporting jumps on day 15; reporting delays should smooth the curve.,3.1,1
+76,3,The curve shows weekend testing dips; real-world reporting artifacts are missing.,3.1,1
+77,3,Lockdown lifts on day 60; rebound cases should appear 2-3 weeks later.,3.1,1
+78,3,Asymptomatic testing begins on day 30; case counts should surge briefly post-implementation.,3.1,1
+79,3,The model assumes fixed incubation; variant-driven changes in latency are ignored.,3.1,1
+80,3,Recovered cases are overcounted early; mild infections often go untested.,3.2,2
+81,3,Case fatality rate is 5%; current healthcare capacity suggests 1.5-2%.,3.2,2
+82,3,The model assumes 80% vaccine coverage; actual uptake is closer to 60%.,3.2,2
+83,3,R0=3.5 is too high given observed mobility data; likely below 2.8.,3.2,2
+84,3,Hospitalization rate is 20%; age-stratified data predicts 10-12%.,3.2,2
+85,3,The curve projects 1M deaths; underreporting adjusts this to 600-700K.,3.2,2
+86,3,Asymptomatic cases are 30% of total; seroprevalence studies suggest 50%+.,3.2,2
+87,3,Peak ICU demand is 50% over capacity; real-world strain caps it at +20%.,3.2,2
+88,3,Reinfection rate is modeled at 1%; emerging variants push it to 5-10%.,3.2,2
+89,3,The curve assumes 90% vaccine efficacy; waning lowers it to 70% after 6 months.,3.2,2
+90,4,Peak is projected for day 40; mobility data suggests day 50-55.,4.1,1
+91,4,The peak arrives too early; current doubling time indicates a later surge.,4.1,1
+92,4,Immunity from prior waves delays the peak; shift it right by 3-4 weeks.,4.1,1
+93,4,Schools reopened too soon; expect a peak 10 days earlier than modeled.,4.1,1
+94,4,Vaccine rollout accelerates herd immunity; peak should occur 2 weeks sooner.,4.1,1
+95,4,The peak aligns with holiday travel; superspreading should advance it by 5-7 days.,4.1,1
+96,4,The model misses a pre-peak plateau; behavioral changes temporarily flatten growth.,4.1,1
+97,4,Peak timing assumes uniform spread; regional variation should create staggered peaks.,4.1,1
+98,4,The curve ignores a new variant; higher transmissibility would shift the peak left.,4.1,1
+99,4,Testing bottlenecks delay observed peak; true peak is 1 week earlier than shown.,4.1,1
+100,4,Peak caseload is 50K/day; test positivity suggests 30-35K is more realistic.,4.2,2
+101,4,The model overestimates peak deaths; healthcare improvements lower fatalities.,4.2,2
+102,4,Peak ICU demand is 10K beds; triage protocols likely cap it at 8K.,4.2,2
+103,4,The curve underestimates peak cases; asymptomatic spread implies higher totals.,4.2,2
+104,4,Peak hospitalizations are 25% too low; aging population increases severity.,4.2,2
+105,4,Deaths peak at 2K/day; excess mortality data supports 2.5-3K.,4.2,2
+106,4,The model ignores underreporting; true peak cases are 2x higher than shown.,4.2,2
+107,4,Peak timing aligns with reporting delays; actual cases crest earlier but are counted later.,4.2,2
+108,4,The curve misses variant-driven severity; peak deaths are 20% higher than projected.,4.2,2
+109,4,Peak cases assume 100% detection; testing gaps mean reported values are 40% low.,4.2,2
+0,1,The infection curve shows an unrealistic plateau; natural fluctuations should be more pronounced.,1.1,1
+1,1,The decline phase is too steep; real-world data shows a more gradual decrease due to heterogeneous transmission.,1.1,1
+2,1,The peak is too narrow; super-spreader events would create a 'shoulder' before the main peak.,1.1,1
+3,1,The curve assumes uniform immunity acquisition; waning immunity would cause a secondary wave.,1.1,1
+4,1,The initial exponential growth phase is too abrupt; regional clustering would slow early spread.,1.1,1
+5,1,The graph lacks a 'long tail' from chronic carriers or persistent infections.,1.1,1
+6,1,The rebound after the first wave is missing—seasonal effects should be considered.,1.1,1
+7,1,The curve implies perfect case detection; undiagnosed asymptomatic cases would flatten the peak.,1.1,1
+8,1,The descent mirrors the ascent too closely; behavioral changes would skew the symmetry.,1.1,1
+9,1,The peak height suggests 100% susceptibility; prior cross-immunity would lower it.,1.1,1
+10,1,"The susceptible curve drops linearly; in reality, depletion slows as high-risk groups are infected first.",1.2,2
+11,1,The model assumes homogeneous mixing; clustered populations would show stair-step depletion.,1.2,2
+12,1,Susceptibles reach zero too quickly—births and migration would maintain a residual pool.,1.2,2
+13,1,The curve ignores age-stratified susceptibility; children might remain uninfected longer.,1.2,2
+14,1,No accounting for reinfection—susceptibles should partially rebound after immunity wanes.,1.2,2
+15,1,The decline is too smooth; superspreading events would cause abrupt drops in susceptibles.,1.2,2
+16,1,The curve assumes static population size; travel bans would alter the susceptible pool dynamically.,1.2,2
+17,1,Vaccination isn't reflected—susceptibles should decline faster post-vaccine rollout.,1.2,2
+18,1,The model overestimates susceptibility in rural areas where density limits transmission.,1.2,2
+19,1,The curve doesn't account for behavioral adaptation reducing effective contacts over time.,1.2,2
+20,1,Recoveries plateau abruptly; long COVID cases would extend the tail of the recovery curve.,1.3,3
+21,1,The recovery lag is fixed at 14 days; variability in illness duration should widen the curve.,1.3,3
+22,1,Reinfections aren't modeled—recoveries should decrease slightly after 6-12 months.,1.3,3
+23,1,The recovery rate is constant; healthcare strain during peaks would delay some recoveries.,1.3,3
+24,1,The curve assumes 100% reporting; mild cases recovering without diagnosis are missing.,1.3,3
+25,1,Immunity duration is infinite; recoveries should gradually re-enter the susceptible pool.,1.3,3
+26,1,The recovery curve is too smooth; hospital discharge policies create weekly 'pulses'.,1.3,3
+27,1,No distinction between partial and full recovery; some cases should relapse.,1.3,3
+28,1,"The model ignores seasonal recovery effects (e.g., faster healing in summer).",1.3,3
+29,1,Recoveries are perfectly synchronized with infections; real data shows overlapping waves.,1.3,3
+30,1,Deaths peak too early; mortality typically lags ICU admissions by 2-3 weeks.,1.4,4
+31,1,The fatality curve lacks 'weekend effects' where reporting delays create periodic dips.,1.4,4
+32,1,"Long-term fatalities (e.g., post-ICU complications) are missing—the tail should extend 6+ months.",1.4,4
+33,1,The decline is too sharp; excess mortality from disrupted healthcare would persist.,1.4,4
+34,1,The curve assumes constant CFR; strain on hospitals during peaks would raise fatality rates.,1.4,4
+35,1,No accounting for underreporting—especially in early phases where deaths were misclassified.,1.4,4
+36,1,Deaths are perfectly correlated with cases; real data shows decoupling during variants shifts.,1.4,4
+37,1,The model ignores demographic differences; mortality in elderly populations should peak earlier.,1.4,4
+38,1,Stillbirths and indirect deaths from resource diversion aren't included in the cumulative curve.,1.4,4
+39,1,The death curve is too smooth; reporting backlogs create artificial 'spikes'.,1.4,4
+40,2,School closures' impact appears instantly; behavioral adaptation takes 10-14 days to affect transmission.,2.1,1
+41,2,The curve shows vaccine effects after 7 days; antibody development requires at least 14 days.,2.1,1
+42,2,Lockdown compliance is overestimated—the R0 drop should be gradual as enforcement ramps up.,2.1,1
+43,2,Travel bans are modeled with immediate effect; imported cases would continue for 1-2 incubation periods.,2.1,1
+44,2,The mask mandate's effect is linear; real-world adoption follows an S-curve over 3 weeks.,2.1,1
+45,2,"Testing capacity increased on Day 30—case detection should rise gradually, not abruptly.",2.1,1
+46,2,Antiviral stockpiling began on Day 15—mortality reductions would lag by 2 weeks.,2.1,1
+47,2,The model assumes perfect policy adherence; fatigue would delay measures' full impact by 3+ weeks.,2.1,1
+48,2,Curfew timing is off—nighttime mobility data shows 5-day delay in behavioral response.,2.1,1
+49,2,Vaccine booster campaigns show immediate effect; immune response takes 10 days minimum.,2.1,1
+50,2,"The 50% work-from-home policy should reduce peak cases by 30%, not the modeled 15%.",2.2,2
+51,2,The curve underrepresents vaccine efficacy—hospitalizations should decline faster post-Day 60.,2.2,2
+52,2,"Border testing reduced imported variants by 80%, but the graph shows only 20% suppression.",2.2,2
+53,2,"The model overestimates contact tracing's impact—empirical data suggests 40% effectiveness, not 70%.",2.2,2
+54,2,"Air filtration mandates in schools should cut pediatric cases by 25%, which is missing from the curve.",2.2,2
+55,2,The graph shows full compliance with indoor dining bans; leakage would keep transmission 10-15% higher.,2.2,2
+56,2,"Vaccine passports reduced mobility in unvaccinated groups by 50%, but cases didn't drop proportionally.",2.2,2
+57,2,The model ignores that mask mandates reduce superspreading events disproportionately (non-linear effect).,2.2,2
+58,2,"The 70% vaccination target was reached, but the curve doesn't show the expected herd immunity threshold.",2.2,2
+59,2,Stadium closures averted 5K cases/month in prior waves—this isn't reflected in the current projection.,2.2,2
+60,2,The curve doesn't reflect the new test-to-treat policy initiated last week.,2.3,3
+61,2,No visible impact from the antiviral rollout—should reduce severe cases by Week 4.,2.3,3
+62,2,The graph ignores the 30% increase in telework reported in mobility data.,2.3,3
+63,2,The updated CDC isolation guidelines (5-day rule) aren't incorporated into transmission rates.,2.3,3
+64,2,The model omits the heatwave effect—outdoor transmission dropped 40% during extreme temperatures.,2.3,3
+65,2,No adjustment for the new Omicron subvariant's immune evasion despite seroprevalence data.,2.3,3
+66,2,"The curve assumes constant hospitalization rates, but triage protocols changed in high-burden regions.",2.3,3
+67,2,School winter breaks reduced child cases by 15% historically—this seasonal pattern is missing.,2.3,3
+68,2,The graph doesn't account for the 20% PCR testing decline due to at-home test underreporting.,2.3,3
+69,2,"Vaccine mandate for healthcare workers should lower nosocomial transmission, but the curve is unchanged.",2.3,3
+70,3,Hospitalizations are peaking 5 days before cases—this contradicts the typical 7-10 day lag.,3.1,1
+71,3,"The model projects 180-day duration, but wastewater data suggests circulation beyond 240 days.",3.1,1
+72,3,Deaths are declining while ICU admissions rise—this temporal inversion is implausible.,3.1,1
+73,3,The second wave starts exactly 90 days post-peak; real inter-wave intervals vary by 20-150 days.,3.1,1
+74,3,The epidemic's start date is miscalculated—serology shows community spread 3 weeks earlier.,3.1,1
+75,3,The curve shows simultaneous peaks across all regions; geographic spread should create 2-4 week offsets.,3.1,1
+76,3,Testing positivity peaks 2 weeks after case peak—this contradicts lead indicator theory.,3.1,1
+77,3,The model assumes fixed serial interval; variant evolution shortened it from 6 to 4 days mid-wave.,3.1,1
+78,3,No seasonal ramp-up in cases despite 20% higher indoor mobility during winter months.,3.1,1
+79,3,The projection shows zero cases by Day 100; endemicity would maintain baseline transmission indefinitely.,3.1,1
+80,3,The modeled 5% CFR contradicts the 1.2% rate from age-adjusted seroprevalence studies.,3.2,2
+81,3,The forecast assumes 80% vaccine efficacy against infection; real-world data shows 50% for current variants.,3.2,2
+82,3,Daily cases are overestimated—wastewater viral load suggests 30% lower community prevalence.,3.2,2
+83,3,The R0=3.5 assumption ignores that Delta's R0 was 6 in low-masking populations.,3.2,2
+84,3,Pediatric cases comprise 5% in the model but 15% in ER syndromic surveillance.,3.2,2
+85,3,The 70% asymptomatic rate is outdated—recent studies show 40% with Omicron sublineages.,3.2,2
+86,3,Projected deaths are 2x higher than expected given current ventilator inventory limits.,3.2,2
+87,3,The model uses 2019 population data despite 3% demographic shifts in high-risk age groups.,3.2,2
+88,3,Reinfection rate is set at 1%/month but is actually 5% for unboosted individuals.,3.2,2
+89,3,The curve assumes 100% test sensitivity; 70% is more realistic with rapid antigen test dominance.,3.2,2
+90,4,Peak timing is miscalculated—Google mobility data predicts a 2-week later surge.,4.1,1
+91,4,The model ignores that prior BA.1 infection delays the BA.5 peak by 6-8 weeks.,4.1,1
+92,4,The peak arrives during harvest season when migrant worker mobility increases transmission.,4.1,1
+93,4,Holiday gatherings will accelerate spread—the peak should move 10 days earlier.,4.1,1
+94,4,The projected peak coincides with school exams when attendance drops 30%—this will flatten it.,4.1,1
+95,4,"Peak is too early given current doubling time of 14 days (should be Day 75, not Day 50).",4.1,1
+96,4,The curve doesn't account for the 10-day delay from policy announcement to enforcement.,4.1,1
+97,4,Peak timing assumes uniform vaccination; rural areas with 20% lower coverage will peak later.,4.1,1
+98,4,"The model overlooks that heatwaves suppress outdoor transmission, pushing the peak into fall.",4.1,1
+99,4,The peak aligns with a national holiday—testing artifacts will artificially depress case counts.,4.1,1
+100,4,Peak hospitalizations exceed ICU bed capacity by 200%—this is unsustainable in reality.,4.2,2
+101,4,The maximum daily cases (50K) contradicts wastewater-based estimates of 120K viral shedders.,4.2,2
+102,4,Peak deaths are under-projected given the 40% increase in excess mortality in comparable regions.,4.2,2
+103,4,The model shows 80% peak test positivity; lab saturation would cap detectable cases at 60%.,4.2,2
+104,4,Peak pediatric cases are 50% lower than school-based surveillance trends suggest.,4.2,2
+105,4,"The curve's peak height assumes constant testing effort, but capacity dropped 30% during surges.",4.2,2
+106,4,Maximum ventilator use exceeds manufacturing limits by 3x—adjust the severe case estimates.,4.2,2
+107,4,Peak transmissibility (Rt=4) is biologically implausible given the variant's known R0 of 2.5.,4.2,2
+108,4,The projected peak ignores that 40% of the population has hybrid immunity from infection+vaccination.,4.2,2
+109,4,Peak cases align with a testing backlog period—true incidence was likely 20% higher.,4.2,2
+0,1,The infection curve is too steep; real-world transmission shows a more gradual incline.,1.1,1
+1,1,The peak is too narrow—superspreading events would create a wider distribution.,1.1,1
+2,1,The descent post-peak is too abrupt; residual transmission should prolong the tail.,1.1,1
+3,1,The curve assumes homogeneous mixing; clustering effects would flatten the peak.,1.1,1
+4,1,Secondary waves are missing; immunity waning should cause recurrent spikes.,1.1,1
+5,1,The initial exponential phase is underestimated; early R0 is higher in practice.,1.1,1
+6,1,The curve is symmetric; real epidemics have slower declines due to interventions.,1.1,1
+7,1,Household transmission isn't modeled—expect a steeper initial rise.,1.1,1
+8,1,"The graph ignores seasonality effects, which would modulate the curve.",1.1,1
+9,1,"Asymptomatic cases are omitted, leading to an undercount in early phases.",1.1,1
+10,1,Susceptible depletion is too rapid; herd immunity thresholds are reached unrealistically fast.,1.2,2
+11,1,"The curve drops to zero, ignoring residual susceptible pockets in populations.",1.2,2
+12,1,Linear decline is unrealistic; depletion slows as contact rates decrease.,1.2,2
+13,1,Age-stratified susceptibility isn't reflected—children remain susceptible longer.,1.2,2
+14,1,The model overestimates cross-immunity from other pathogens.,1.2,2
+15,1,No accounting for demographic turnover (births/migrations) replenishing susceptibles.,1.2,2
+16,1,The curve assumes uniform immunity acquisition; geographic heterogeneity would stagger depletion.,1.2,2
+17,1,Vaccine hesitancy isn't modeled—susceptible pools persist longer.,1.2,2
+18,1,The decline assumes perfect vaccine efficacy; leakage infections prolong depletion.,1.2,2
+19,1,"Behavioral adaptation (e.g., voluntary distancing) slows susceptible depletion unmodeled here.",1.2,2
+20,1,Recovery rates are overestimated early on; severe cases take weeks to resolve.,1.3,3
+21,1,"The curve lacks reinfections, causing overestimation of cumulative recoveries.",1.3,3
+22,1,Plateau occurs too soon; long-term immunity isn't universal.,1.3,3
+23,1,Recovery lag post-infection isn't aligned with empirical hospitalization durations.,1.3,3
+24,1,The graph ignores partial immunity leading to slower recovery accrual.,1.3,3
+25,1,No distinction between mild/severe cases—recovery trajectories should bifurcate.,1.3,3
+26,1,Reinfection waves aren't captured; recoveries should dip periodically.,1.3,3
+27,1,The curve assumes constant recovery rates; healthcare strain delays them during peaks.,1.3,3
+28,1,"Asymptomatic recoveries are missing, flattening the true curve.",1.3,3
+29,1,Vaccine-boosted recoveries aren't separated from natural immunity.,1.3,3
+30,1,The fatality curve is too front-loaded; mortality typically lags infections by 2–3 weeks.,1.4,4
+31,1,"Long COVID fatalities are omitted, truncating the tail.",1.4,4
+32,1,The decline assumes perfect healthcare access; real-world fatalities persist post-peak.,1.4,4
+33,1,Age-specific mortality isn't reflected—older cohorts prolong the tail.,1.4,4
+34,1,The curve ignores variants with higher lethality causing secondary spikes.,1.4,4
+35,1,Underreporting isn't factored in; true deaths are likely 20–30% higher.,1.4,4
+36,1,"Healthcare collapse during peaks isn't modeled, which would steepen the curve.",1.4,4
+37,1,"The graph lacks seasonal mortality effects (e.g., winter surge in fatalities).",1.4,4
+38,1,"Non-COVID excess deaths (e.g., delayed care) aren't included.",1.4,4
+39,1,The cumulative curve plateaus too early; reporting delays extend fatalities.,1.4,4
+40,2,School closures' impact appears instantaneously; behavioral shifts take 10–14 days.,2.1,1
+41,2,Vaccine rollout effects are modeled immediately; immune response requires 2–3 weeks.,2.1,1
+42,2,"Travel bans show abrupt efficacy, but imported cases trickle in for weeks.",2.1,1
+43,2,Lockdown compliance isn't immediate—curve suppression should lag by 14 days.,2.1,1
+44,2,"Mask mandates reduce transmission gradually, not as a step function.",2.1,1
+45,2,Testing ramp-up effects are delayed; case detection improves over 3 weeks.,2.1,1
+46,2,"Antiviral stockpiling shows instant benefit, but distribution takes time.",2.1,1
+47,2,Contact tracing's impact is oversimplified; it scales nonlinearly over weeks.,2.1,1
+48,2,Quarantine fatigue isn't modeled—effectiveness wanes after 4–6 weeks.,2.1,1
+49,2,Border controls' effect is overestimated in the first week; leaks persist.,2.1,1
+50,2,Curve suppression from lockdowns is understated—Rt should drop below 0.8.,2.2,2
+51,2,Vaccine efficacy is overrepresented; breakthrough infections flatten the curve less.,2.2,2
+52,2,"The model overestimates mask adherence; real-world reduction is 15–20%, not 30%.",2.2,2
+53,2,Telework policies are ignored—office transmission should decline faster.,2.2,2
+54,2,Hospital triage protocols aren't reflected; fatalities rise nonlinearly during surges.,2.2,2
+55,2,The curve doesn't show the expected dip from holiday gathering bans.,2.2,2
+56,2,Partial lockdowns are modeled as full; residual transmission is higher.,2.2,2
+57,2,Vaccine inequity isn't captured—regional Rt declines are uneven.,2.2,2
+58,2,The graph ignores booster campaigns' impact on prolonging immunity.,2.2,2
+59,2,Curve rebound post-measures is too slow; behavioral relaxation accelerates spread.,2.2,2
+60,2,No visible impact from the new testing policy starting Day 30.,2.3,3
+61,2,The graph doesn't account for mandated ventilation upgrades in schools.,2.3,3
+62,2,Vaccine passport implementation is missing from transmission dynamics.,2.3,3
+63,2,No change in curve after Day 45’s superspreader event restrictions.,2.3,3
+64,2,The model omits mobile vaccination units deployed in rural areas.,2.3,3
+65,2,Antiviral rollout from Day 60 isn't reducing severe outcomes.,2.3,3
+66,2,The curve ignores the 50% work-from-home order effective last week.,2.3,3
+67,2,No adjustment for variant-specific boosters introduced on Day 75.,2.3,3
+68,2,Test-to-stay policies in schools aren't affecting case trajectories.,2.3,3
+69,2,The graph doesn't reflect the nursing home vaccination blitz.,2.3,3
+70,3,Deaths peak simultaneously with cases; typical lag is 14–21 days.,3.1,1
+71,3,"Hospitalizations surge 5 days after cases, but data shows 10–12 day delay.",3.1,1
+72,3,Immunity waning is modeled at 6 months; recent data suggests 3–4 months.,3.1,1
+73,3,The second wave arrives too soon; seroprevalence data indicates longer gaps.,3.1,1
+74,3,Vaccination timeline is compressed—doses administered faster than logistics allow.,3.1,1
+75,3,Case doubling time is 2 days; empirical data shows 4–5 days with current measures.,3.1,1
+76,3,The epidemic concludes by Day 100; endemicity is more likely.,3.1,1
+77,3,Variant emergence is modeled every 60 days; genomic surveillance suggests 90–120 days.,3.1,1
+78,3,Testing delays aren't factored in; reported cases lag infections by 5–7 days.,3.1,1
+79,3,"Seasonal uptick timing is off—should align with winter months, not autumn.",3.1,1
+80,3,Projected ICU admissions exceed bed capacity by 300%; unrealistic overflow.,3.2,2
+81,3,"Case fatality rate is 5%, but population serology suggests 1.2–1.8%.",3.2,2
+82,3,Vaccine coverage reaches 95% by Day 90; supply constraints limit to 80%.,3.2,2
+83,3,Reinfection rate is 2%; empirical data shows 5–8% for this variant.,3.2,2
+84,3,Asymptomatic cases are 20% of total; wastewater data implies 40–50%.,3.2,2
+85,3,Rt drops to 0.5 post-lockdown; mobility data suggests 0.7–0.8.,3.2,2
+86,3,Pediatric hospitalizations are 10x lower than observed in adjacent regions.,3.2,2
+87,3,Boosters are modeled for 100% of eligible; uptake is 60% in practice.,3.2,2
+88,3,Long COVID incidence is 5%; cohort studies report 10–15%.,3.2,2
+89,3,Testing positivity peaks at 15%; local labs report 25–30%.,3.2,2
+90,4,Peak occurs on Day 30; mobility data suggests Day 45–50.,4.1,1
+91,4,Winter surge is missing; expect a secondary peak in January.,4.1,1
+92,4,The peak is delayed by prior immunity; model underestimates cross-protection.,4.1,1
+93,4,School reopenings should shift the peak forward by 2 weeks.,4.1,1
+94,4,Vaccine rollout acceleration moves peak 10 days earlier than projected.,4.1,1
+95,4,Peak timing aligns with holidays; gathering restrictions would delay it.,4.1,1
+96,4,The curve lacks a bimodal peak from sequential variant waves.,4.1,1
+97,4,Peak is too late given current Rt<1; decline should already begin.,4.1,1
+98,4,Regional hotspots aren't modeled; national peak is smoother in reality.,4.1,1
+99,4,Behavioral fatigue accelerates peak timing by 1–2 weeks.,4.1,1
+100,4,"Peak caseload is 50,000/day; test positivity caps suggest 30,000.",4.2,2
+101,4,ICU admissions at peak exceed historical maxima by 200%.,4.2,2
+102,4,"Deaths peak at 1,000/day; excess mortality data supports 600–700.",4.2,2
+103,4,Modeled peak prevalence is 15%; serosurveys indicate 8–10%.,4.2,2
+104,4,Peak hospitalizations assume 100% bed occupancy; real capacity is 70%.,4.2,2
+105,4,Pediatric cases at peak are underestimated by 50%.,4.2,2
+106,4,Peak transmission occurs in unvaccinated cohorts; their share is overstated.,4.2,2
+107,4,Peak wastewater viral load corresponds to higher cases than reported.,4.2,2
+108,4,The model ignores nursing home outbreaks inflating peak fatalities.,4.2,2
+109,4,Peak contact tracing efficacy is 80%; real-world data shows 50–60%.,4.2,2

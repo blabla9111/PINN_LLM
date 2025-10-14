@@ -115,7 +115,7 @@ class DINN(nn.Module):
         # Train
         print('\nStarting training...\n')
 
-        self.optimizer = optim.Adam(self.params, lr=1e-3)
+        self.optimizer = optim.Adam(self.params, lr=1e-4)
         self.scheduler = optim.lr_scheduler.StepLR(self.optimizer, step_size=5000, gamma=0.1)
 
         for epoch in range(n_epochs):
@@ -236,8 +236,6 @@ S_pred_list, I_pred_list, D_pred_list, R_pred_list, alpha_pred_list = dinn.train
     10000, regul=0.8)
 S_pred_list, I_pred_list, D_pred_list, R_pred_list, alpha_pred_list = dinn.train(
     20000, regul=0.8)
-S_pred_list, I_pred_list, D_pred_list, R_pred_list, alpha_pred_list = dinn.train(
-    30000, regul=0.8)
 
 
 def save_model(model, filepath):
