@@ -1,5 +1,5 @@
 import streamlit as st
-from web.backend.utils import *
+from web.backend.utils.utils import *
 from lib.loss_update import save, save_py
 from lib.create_file import create_file_in_tmp
 from lib.prompt_sender import *

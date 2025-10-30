@@ -5904,3 +5904,243 @@ def loss_dinn(S_hat, S_pred, I_hat, I_pred, D_hat, D_pred, R_hat, R_pred, f1, f2
            last_infected_penalty * norm_func(I_pred_last)
 
     return loss
+
+#============================================================
+# Сохранено: 2025-10-30 16:30:48
+#============================================================
+
+
+
+import torch
+
+
+def loss_dinn(S_hat, S_pred, I_hat, I_pred, D_hat, D_pred, R_hat, R_pred, f1, f2, f3, f4, I_pred_last, train_size):
+    
+    S_pred_slice = S_pred[:train_size]
+    I_pred_slice = I_pred[:train_size]
+    R_pred_slice = R_pred[:train_size]
+    D_pred_slice = D_pred[:train_size]
+
+    regul = 0.9
+    last_infected_penalty = 0.1  #  Adjusted to 0.1, considering the comment to penalize the discrepancy
+   '''
+    Adjusted comment to ensure the last_infected_penalty term2 to capture the key statement the expert wants
+    '''
+    term2 hardness = 1.8 #  Assign a hardness to term 2
+    
+    aggregation_func = torch.mean
+    norm_func = torch.square
+
+    term1 = aggregation_func(norm_func(S_hat - S_pred_slice))
+    term2 = aggregation_func(term2 hardness * norm_func(I_hat - I_pred_slice)) # I will be penalized more heavily for being off in the curve as required for penalization to better match the infected curve the infected curve 
+    # Adding term3 is reasonable in general, and it would be more questionable if its weight is zero, but re Initial asking statement disregard here
+    term3 = aggregation_func(norm_func(D_hat - D_pred_slice))
+    term4 = aggregation_func(norm_func(R_hat - R_pred_slice))
+
+    term5 = aggregation_func(norm_func(f1))
+    term6 = aggregation_func(norm_func(f2))
+    term7 = aggregation_func(norm_func(f3))
+    term8 = aggregation_func(norm_func(f4))
+
+    loss = regul * (term1 + term3 + term4) + \
+           (1 - regul) * (0.75 * term5 + 0.75 * term6 + 0.75 * term7 + 0.75 * term8) + \
+           last_infected_penalty * norm_func(I_pred_last-0)
+    return loss
+
+#============================================================
+# Сохранено: 2025-10-30 16:30:55
+#============================================================
+
+
+
+import torch
+
+
+def loss_dinn(S_hat, S_pred, I_hat, I_pred, D_hat, D_pred, R_hat, R_pred, f1, f2, f3, f4, I_pred_last, train_size):
+    S_pred_slice = S_pred[:train_size]
+    I_pred_slice = I_pred[:train_size]
+    R_pred_slice = R_pred[:train_size]
+    D_pred_slice = D_pred[:train_size]
+
+    regul = 0.9
+    last_infected_penalty = 0.1  
+    ''' 
+    Adjusted comment to ensure the last_infected_penalty term2 to capture the key statement the expert wants
+    '''
+    term2_hardness = 1.8 #  Assign a hardness to term 2
+
+    aggregation_func = torch.mean
+    norm_func = torch.square
+
+    term1 = aggregation_func(norm_func(S_hat - S_pred_slice))
+    term2 = aggregation_func(term2_hardness * norm_func(I_hat[:train_size] - I_pred_slice)) 
+    term3 = aggregation_func(norm_func(D_hat[:train_size] - D_pred_slice))
+    term4 = aggregation_func(norm_func(R_hat[:train_size] - R_pred_slice))
+
+    term5 = aggregation_func(norm_func(f1[:train_size]))
+    term6 = aggregation_func(norm_func(f2[:train_size]))
+    term7 = aggregation_func(norm_func(f3[:train_size]))
+    term8 = aggregation_func(norm_func(f4[:train_size]))
+
+    mask = torch.ones((train_size,), device=torch.device('cuda' if torch.cuda.is_available() else 'cpu'))
+    last_infected_penalty = last_infected_penalty * norm_func((I_hat[train_size:] - I_pred[:train_size]).abs() * mask)
+
+    loss = regul * (term1 + term3 + term4) + \
+           (1 - regul) * (0.75 * term5 + 0.75 * term6 + 0.75 * term7 + 0.75 * term8) + \
+           last_infected_penalty
+    loss = loss.type(torch.float64) # Convert to float64 before return
+    return loss
+
+#============================================================
+# Сохранено: 2025-10-30 16:31:06
+#============================================================
+
+
+
+import torch
+
+
+def loss_dinn(S_hat, S_pred, I_hat, I_pred, D_hat, D_pred, R_hat, R_pred, f1, f2, f3, f4, I_pred_last, train_size):
+    S_pred_slice = S_pred[:train_size]
+    I_pred_slice = I_pred[:train_size]
+    R_pred_slice = R_pred[:train_size]
+    D_pred_slice = D_pred[:train_size]
+
+    regul = 0.9
+    last_infected_penalty = 0.1  # last_infected_penalty term1 calculate difference between current and last infected values
+
+    term2_hardness = 1.8 #  Assign a hardness to term 2
+
+    aggregation_func = torch.mean
+    norm_func = torch.square
+
+    term1 = aggregation_func(norm_func(S_hat - S_pred_slice))
+    term2 = aggregation_func(term2_hardness * norm_func(I_hat[train_size:]-I_pred[slice(train_size, -1)])) #now calculate the difference between current and last infected values 
+    term3 = aggregation_func(norm_func(D_hat[:train_size] - D_pred_slice))
+    term4 = aggregation_func(norm_func(R_hat[:train_size] - R_pred_slice))
+
+    term5 = aggregation_func(norm_func(f1[:train_size]))
+    term6 = aggregation_func(norm_func(f2[:train_size]))
+    term7 = aggregation_func(norm_func(f3[:train_size]))
+    term8 = aggregation_func(norm_func(f4[:train_size]))
+
+    mask = torch.ones((train_size,), device=torch.device('cuda' if torch.cuda.is_available() else 'cpu'))
+
+    loss = regul * (term1 + term3 + term4) + \
+           (1 - regul) * (0.75 * term5 + 0.75 * term6 + 0.75 * term7 + 0.75 * term8) + \
+           last_infected_penalty
+    loss = loss.type(torch.float64)
+    return loss
+
+#============================================================
+# Сохранено: 2025-10-30 16:31:14
+#============================================================
+
+
+
+import torch
+
+
+def loss_dinn(S_hat, S_pred, I_hat, I_pred, D_hat, D_pred, R_hat, R_pred, f1, f2, f3, f4, I_pred_last, train_size):
+    
+    S_pred_slice = S_pred[:train_size]
+    I_pred_slice = I_pred[:train_size]
+    R_pred_slice = R_pred[:train_size]
+    D_pred_slice = D_pred[:train_size]
+
+    regul = 0.9
+    last_infected_penalty = 0.2  # Increased penalty for disturbing epidemiological dynamics
+    
+    aggregation_func = torch.mean
+    norm_func = torch.square
+
+    term1 = aggregation_func(norm_func(S_hat - S_pred_slice))
+    term2 = aggregation_func(2 * norm_func(I_hat[:4] - I_pred_slice[:4]) +  # Pit a higher weight in the first four points of infected curve
+                            norm_func(I_hat[4:] - I_pred_slice[4:]))  # But still keep the right to be able to penalize the curb of entire infected curve
+    term3 = aggregation_func(norm_func(D_hat - D_pred_slice))
+    term4 = aggregation_func(norm_func(R_hat - R_pred_slice))
+
+    term5 = aggregation_func(norm_func(f1))
+    term6 = aggregation_func(norm_func(f2))
+    term7 = aggregation_func(norm_func(f3))
+    term8 = aggregation_func(norm_func(f4))
+
+    loss = regul * (term1 + term2 + term3 + term4) + \
+          (1 - regul) * (term5 + term6 + term7 + term8) + \
+          last_infected_penalty * norm_func(I_pred_last-0)
+    return loss
+
+#============================================================
+# Сохранено: 2025-10-30 16:31:22
+#============================================================
+
+
+
+import torch
+
+
+def loss_dinn(S_hat, S_pred, I_hat, I_pred, D_hat, D_pred, R_hat, R_pred, f1, f2, f3, f4, I_pred_last, train_size):
+    S_pred_slice = S_pred[:train_size]
+    I_pred_slice = I_pred[:train_size]
+    R_pred_slice = R_pred[:train_size]
+    D_pred_slice = D_pred[:train_size]
+
+    regul = 0.9
+    last_infected_penalty = 0.2  # Increased penalty for disturbing epidemiological dynamics
+
+    aggregation_func = torch.mean
+    norm_func = torch.square
+
+    term1 = aggregation_func(norm_func(S_hat - S_pred_slice))
+    term2 = aggregation_func(torch.cat((2 * norm_func(I_hat[:4] - I_pred_slice[:4]), norm_func(I_hat[4:] - I_pred_slice[4:])), dim=0))  # Fix: concatenate tensors along dimension 0
+    term3 = aggregation_func(norm_func(D_hat - D_pred_slice))
+    term4 = aggregation_func(norm_func(R_hat - R_pred_slice))
+
+    term5 = aggregation_func(norm_func(f1))
+    term6 = aggregation_func(norm_func(f2))
+    term7 = aggregation_func(norm_func(f3))
+    term8 = aggregation_func(norm_func(f4))
+
+    loss = regul * (term1 + term2 + term3 + term4) + \
+          (1 - regul) * (term5 + term6 + term7 + term8) + \
+          last_infected_penalty * norm_func(I_pred_last - 0)
+    return loss
+
+#============================================================
+# Сохранено: 2025-10-30 16:41:20
+#============================================================
+
+
+
+import torch
+
+
+def loss_dinn(S_hat, S_pred, I_hat, I_pred, D_hat, D_pred, R_hat, R_pred, f1, f2, f3, f4, I_pred_last, train_size):
+    S_pred_slice = S_pred[:train_size]
+    I_pred_slice = I_pred[:train_size]
+    R_pred_slice = R_pred[:train_size]
+    D_pred_slice = D_pred[:train_size]
+
+    regul = 0.9
+    mask_efficiency = 0.8  # introduce a new parameter to account for mask efficiency
+    last_infected_penalty = 0.1
+
+    aggregation_func = torch.mean
+    norm_func = torch.square
+
+    term1 = aggregation_func(norm_func(S_hat - S_pred_slice))
+    term2 = aggregation_func(norm_func(I_hat - I_pred_slice * (1 - mask_efficiency)))  # adjust I_pred_slice to incorporate mask efficiency
+    term3 = aggregation_func(norm_func(D_hat - D_pred_slice))
+    term4 = aggregation_func(norm_func(R_hat - R_pred_slice))
+
+    term5 = aggregation_func(norm_func(f1))
+    term6 = aggregation_func(norm_func(f2))
+    term7 = aggregation_func(norm_func(f3))
+    term8 = aggregation_func(norm_func(f4))
+
+    term9 = aggregation_func(norm_func(f3 * mask_efficiency))  # introduce a new term to account for mask efficiency on R_pred
+
+    loss = regul * (term1 + term2 + term3 + term4) + \
+        (1 - regul) * (term5 + term6 + term7 + term8 + mask_efficiency * term9) + \
+        last_infected_penalty * norm_func(I_pred_last-0)
+    return loss

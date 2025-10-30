@@ -10,8 +10,8 @@ from plotly.subplots import make_subplots
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from datetime import datetime, timedelta
 
-from .EpidParams.EpidParams import EpidParams
-from .PINN_utils.PINN_class import DINN
+from ..EpidParams.EpidParams import EpidParams
+from ..PINN_utils.PINN_class import DINN
 
 
 def load_model(filepath, t, S_data, I_data, D_data, R_data, train_size):
