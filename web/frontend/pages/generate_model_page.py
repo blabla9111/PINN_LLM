@@ -1,4 +1,5 @@
 import streamlit as st
+from lib.translator import translate
 
 # Импорт конфигурации и контроллеров
 from web.backend.config.config_utils import get_config
@@ -23,7 +24,7 @@ def generate_model_page():
     model_type = st.session_state.model_type
 
     # Создаем контейнеры для отображения прогресса
-    st.header("🚀 Процесс генерации и обучения модели")
+    st.header(translate("🚀 Процесс генерации и обучения модели"))
     progress_bar = st.progress(0)
     status_text = st.empty()
     details_container = st.empty()
@@ -31,7 +32,7 @@ def generate_model_page():
 
     # Callback функция для обновления прогресса
     def progress_callback(message, progress):
-        status_text.text(message)
+        status_text.text(translate(message))
         progress_bar.progress(progress)
 
     # Запуск пайплайна генерации модели через контроллер
@@ -45,18 +46,18 @@ def generate_model_page():
 
     # Обработка результата пайплайна
     if not pipeline_result['success']:
-        error_container.error(f"❌ {pipeline_result['error']}")
+        error_container.error(translate(f"❌ {pipeline_result['error']}"))
         progress_bar.progress(100)
-        st.error("Процесс остановлен из-за ошибок. Пожалуйста, обновите страницу")
+        st.error(translate("Процесс остановлен из-за ошибок. Пожалуйста, обновите страницу"))
         return
 
     # Успешное завершение пайплайна
-    st.success("Модель успешно сгенерирована и обучена!")
+    st.success(translate("Модель успешно сгенерирована и обучена!"))
 
     # Детали выполнения в режиме разработчика
     if st.session_state.mode == 'DEV':
-        with st.expander("Детали выполнения"):
-            st.write("**Информация о процессе:**")
+        with st.expander(translate("Детали выполнения")):
+            st.write(translate("**Информация о процессе:**"))
             st.json({
                 "validation_attempts": pipeline_result['error_count'],
                 "final_code_length": len(pipeline_result['final_code']),
@@ -73,7 +74,7 @@ def generate_model_page():
     )
 
     if not comparison_result['success']:
-        st.error(f"Ошибка при сравнении моделей: {comparison_result['error']}")
+        st.error(translate(f"Ошибка при сравнении моделей: {comparison_result['error']}"))
         # Показываем кнопки даже если сравнение не удалось
         _show_action_buttons(pipeline_result['model_path'], pipeline_result['loss_path'])
         return
@@ -83,7 +84,7 @@ def generate_model_page():
     _show_action_buttons(pipeline_result['model_path'], pipeline_result['loss_path'])
 
     # Стили
-    st.markdown("""
+    st.markdown(translate("""
         <style>
         div[data-testid="stVerticalBlock"] > div:has(> div[data-testid="stVerticalBlock"]) {
             background-color: #f0f8ff;
@@ -93,12 +94,12 @@ def generate_model_page():
             margin-bottom: 20px;
         }
         </style>
-        """, unsafe_allow_html=True)
+        """), unsafe_allow_html=True)
 
 
 def _show_comparison_results(comparison_result: dict):
     """Показать результаты сравнения моделей"""
-    st.title("Сравнение моделей")
+    st.title(translate("Сравнение моделей"))
     
     metrics_old = comparison_result['metrics_old']
     metrics_new = comparison_result['metrics_new']
@@ -107,54 +108,54 @@ def _show_comparison_results(comparison_result: dict):
 
     # Отображение графиков и метрик
     col1, col2 = st.columns(2)
-    OLD_MODEL_NAME = "PINN"
-    NEW_MODEL_NAME = "NEW_PINN"
+    OLD_MODEL_NAME = translate("PINN")
+    NEW_MODEL_NAME = translate("NEW_PINN")
     
     with col1:
-        with st.expander("📈 Susceptible (S) - Развернуть/Свернуть", expanded=True):
+        with st.expander(translate("📈 Susceptible (S) - Развернуть/Свернуть"), expanded=True):
             st.plotly_chart(figures['S'])
-            st.write("📊 Метрики моделей для S")
+            st.write(translate("📊 Метрики моделей для S"))
             comparison_table = compare_metrics(metrics_old['S'], metrics_new['S'], OLD_MODEL_NAME, NEW_MODEL_NAME)
 
     with col2:
-        with st.expander("🦠 Infected (I) - Развернуть/Свернуть", expanded=True):
+        with st.expander(translate("🦠 Infected (I) - Развернуть/Свернуть"), expanded=True):
             st.plotly_chart(figures['I'])
-            st.write("📊 Метрики моделей для I")
+            st.write(translate("📊 Метрики моделей для I"))
             comparison_table = compare_metrics(metrics_old['I'], metrics_new['I'], OLD_MODEL_NAME, NEW_MODEL_NAME)
     
     col1, col2 = st.columns(2)
     with col1:
-        with st.expander("💊 Recovered (R) - Развернуть/Свернуть", expanded=True):
+        with st.expander(translate("💊 Recovered (R) - Развернуть/Свернуть"), expanded=True):
             st.plotly_chart(figures['R'])
-            st.write("📊 Метрики моделей для R")
+            st.write(translate("📊 Метрики моделей для R"))
             comparison_table = compare_metrics(metrics_old['R'], metrics_new['R'], OLD_MODEL_NAME, NEW_MODEL_NAME)
 
     with col2:
-        with st.expander("⚰️ Dead (D) - Развернуть/Свернуть", expanded=True):
+        with st.expander(translate("⚰️ Dead (D) - Развернуть/Свернуть"), expanded=True):
             st.plotly_chart(figures['D'])
-            st.write("📊 Метрики моделей для D")
+            st.write(translate("📊 Метрики моделей для D"))
             comparison_table = compare_metrics(metrics_old['D'], metrics_new['D'], OLD_MODEL_NAME, NEW_MODEL_NAME)
     
     # Показ эпидемиологических параметров
-    st.subheader("Эпид.параметры")
-    st.metric("R0 (basic reproduction number)", f"{epidemic_params['r0']:.3f}")
+    st.subheader(translate("Эпидемиологические параметры"))
+    st.metric(translate("R0 (базовое репродуктивное число)"), f"{epidemic_params['r0']:.3f}")
         
     st.plotly_chart(figures['epid'], width='stretch')
 
     # Рекомендации
-    with st.expander("💡 Что делать после получения прогноза?", expanded=True):
-        st.success("✅ **Если прогноз устраивает:**")
-        st.markdown("""
+    with st.expander(translate("💡 Что делать после получения прогноза?"), expanded=True):
+        st.success(translate("✅ **Если прогноз устраивает:**"))
+        st.markdown(translate("""
         1. Нажмите кнопку **«Сохранить модель в Storage»**
         2. Вы автоматически перейдете на главную страницу
         3. В боковой панели выберите **«Кастомизированная модель»** для работы с сохраненной моделью
-        """)
+        """))
         
-        st.warning("❌ **Если прогноз не устраивает:**")
-        st.markdown("""
+        st.warning(translate("❌ **Если прогноз не устраивает:**"))
+        st.markdown(translate("""
         1. Вернитесь на главную страницу
         2. Переформулируйте указания для модели
-        """)
+        """))
 
 
 def _show_action_buttons(model_path: str, loss_path: str):
@@ -167,14 +168,14 @@ def _show_action_buttons(model_path: str, loss_path: str):
     col1, col2 = st.columns(2)
     
     with col1:
-        if st.button("↩️ Вернуться на главную страницу", 
+        if st.button(translate("↩️ Вернуться на главную страницу"), 
              use_container_width=True,
              on_click=lambda: setattr(st.session_state, 'current_page', 'main')):
             pass
     
     with col2:
         st.button(
-            "💾 Сохранить модель в Storage",
+            translate("💾 Сохранить модель в Storage"),
             use_container_width=True,
             on_click=save_model_callback,
             key="save_model_btn"
@@ -218,8 +219,8 @@ def save_model_callback():
                 )
             )
 
-        st.success("✅ Модель успешно сохранена!")
+        st.success(translate("✅ Модель успешно сохранена!"))
         st.session_state.current_page = "main"
         
     except Exception as e:
-        st.error(f"❌ Ошибка при сохранении модели: {str(e)}")
+        st.error(translate(f"❌ Ошибка при сохранении модели: {str(e)}"))

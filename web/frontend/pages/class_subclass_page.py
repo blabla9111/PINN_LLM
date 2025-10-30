@@ -1,5 +1,6 @@
 import streamlit as st
 from web.backend.controllers import AnalysisController
+from lib.translator import translate
 
 CLASS_TYPE_INFO = {
     "1": ["Поведение эпидемической кривой не соответствует ожиданиям эксперта.", {
@@ -25,7 +26,7 @@ CLASS_TYPE_INFO = {
 
 def class_subclass_page():
     show_mode_indicator()
-    st.title("Результаты анализа экспертных указаний")
+    st.title(translate("Результаты анализа экспертных указаний"))
 
     # Получаем конфиг и клиент из session state
     config = st.session_state['app_config']
@@ -36,8 +37,8 @@ def class_subclass_page():
 
     # Проверка наличия данных для анализа
     if 'comment_analysis' not in st.session_state:
-        st.warning("Нет данных для анализа. Вернитесь на главную страницу.")
-        if st.button("Вернуться на главную"):
+        st.warning(translate("Нет данных для анализа. Вернитесь на главную страницу."))
+        if st.button(translate("Вернуться на главную")):
             st.session_state.current_page = "main"
             st.rerun()
         return
@@ -47,7 +48,7 @@ def class_subclass_page():
     analysis_result = analysis_controller.analyze_comment(comment)
     
     if not analysis_result['success']:
-        st.error(f"Ошибка при анализе комментария: {analysis_result['error']}")
+        st.error(translate(f"Ошибка при анализе комментария: {analysis_result['error']}"))
         return
 
     # Извлекаем результаты анализа
@@ -63,12 +64,12 @@ def class_subclass_page():
     # Проверка валидности классификации
     if not is_valid:
         if st.session_state.mode == 'DEV':
-            st.error("❌ Некорректная иерархия классов")
-            st.warning("Предсказанные классы не образуют валидную пару класс-подкласс")
-        st.write("⚠️ Перейдите, пожалуйста, на главную страницу... Нужно переформулировать комментарий (указание для модели), так как модель не смогла однозначно определить темы комментария", icon="⚠️")
+            st.error(translate("❌ Некорректная иерархия классов"))
+            st.warning(translate("Предсказанные классы не образуют валидную пару класс-подкласс"))
+        st.write(translate("⚠️ Перейдите, пожалуйста, на главную страницу... Нужно переформулировать комментарий (указание для модели), так как модель не смогла однозначно определить темы комментария"), icon="⚠️")
     
     # Отображение исходного комментария
-    st.subheader("Ваш комментарий (указание для модели):")
+    st.subheader(translate("Ваш комментарий (указание для модели):"))
     st.info(f'"{st.session_state.comment_primary}"')
     
     # Сохранение экспертного комментария через контроллер
@@ -83,49 +84,49 @@ def class_subclass_page():
     if save_result['success']:
         st.session_state.comment_id = save_result['comment_id']
     else:
-        st.error(f"Ошибка при сохранении комментария: {save_result['error']}")
+        st.error(translate(f"Ошибка при сохранении комментария: {save_result['error']}"))
 
     # Разделение на колонки для результатов
     col1 = st.columns(1)
 
     with col1[0]:
-        st.subheader("Программа определила, что Ваш комментарий относится к следующим темам:")
-        st.info(f"**{CLASS_TYPE_INFO[comment_class][0]}**", icon="📋")
-        st.info(f"**{CLASS_TYPE_INFO[comment_class][1][comment_subclass]}**", icon="📋")
+        st.subheader(translate("Программа определила, что Ваш комментарий относится к следующим темам:"))
+        st.info(f"**{translate(CLASS_TYPE_INFO[comment_class][0])}**", icon="📋")
+        st.info(f"**{translate(CLASS_TYPE_INFO[comment_class][1][comment_subclass])}**", icon="📋")
 
         if st.session_state.mode == 'DEV':
             # Дополнительная информация о результате
-            with st.expander("Детали выполнения"):
-                st.write(f"**🎯 Основной класс:** {comment_class}")
-                st.caption(CLASS_TYPE_INFO[comment_class][0])
-                st.write(f"Уверенность в классе: {analysis_result['confidence_class']}%")
+            with st.expander(translate("Детали выполнения")):
+                st.write(f"**{translate('🎯 Основной класс')}:** {comment_class}")
+                st.caption(translate(CLASS_TYPE_INFO[comment_class][0]))
+                st.write(f"{translate('Уверенность в классе')}: {analysis_result['confidence_class']}%")
                 
-                st.write(f"**🔍 Подкласс:** {comment_subclass}")
-                st.caption(CLASS_TYPE_INFO[comment_class][1][comment_subclass])
-                st.write(f"Уверенность в подклассе: {analysis_result['confidence_subclass']}%")
+                st.write(f"**{translate('🔍 Подкласс')}:** {comment_subclass}")
+                st.caption(translate(CLASS_TYPE_INFO[comment_class][1][comment_subclass]))
+                st.write(f"{translate('Уверенность в подклассе')}: {analysis_result['confidence_subclass']}%")
                 
                 # Информация о конфигурации
-                st.write("**⚙️ Конфигурация:**")
+                st.write(f"**{translate('⚙️ Конфигурация')}:**")
                 st.json({
                     "app_mode": config.app.MODE,
                     "debug": config.app.DEBUG,
                     "llm_model": config.llm.MODEL_NAME
                 })
 
-    st.subheader("Подходят ли предложенные темы под ваш комментарий?")
-    st.write("После подтверждения программа попытается адаптировать прогноз по Вашему комментарию")
+    st.subheader(translate("Подходят ли предложенные темы под ваш комментарий?"))
+    st.write(translate("После подтверждения программа попытается адаптировать прогноз по Вашему комментарию"))
 
     col_confirm1, col_confirm2 = st.columns(2)
 
     with col_confirm1:
-        if st.button("✅ Да, подходят", 
+        if st.button(translate("✅ Да, подходят"), 
             type="primary", 
             use_container_width=True,
             on_click=lambda: confirm_classification_callback(supabase, analysis_controller)):
             pass
 
     with col_confirm2:
-        if st.button("❌ Нет, не подходят", 
+        if st.button(translate("❌ Нет, не подходят"), 
             type="secondary", 
             use_container_width=True,
             on_click=reject_classification_callback):
@@ -138,7 +139,7 @@ def class_subclass_page():
     col_btn1, col_btn2 = st.columns(2)
 
     with col_btn1:
-        st.button("↩️ Вернуться на главную страницу", 
+        st.button(translate("↩️ Вернуться на главную страницу"), 
              use_container_width=True,
              on_click=return_to_main_callback)
 
@@ -176,7 +177,7 @@ def confirm_classification_callback(supabase, analysis_controller):
         )
         
         if not update_result['success']:
-            st.error(f"Ошибка при обновлении статуса комментария: {update_result['error']}")
+            st.error(translate(f"Ошибка при обновлении статуса комментария: {update_result['error']}"))
     
     st.session_state.current_page = "generate new model"
 
@@ -192,12 +193,12 @@ def reject_classification_callback():
         "confirmed": False,
     })
 
-    st.toast("⚠️ Переход на главную страницу... Нужно переформулировать комментарий (указание для модели)", icon="⚠️")
+    st.toast(translate("⚠️ Переход на главную страницу... Нужно переформулировать комментарий (указание для модели)"), icon="⚠️")
     st.session_state.current_page = "main"
 
 # Вспомогательная функция для отображения индикатора режима
 def show_mode_indicator():
     if st.session_state.mode == 'DEV':
-        st.sidebar.info("🔧 Режим разработчика")
+        st.sidebar.info(translate("🔧 Режим разработчика"))
     else:
-        st.sidebar.info("👤 Пользовательский режим")
+        st.sidebar.info(translate("Пользовательский режим"))
