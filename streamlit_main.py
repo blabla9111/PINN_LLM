@@ -1,17 +1,30 @@
 import streamlit as st
 from web.frontend import pages as pg
-from web.backend.database_connection.SupabaseEngine import SupabaseEngine
+from web.backend.database.SupabaseEngine import SupabaseEngine
 
+# Импорт конфигурации
+from web.backend.config.config_utils import get_config
+
+# Инициализация конфигурации
+config = get_config()
 
 # Настройка страницы
-st.set_page_config(page_title="Анализ модели", layout="wide")
+st.set_page_config(
+    page_title=config.app.PAGE_TITLE, 
+    layout=config.app.PAGE_LAYOUT
+)
 
 # Инициализация session state
 if 'current_page' not in st.session_state:
     st.session_state.current_page = "main"
 
 if "supabase" not in st.session_state:
-     st.session_state['supabase'] = SupabaseEngine().supabase
+    # Используем конфиг для инициализации Supabase
+    st.session_state['supabase'] = SupabaseEngine(config).supabase
+
+# Добавляем конфиг в session state для доступа на всех страницах
+if 'app_config' not in st.session_state:
+    st.session_state['app_config'] = config
 
 # Отображение текущей страницы
 if st.session_state.current_page == "main":
@@ -20,6 +33,14 @@ elif st.session_state.current_page == "results":
     pg.class_subclass_page()
 elif st.session_state.current_page == "generate new model":
     pg.generate_model_page()
+
+# Информация о конфигурации в режиме разработчика
+if st.session_state.get('mode') == 'DEV':
+    with st.sidebar.expander("🔧 Конфигурация"):
+        st.write(f"**Режим:** {config.app.MODE}")
+        st.write(f"**LLM Модель:** {config.llm.MODEL_NAME}")
+        st.write(f"**TensorBoard:** {'✅' if config.training.ENABLE_TENSORBOARD_LOGGING else '❌'}")
+        st.write(f"**Bucket:** {config.supabase.STORAGE_BUCKET}")
 
 # Стилизация
 st.markdown("""

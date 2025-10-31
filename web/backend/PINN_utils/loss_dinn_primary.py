@@ -1,10 +1,15 @@
 import torch
 
 
-def loss_dinn(S_hat, S_pred, I_hat, I_pred, D_hat, D_pred, R_hat, R_pred, f1, f2, f3, f4, I_pred_last):
+def loss_dinn(S_hat, S_pred, I_hat, I_pred, D_hat, D_pred, R_hat, R_pred, f1, f2, f3, f4, I_pred_last, train_size):
 
-    regul = 0.8
-    last_infected_penalty = 0.05
+    S_pred = S_pred[:train_size]
+    I_pred = I_pred[:train_size]
+    R_pred = R_pred[:train_size]
+    D_pred = D_pred[:train_size]
+
+    regul = 0.9
+    last_infected_penalty = 0.1
 
     aggregation_func = torch.mean
     norm_func = torch.square

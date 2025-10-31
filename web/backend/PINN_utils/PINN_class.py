@@ -8,7 +8,7 @@ import torch.nn.functional as F
 
 
 class DINN(nn.Module):
-    def __init__(self, t, S_data, I_data, D_data, R_data, device):
+    def __init__(self, t, S_data, I_data, D_data, R_data, device, train_size):
         super(DINN, self).__init__()
         self.device = device
         self.N = 6e6
@@ -19,6 +19,7 @@ class DINN(nn.Module):
         self.I = torch.tensor(I_data, device=self.device)
         self.D = torch.tensor(D_data, device=self.device)
         self.R = torch.tensor(R_data, device=self.device)
+        self.train_size = train_size
 
         self.losses = []
 
@@ -26,14 +27,15 @@ class DINN(nn.Module):
         self.gamma_tilda = torch.nn.Parameter(
             torch.rand(1, requires_grad=True, device=self.device))
 
-        self.S_max = max(self.S)
-        self.I_max = max(self.I)
-        self.D_max = max(self.D)
-        self.R_max = max(self.R)
-        self.S_min = min(self.S)
-        self.I_min = min(self.I)
-        self.D_min = min(self.D)
-        self.R_min = min(self.R)
+        # Нормализация только по обучающей части (первые train_size точек)
+        self.S_max = max(self.S[:train_size])
+        self.I_max = max(self.I[:train_size])
+        self.D_max = max(self.D[:train_size])
+        self.R_max = max(self.R[:train_size])
+        self.S_min = min(self.S[:train_size])
+        self.I_min = min(self.I[:train_size])
+        self.D_min = min(self.D[:train_size])
+        self.R_min = min(self.R[:train_size])
 
         self.S_hat = (self.S - self.S_min) / (self.S_max - self.S_min)
         self.I_hat = (self.I - self.I_min) / (self.I_max - self.I_min)

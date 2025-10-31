@@ -1,334 +1,90 @@
 import streamlit as st
-from web.backend.utils import *
-from lib.loss_update import save, save_py
-from lib.create_file import create_file_in_tmp
-from lib.prompt_sender import *
-from lib.parser import *
-import subprocess
-import time
-from huggingface_hub import InferenceClient
-import sys
-import matplotlib.pyplot as plt
-from lib.create_file import *
+from web.backend.utils.translator import translate
 
-client = InferenceClient(model="meta-llama/Meta-Llama-3.1-8B-Instruct",
-                         token=st.secrets['HUGGINGFACE_HUB_TOKEN'])
+# Импорт конфигурации и контроллеров
+from web.backend.config.config_utils import get_config
+from web.backend.controllers import ModelGenerationController, ResultsController
+from web.backend.utils import compare_metrics, download_temp_file, show_mode_indicator
+
+# Инициализация конфигурации
+config = get_config()
+
+# Инициализация контроллеров
+generation_controller = ModelGenerationController(config)
+results_controller = ResultsController(config)
 
 
 def generate_model_page():
     show_mode_indicator()
     
-    PROMPT_FILE_PATH = 'promts_templates/get_loss_based_on_recommendation_prompt.json'
-    ANSWER_FILE_PATH = 'promts_templates/get_loss_based_on_recommendation_prompt_answer.json'
-    LOSS_FILE_PATH = 'loss_dinn_LLM.py'
-    # LOSS_PRIMARY_FILE_PATH = 'web/backend/PINN_utils/loss_dinn_primary.py'
-    LLM_URL = 'http://localhost:1234/v1/chat/completions'
-
-    LOSS_CHECK_FILE_NAME = "loss_dinn_check.py"
-    LOSS_CHECK_START_FILE_PATH = "web/backend/code_constructor_files/loss_dinn_check/loss_dinn_check_start.txt"
-    LOSS_CHECK_END_FILE_PATH = "web/backend/code_constructor_files/loss_dinn_check/loss_dinn_check_end.txt"
-
-    PINN_NEW_FILE_NAME = "PINN_NEW_MODEL.py"
-    PINN_RUN_START_FILE_PATH = "web/backend/code_constructor_files/PINN_run/PINN_class_start_code.txt"
-    PINN_RUN_END_FILE_PATH = "web/backend/code_constructor_files/PINN_run/PINN_class_end_code.txt"
-
-
-    RUN_PINN_COMMAND = ['python', 'PINN.py']
-    RUN_TESTER_COMMAND = ['python', 'loss_dinn_check.py ', '']
-    PROMPT_FIX_ERROR_FILE_PATH = "promts_templates/prompt_fix_error.json"
-    ANSWER_FIX_ERROR_FILE_PATH = 'promts_templates/answer_fix_error_from_LLM_2.json'
-
+    # Данные из session state
     EXPERT_COMMENT = st.session_state.user_comment
     comment_class = st.session_state.user_comment_class
     comment_subclass = st.session_state.user_comment_subclass
+    model_type = st.session_state.model_type
 
     # Создаем контейнеры для отображения прогресса
-    st.header("🚀 Процесс генерации и обучения модели")
+    st.header(translate("🚀 Процесс генерации и обучения модели"))
     progress_bar = st.progress(0)
     status_text = st.empty()
     details_container = st.empty()
     error_container = st.empty()
 
-    # Шаг 1: Подготовка промпта
-    status_text.text("📝 Подготовка промпта для LLM...")
-    details_container.text(
-        "Генерация промпта на основе экспертного комментария")
-    supabase = st.session_state['supabase']
-    if st.session_state.model_type == "CUSTOM":
-        response = supabase.storage.from_("PINN_LLM_STORAGE").download("loss/loss_dinn_custom.py")
-    else:
-        response = supabase.storage.from_("PINN_LLM_STORAGE").download("loss/loss_dinn_primary.py")
+    # Callback функция для обновления прогресса
+    def progress_callback(message, progress):
+        status_text.text(translate(message))
+        progress_bar.progress(progress)
 
-    loss_filepath = load_python_file_to_tmp(response)
-    code = get_loss_func_as_str(loss_filepath)
-    create_get_loss_based_on_recommendation_prompt(
-        PROMPT_FILE_PATH, comment_class, comment_subclass, EXPERT_COMMENT, code)
-    progress_bar.progress(10)
-    time.sleep(0.5)
+    # Запуск пайплайна генерации модели через контроллер
+    pipeline_result = generation_controller.execute_training_pipeline(
+        expert_comment=EXPERT_COMMENT,
+        comment_class=comment_class,
+        comment_subclass=comment_subclass,
+        model_type=model_type,
+        progress_callback=progress_callback
+    )
 
-    # Шаг 2: Отправка запроса к LLM
-    status_text.text("🤖 Отправка запроса к языковой модели...")
-    details_container.text("Ожидание ответа от LLM")
-    send_prompt(PROMPT_FILE_PATH, LLM_URL, client, ANSWER_FILE_PATH)
-    progress_bar.progress(30)
-    time.sleep(1)
-
-    # Шаг 3: Обработка ответа
-    status_text.text("🔍 Обработка ответа от LLM...")
-    details_container.text("Извлечение кода из ответа")
-    json_text = load_text_to_json(ANSWER_FILE_PATH)
-    code = llm_answer_to_python_code(json_text)
-    # print(code)
-    if st.session_state.mode == 'DEV':
-        details_container.text(f"Полученный код:\n```python\n{code}\n```")
-    progress_bar.progress(40)
-    # return
-
-    # Шаг 4: Сохранение и первая проверка
-    status_text.text("💾 Сохранение сгенерированного кода...")
-    # save(LOSS_FILE_PATH, code)
-    loss_file_path, content = save_py(LOSS_FILE_PATH, code)
-    progress_bar.progress(50)
-    # print(file_path)
-    # return
-    status_text.text("🧪 Первая проверка кода...")
-    details_container.text("Запуск тестера для проверки корректности")
-    # RUN_TESTER_COMMAND[2] = code
-    file_path, content = create_file_in_tmp(code, LOSS_CHECK_FILE_NAME,
-                                         LOSS_CHECK_START_FILE_PATH, LOSS_CHECK_END_FILE_PATH)
-    # output = subprocess.run(RUN_TESTER_COMMAND, capture_output=True, text=True)
-    output = subprocess.run(
-        [f"{sys.executable}", file_path, code], capture_output=True)
-    print(output.stdout)
-    # t =  eval(output.stdout)
-    # return
-
-    if "True" in str(output.stdout):
-        t = (True, '')
-        print(f"Результат: {t}")
-    else:
-        t = (False, str(output.stdout))
-    # return
-    is_correct = t[0]
-    status_text.text(is_correct)
-    print(is_correct)
-    error = t[1]
-    print(error)
-
-    error_counter = 0
-    max_error_iterations = 6
-
-    # Шаг 5: Цикл исправления ошибок
-    while not is_correct and error_counter < max_error_iterations:
-        error_counter += 1
-        status_text.text(f"⚠️ Исправление ошибок (попытка {error_counter})...")
-        # details_container.text(f"Обнаружена ошибка: {error[:100]}...")
-        if st.session_state.mode == 'DEV':
-            error_container.error(f"Ошибка: {error}")
-
-        progress_value = 50 + (error_counter * 10)
-        progress_bar.progress(min(progress_value, 80))
-
-        create_prompt_to_fix_error(PROMPT_FIX_ERROR_FILE_PATH, code, error)
-
-        if error_counter % 3 == 0:
-            details_container.text("Повторная отправка основного промпта...")
-            send_prompt(PROMPT_FILE_PATH, LLM_URL, client, ANSWER_FILE_PATH)
-            json_text = load_text_to_json(ANSWER_FILE_PATH)
-        else:
-            details_container.text(
-                "Отправка промпта для исправления ошибки...")
-            send_prompt(PROMPT_FIX_ERROR_FILE_PATH,
-                        LLM_URL, client, ANSWER_FIX_ERROR_FILE_PATH)
-            json_text = load_text_to_json(ANSWER_FIX_ERROR_FILE_PATH)
-
-        code = llm_answer_to_python_code(json_text)
-        loss_file_path, content = save_py(LOSS_FILE_PATH, code)
-
-        # Проверка исправленного кода
-        details_container.text("Проверка исправленного кода...")
-        # RUN_TESTER_COMMAND[2] = code
-        file_path, content = create_file_in_tmp(code, LOSS_CHECK_FILE_NAME,
-                                             LOSS_CHECK_START_FILE_PATH, LOSS_CHECK_END_FILE_PATH)
-        output = subprocess.run(
-            [f"{sys.executable}", file_path, code], capture_output=True)
-        if "True" in str(output.stdout):
-            t = (True, '')
-            print(f"Результат: {t}")
-        else:
-            t = (False, str(output.stdout))
-        is_correct = t[0]
-        status_text.text(is_correct)
-        error = t[1]
-
-        if is_correct:
-            error_container.empty()
-            details_container.text("✅ Ошибки исправлены!")
-            progress_bar.progress(80)
-
-    # return
-    # Если превышено максимальное количество попыток
-    if not is_correct:
-        status_text.text(
-            "❌ Не удалось исправить ошибки после нескольких попыток")
-        error_container.error(f"Последняя ошибка: {error}")
+    # Обработка результата пайплайна
+    if not pipeline_result['success']:
+        error_container.error(translate(f"❌ {pipeline_result['error']}"))
         progress_bar.progress(100)
-        st.error("Процесс остановлен из-за непреодолимых ошибок. Пожалуйста, обновите страницу")
+        st.error(translate("Процесс остановлен из-за ошибок. Пожалуйста, обновите страницу"))
         return
 
-    # Шаг 6: Запуск обучения PINN
-    status_text.text("🏃‍♂️ Запуск обучения PINN модели...")
-    details_container.text(
-        "Обучение нейросети (это может занять некоторое время)")
-    progress_bar.progress(90)
+    # Успешное завершение пайплайна
+    st.success(translate("Модель успешно сгенерирована и обучена!"))
 
-    # Запуск с индикатором прогресса
-    filename = ""
-    with st.spinner("Идет обучение модели..."):
-        file_path, content = create_file_in_tmp(code, PINN_NEW_FILE_NAME,
-                                             PINN_RUN_START_FILE_PATH, PINN_RUN_END_FILE_PATH)
-        output = subprocess.run(
-            [f"{sys.executable}", file_path], capture_output=True, text=True)
-        print(output.stdout)
-        text = str(output.stdout)
-        lines = text.strip().split('\n')
-        last_line = lines[-1] if lines else ""
-        filename = last_line.split("Model saved to ")[-1].strip()
-        print(filename)
-
-    # Шаг 7: Завершение
-    status_text.text("✅ Обучение завершено!")
-    # details_container.text("Процесс генерации и обучения успешно завершен")
-    progress_bar.progress(100)
-
-    # Показ результатов
-    st.success("Модель успешно сгенерирована и обучена!")
-
+    # Детали выполнения в режиме разработчика
     if st.session_state.mode == 'DEV':
-    # Дополнительная информация о результате
-        with st.expander("Детали выполнения"):
-            st.text("Логи выполнения:")
-            st.code(output.stdout[:1000] +
-                    "..." if len(output.stdout) > 1000 else output.stdout)
+        with st.expander(translate("Детали выполнения")):
+            st.write(translate("**Информация о процессе:**"))
+            st.json({
+                "validation_attempts": pipeline_result['error_count'],
+                "final_code_length": len(pipeline_result['final_code']),
+                "model_saved_to": pipeline_result['model_path']
+            })
 
-            if output.stderr:
-                st.warning("Предупреждения/ошибки:")
-                st.code(output.stderr)
+    # Сравнение моделей через ResultsController
     supabase = st.session_state['supabase']
+    comparison_result = results_controller.compare_models(
+        supabase_client=supabase,
+        old_model_path="",  # путь будет получен из конфига внутри контроллера
+        new_model_path=pipeline_result['model_path'],
+        model_type=model_type
+    )
 
-    response = supabase.storage.from_("PINN_LLM_STORAGE").download("data.csv")
-    filepath = load_data_to_tmp(response)
-    timesteps, susceptible, infected, dead, recovered, x = get_data_for_model(filepath)
-    if st.session_state.model_type == "CUSTOM":
-        response = supabase.storage.from_("PINN_LLM_STORAGE").download("NEW_MODEL_dinn_cuda_2.pth")
-    else:
-        response = supabase.storage.from_("PINN_LLM_STORAGE").download("dinn_cuda.pth")
+    if not comparison_result['success']:
+        st.error(translate(f"Ошибка при сравнении моделей: {comparison_result['error']}"))
+        # Показываем кнопки даже если сравнение не удалось
+        _show_action_buttons(pipeline_result['model_path'], pipeline_result['loss_path'])
+        return
 
-    
-    filepath = load_model_to_tmp(response)
-    loaded_dinn = load_model(filepath,
-                             timesteps, susceptible, infected, dead, recovered)
-    
-    loaded_dinn_new = load_model(filename,
-                                 timesteps, susceptible, infected, dead, recovered)
-    
-    S_pred, I_pred, D_pred, R_pred, alpha_pred = loaded_dinn.predict()
+    # Успешное сравнение моделей - показываем результаты
+    _show_comparison_results(comparison_result)
+    _show_action_buttons(pipeline_result['model_path'], pipeline_result['loss_path'])
 
-    S_pred_new, I_pred_new, D_pred_new, R_pred_new, alpha_pred_new = loaded_dinn_new.predict()
-
-
-    st.title("Сравнение моделей")
-    col1, col2 = st.columns(2)
-    OLD_MODEL_NAME = "PINN"
-    NEW_MODEL_NAME = "NEW_PINN"
-    with col1:
-        with st.expander("📈 Susceptible (S) - Развернуть/Свернуть", expanded=True):
-            fig_s = plot_S_comparison(timesteps, x, susceptible, S_pred, S_pred_new)
-            st.plotly_chart(fig_s)
-            st.write("📊 Метрики моделей для S")
-            metrics_I = calculate_metrics(susceptible[x:x+30], S_pred[x:x+30])
-            metrics_II = calculate_metrics(susceptible[x:x+30], S_pred_new[x:x+30])
-            comparison_table = compare_metrics(metrics_I, metrics_II, OLD_MODEL_NAME, NEW_MODEL_NAME)
-
-    with col2:
-        with st.expander("🦠 Infected (I) - Развернуть/Свернуть", expanded=True):
-            fig_i = plot_I_comparison(timesteps, x, infected, I_pred, I_pred_new)
-            st.plotly_chart(fig_i)
-            st.write("📊 Метрики моделей для I")
-            metrics_I = calculate_metrics(infected[x:x+30], I_pred[x:x+30])
-            metrics_II = calculate_metrics(infected[x:x+30], I_pred_new[x:x+30])
-            comparison_table = compare_metrics(metrics_I, metrics_II, OLD_MODEL_NAME, NEW_MODEL_NAME)
-    col1, col2 = st.columns(2)
-    with col1:
-        with st.expander("💊 Recovered (R) - Развернуть/Свернуть", expanded=True):
-            fig_r = plot_R_comparison(timesteps, x, recovered, R_pred, R_pred_new)
-            st.plotly_chart(fig_r)
-            st.write("📊 Метрики моделей для R")
-            metrics_I = calculate_metrics(recovered[x:x+30], R_pred[x:x+30])
-            metrics_II = calculate_metrics(recovered[x:x+30], R_pred_new[x:x+30])
-            comparison_table = compare_metrics(metrics_I, metrics_II, OLD_MODEL_NAME, NEW_MODEL_NAME)
-
-    with col2:
-        with st.expander("⚰️ Dead (D) - Развернуть/Свернуть", expanded=True):
-            fig_d = plot_D_comparison(timesteps, x, dead, D_pred, D_pred_new)
-            st.plotly_chart(fig_d)
-            st.write("📊 Метрики моделей для D")
-            metrics_I = calculate_metrics(dead[x:x+30], D_pred[x:x+30])
-            metrics_II = calculate_metrics(dead[x:x+30], D_pred_new[x:x+30])
-            comparison_table = compare_metrics(metrics_I, metrics_II, OLD_MODEL_NAME, NEW_MODEL_NAME)
-                    
-    st.subheader("Эпид.параметры")
-    r0_value = get_R0(S_pred_new, I_pred_new, R_pred_new, D_pred_new, timesteps).numpy()
-    st.metric("R0 (basic reproduction number)", f"{r0_value:.3f}")
-        
-
-    st.plotly_chart(display_compared_epid_params(S_pred, I_pred, R_pred, D_pred, timesteps, S_pred_new, I_pred_new, R_pred_new, D_pred_new, timesteps), width='stretch')
-
-    # st.write("Если новый проноз Вас устраивает больше предыдущего, то нажмите на кнопку сохранения. После с новой сохраненной моделью можно будет работать, для этого нужно в левой боковой панели (настройки) главной страницы выбрать Кастомную модель, а не LTS Модель.")
-    # st.write("Если Вы недовольны новым пронозом, то вернитесь на главную страницу и попытайтесь конкретнее сформулировать свое указание модели.")
-    
-    with st.expander("💡 Что делать после получения прогноза?", expanded=True):
-        st.success("✅ **Если прогноз устраивает:**")
-        st.markdown("""
-        1. Нажмите кнопку **«Сохранить модель в Storage»**
-        2. Вы автоматически перейдете на главную страницу
-        3. В боковой панели выберите **«Кастомизированная модель»** для работы с сохраненной моделью
-        """)
-        
-        st.warning("❌ **Если прогноз не устраивает:**")
-        st.markdown("""
-        1. Вернитесь на главную страницу
-        2. Переформулируйте указания для модели
-        """)
-    # Кнопки возврата и сохранения
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        if st.button("↩️ Вернуться на главную страницу", 
-             use_container_width=True,
-             on_click=lambda: (
-                 setattr(st.session_state, 'current_page', 'main')
-             )):
-            pass
-            # return
-    st.session_state.current_model_path = filename
-    st.session_state.current_loss_path = loss_file_path
-    with col2:
-        st.button(
-            "💾 Сохранить модель в Storage",
-            use_container_width=True,
-            on_click=save_model_callback,
-            key="save_model_btn"
-        )
-
-    if 'save_status' in st.session_state:
-        st.write(st.session_state['save_status'])
-            
-    if st.session_state.mode == 'DEV':
-        download_temp_file(loss_file_path)
-        download_temp_file(filename)
-
-    st.markdown("""
+    # Стили
+    st.markdown(translate("""
         <style>
         div[data-testid="stVerticalBlock"] > div:has(> div[data-testid="stVerticalBlock"]) {
             background-color: #f0f8ff;
@@ -338,9 +94,104 @@ def generate_model_page():
             margin-bottom: 20px;
         }
         </style>
-        """, unsafe_allow_html=True)
+        """), unsafe_allow_html=True)
+
+
+def _show_comparison_results(comparison_result: dict):
+    """Показать результаты сравнения моделей"""
+    st.title(translate("Сравнение моделей"))
+    
+    metrics_old = comparison_result['metrics_old']
+    metrics_new = comparison_result['metrics_new']
+    figures = comparison_result['figures']
+    epidemic_params = comparison_result['epidemic_params']
+
+    # Отображение графиков и метрик
+    col1, col2 = st.columns(2)
+    OLD_MODEL_NAME = translate("PINN")
+    NEW_MODEL_NAME = translate("NEW_PINN")
+    
+    with col1:
+        with st.expander(translate("📈 Susceptible (S) - Развернуть/Свернуть"), expanded=True):
+            st.plotly_chart(figures['S'])
+            st.write(translate("📊 Метрики моделей для S"))
+            comparison_table = compare_metrics(metrics_old['S'], metrics_new['S'], OLD_MODEL_NAME, NEW_MODEL_NAME)
+
+    with col2:
+        with st.expander(translate("🦠 Infected (I) - Развернуть/Свернуть"), expanded=True):
+            st.plotly_chart(figures['I'])
+            st.write(translate("📊 Метрики моделей для I"))
+            comparison_table = compare_metrics(metrics_old['I'], metrics_new['I'], OLD_MODEL_NAME, NEW_MODEL_NAME)
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        with st.expander(translate("💊 Recovered (R) - Развернуть/Свернуть"), expanded=True):
+            st.plotly_chart(figures['R'])
+            st.write(translate("📊 Метрики моделей для R"))
+            comparison_table = compare_metrics(metrics_old['R'], metrics_new['R'], OLD_MODEL_NAME, NEW_MODEL_NAME)
+
+    with col2:
+        with st.expander(translate("⚰️ Dead (D) - Развернуть/Свернуть"), expanded=True):
+            st.plotly_chart(figures['D'])
+            st.write(translate("📊 Метрики моделей для D"))
+            comparison_table = compare_metrics(metrics_old['D'], metrics_new['D'], OLD_MODEL_NAME, NEW_MODEL_NAME)
+    
+    # Показ эпидемиологических параметров
+    st.subheader(translate("Эпидемиологические параметры"))
+    st.metric(translate("R0 (базовое репродуктивное число)"), f"{epidemic_params['r0']:.3f}")
+        
+    st.plotly_chart(figures['epid'], width='stretch')
+
+    # Рекомендации
+    with st.expander(translate("💡 Что делать после получения прогноза?"), expanded=True):
+        st.success(translate("✅ **Если прогноз устраивает:**"))
+        st.markdown(translate("""
+        1. Нажмите кнопку **«Сохранить модель в Storage»**
+        2. Вы автоматически перейдете на главную страницу
+        3. В боковой панели выберите **«Кастомизированная модель»** для работы с сохраненной моделью
+        """))
+        
+        st.warning(translate("❌ **Если прогноз не устраивает:**"))
+        st.markdown(translate("""
+        1. Вернитесь на главную страницу
+        2. Переформулируйте указания для модели
+        """))
+
+
+def _show_action_buttons(model_path: str, loss_path: str):
+    """Показать кнопки действий"""
+    # Сохраняем пути в session state
+    st.session_state.current_model_path = model_path
+    st.session_state.current_loss_path = loss_path
+    
+    # Кнопки возврата и сохранения
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        if st.button(translate("↩️ Вернуться на главную страницу"), 
+             use_container_width=True,
+             on_click=lambda: setattr(st.session_state, 'current_page', 'main')):
+            pass
+    
+    with col2:
+        st.button(
+            translate("💾 Сохранить модель в Storage"),
+            use_container_width=True,
+            on_click=save_model_callback,
+            key="save_model_btn"
+        )
+
+    if 'save_status' in st.session_state:
+        st.write(st.session_state['save_status'])
+            
+    # Скачивание файлов в режиме разработчика
+    if st.session_state.mode == 'DEV':
+        download_temp_file(loss_path)
+        download_temp_file(model_path)
+
 
 def save_model_callback():
+    """Callback для сохранения модели"""
     try:
         supabase = st.session_state['supabase']
         filename = st.session_state.current_model_path
@@ -349,10 +200,10 @@ def save_model_callback():
         with open(filename, "rb") as model_file:
             response = (
                 supabase.storage
-                .from_("PINN_LLM_STORAGE")
+                .from_(config.supabase.STORAGE_BUCKET)
                 .upload(
                     file=model_file,
-                    path="NEW_MODEL_dinn_cuda_2.pth",
+                    path=config.paths.CUSTOM_MODEL_PATH,
                     file_options={"cache-control": "3600", "upsert": "true"}
                 )
             )
@@ -360,16 +211,16 @@ def save_model_callback():
         with open(loss_file_path, "rb") as loss_file:
             response = (
                 supabase.storage
-                .from_("PINN_LLM_STORAGE")
+                .from_(config.supabase.STORAGE_BUCKET)
                 .upload(
                     file=loss_file,
-                    path="loss/loss_dinn_custom.py",
+                    path=config.paths.CUSTOM_LOSS_PATH,
                     file_options={"cache-control": "3600", "upsert": "true"}
                 )
             )
 
-        st.success("✅ Модель успешно сохранена!")
+        st.success(translate("✅ Модель успешно сохранена!"))
         st.session_state.current_page = "main"
-        # Можно не менять current_page, тогда страница не "переедет"
+        
     except Exception as e:
-        st.error(f"❌ Ошибка при сохранении модели: {str(e)}")
+        st.error(translate(f"❌ Ошибка при сохранении модели: {str(e)}"))

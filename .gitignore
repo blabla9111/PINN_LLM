@@ -22,5 +22,7 @@ dist/
 .ipynb_checkpoints
 
 .streamlit/secrets.toml
-
+runs/
 *.pth
+results/
+archive/

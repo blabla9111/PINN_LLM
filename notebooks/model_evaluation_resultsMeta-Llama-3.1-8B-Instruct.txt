@@ -1,0 +1,97 @@
+Результаты оценки моделей
+==================================================
+Всего обработано моделей: 16
+Ошибок: 3
+
+--------------------------------------------------
+1. Эксперимент: dinn_experiment_20251007_205150
+   MSE: 698373120.000000
+   MAE: 13152.750000
+   Путь: ../runs/test/1/Meta-Llama-3.1-8B-Instruct\dinn_experiment_20251007_205150\model_checkpoint.pth
+
+2. Эксперимент: dinn_experiment_20251007_211002
+   MSE: 49447884.000000
+   MAE: 3352.334961
+   Путь: ../runs/test/1/Meta-Llama-3.1-8B-Instruct\dinn_experiment_20251007_211002\model_checkpoint.pth
+
+3. Эксперимент: dinn_experiment_20251008_125447
+   MSE: 211633.734375
+   MAE: 260.591400
+   Путь: ../runs/test/1/Meta-Llama-3.1-8B-Instruct\dinn_experiment_20251008_125447\model_checkpoint.pth
+
+4. Эксперимент: dinn_experiment_20251008_130404
+   MSE: 75921384.000000
+   MAE: 3945.691895
+   Путь: ../runs/test/1/Meta-Llama-3.1-8B-Instruct\dinn_experiment_20251008_130404\model_checkpoint.pth
+
+5. Эксперимент: dinn_experiment_20251008_134607
+   MSE: 304592.125000
+   MAE: 310.097382
+   Путь: ../runs/test/1/Meta-Llama-3.1-8B-Instruct\dinn_experiment_20251008_134607\model_checkpoint.pth
+
+6. Эксперимент: dinn_experiment_20251008_135425
+   MSE: 146307952.000000
+   MAE: 5134.184570
+   Путь: ../runs/test/1/Meta-Llama-3.1-8B-Instruct\dinn_experiment_20251008_135425\model_checkpoint.pth
+
+7. Эксперимент: dinn_experiment_20251008_140151
+   MSE: 37470784.000000
+   MAE: 1001.255188
+   Путь: ../runs/test/1/Meta-Llama-3.1-8B-Instruct\dinn_experiment_20251008_140151\model_checkpoint.pth
+
+8. Эксперимент: dinn_experiment_20251009_121752
+   MSE: 212868.843750
+   MAE: 255.398453
+   Путь: ../runs/test/1/Meta-Llama-3.1-8B-Instruct\dinn_experiment_20251009_121752\model_checkpoint.pth
+
+9. Эксперимент: dinn_experiment_20251009_122301
+   MSE: 1131564672.000000
+   MAE: 23514.177734
+   Путь: ../runs/test/1/Meta-Llama-3.1-8B-Instruct\dinn_experiment_20251009_122301\model_checkpoint.pth
+
+10. Эксперимент: dinn_experiment_20251009_122815
+   MSE: 915707.312500
+   MAE: 567.379211
+   Путь: ../runs/test/1/Meta-Llama-3.1-8B-Instruct\dinn_experiment_20251009_122815\model_checkpoint.pth
+
+11. Эксперимент: dinn_experiment_20251009_123313
+   MSE: 1131641472.000000
+   MAE: 23515.039062
+   Путь: ../runs/test/1/Meta-Llama-3.1-8B-Instruct\dinn_experiment_20251009_123313\model_checkpoint.pth
+
+12. Эксперимент: dinn_experiment_20251009_123821
+   MSE: 219295.578125
+   MAE: 262.946930
+   Путь: ../runs/test/1/Meta-Llama-3.1-8B-Instruct\dinn_experiment_20251009_123821\model_checkpoint.pth
+
+13. Эксперимент: dinn_experiment_20251011_194351
+   MSE: 169231597568.000000
+   MAE: 411375.125000
+   Путь: ../runs/test/1/Meta-Llama-3.1-8B-Instruct\dinn_experiment_20251011_194351\model_checkpoint.pth
+
+14. Эксперимент: dinn_experiment_20251011_195025
+   MSE: 331695357952.000000
+   MAE: 575928.000000
+   Путь: ../runs/test/1/Meta-Llama-3.1-8B-Instruct\dinn_experiment_20251011_195025\model_checkpoint.pth
+
+15. Эксперимент: dinn_experiment_20251011_205152
+   MSE: 212868.843750
+   MAE: 255.398453
+   Путь: ../runs/test/1/Meta-Llama-3.1-8B-Instruct\dinn_experiment_20251011_205152\model_checkpoint.pth
+
+16. Эксперимент: dinn_experiment_20251011_205652
+   MSE: 31650144583680.000000
+   MAE: 5625794.500000
+   Путь: ../runs/test/1/Meta-Llama-3.1-8B-Instruct\dinn_experiment_20251011_205652\model_checkpoint.pth
+
+ОШИБКИ ОБРАБОТКИ:
+--------------------------------------------------
+1. Эксперимент: dinn_experiment_20251008_133931
+   Ошибка: Input contains NaN.
+
+2. Эксперимент: dinn_experiment_20251009_121228
+   Ошибка: Input contains NaN.
+
+3. Эксперимент: dinn_experiment_20251011_210205
+   Ошибка: Input contains NaN.
+

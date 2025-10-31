@@ -1,5 +1,5 @@
 class DINN(nn.Module):
-    def __init__(self, t, S_data, I_data, D_data, R_data):
+    def __init__(self, t, S_data, I_data, D_data, R_data, device, train_size):
         super(DINN, self).__init__()
         self.device = device
         self.N = 6e6
@@ -10,6 +10,7 @@ class DINN(nn.Module):
         self.I = torch.tensor(I_data, device=self.device)
         self.D = torch.tensor(D_data, device=self.device)
         self.R = torch.tensor(R_data, device=self.device)
+        self.train_size = train_size
 
         self.losses = []
 
@@ -17,14 +18,15 @@ class DINN(nn.Module):
         self.gamma_tilda = torch.nn.Parameter(
             torch.rand(1, requires_grad=True, device=self.device))
 
-        self.S_max = max(self.S)
-        self.I_max = max(self.I)
-        self.D_max = max(self.D)
-        self.R_max = max(self.R)
-        self.S_min = min(self.S)
-        self.I_min = min(self.I)
-        self.D_min = min(self.D)
-        self.R_min = min(self.R)
+        # Нормализация только по обучающей части (первые train_size точек)
+        self.S_max = max(self.S[:train_size])
+        self.I_max = max(self.I[:train_size])
+        self.D_max = max(self.D[:train_size])
+        self.R_max = max(self.R[:train_size])
+        self.S_min = min(self.S[:train_size])
+        self.I_min = min(self.I[:train_size])
+        self.D_min = min(self.D[:train_size])
+        self.R_min = min(self.R[:train_size])
 
         self.S_hat = (self.S - self.S_min) / (self.S_max - self.S_min)
         self.I_hat = (self.I - self.I_min) / (self.I_max - self.I_min)
@@ -113,7 +115,7 @@ class DINN(nn.Module):
         # Train
         print('\nStarting training...\n')
 
-        self.optimizer = optim.Adam(self.params, lr=1e-3)
+        self.optimizer = optim.Adam(self.params, lr=1e-4)
         self.scheduler = optim.lr_scheduler.StepLR(self.optimizer, step_size=5000, gamma=0.1)
 
         for epoch in range(n_epochs):
@@ -132,14 +134,14 @@ class DINN(nn.Module):
             D_pred_list.append(self.D_min + (self.D_max - self.D_min) * D_pred)
             R_pred_list.append(self.R_min + (self.R_max - self.R_min) * R_pred)
             alpha_pred_list.append(alpha_pred)
-            loss = loss_dinn(self.S_hat[:x], S_pred[:x],
-                             self.I_hat[:x], I_pred[:x],
-                             self.D_hat[:x], D_pred[:x],
-                             self.R_hat[:x], R_pred[:x],
-                             f1[:x],
-                             f2[:x],
-                             f3[:x],
-                             f4[:x], I_pred[-1])
+            loss = loss_dinn(self.S_hat[:self.train_size], S_pred,
+                             self.I_hat[:self.train_size], I_pred,
+                             self.D_hat[:self.train_size], D_pred,
+                             self.R_hat[:self.train_size], R_pred,
+                             f1[:self.train_size],
+                             f2[:self.train_size],
+                             f3[:self.train_size],
+                             f4[:self.train_size], I_pred[-1], self.train_size)
             # print("!!!!!!!!!!!!")
             loss.backward()
             self.optimizer.step()
@@ -226,12 +228,14 @@ x = 180
 
 
 
-dinn = DINN(timesteps, susceptible, infected, dead, recovered)
+dinn = DINN(timesteps, susceptible, infected, dead, recovered, device, x)
 
 
 
 S_pred_list, I_pred_list, D_pred_list, R_pred_list, alpha_pred_list = dinn.train(
-    100, regul=0.8)
+    1000, regul=0.8)
+S_pred_list, I_pred_list, D_pred_list, R_pred_list, alpha_pred_list = dinn.train(
+    2000, regul=0.8)
 
 
 def save_model(model, filepath):
@@ -254,7 +258,9 @@ def save_model(model, filepath):
         'S': model.S,
         'I': model.I,
         'D': model.D,
-        'R': model.R
+        'R': model.R,
+        'train_size': model.train_size,  # Добавлено
+        'device': model.device           # Добавлено
     }, temp_file_path)
     print(f"Model saved to {temp_file_path}")
 

@@ -1,0 +1,106 @@
+Результаты оценки моделей
+==================================================
+Всего обработано моделей: 20
+Ошибок: 0
+
+--------------------------------------------------
+1. Эксперимент: dinn_experiment_20251009_092135
+   MSE: 242912.359375
+   MAE: 298.046326
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251009_092135\model_checkpoint.pth
+
+2. Эксперимент: dinn_experiment_20251009_110046
+   MSE: 237761056.000000
+   MAE: 8977.053711
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251009_110046\model_checkpoint.pth
+
+3. Эксперимент: dinn_experiment_20251009_110622
+   MSE: 212700.062500
+   MAE: 266.181488
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251009_110622\model_checkpoint.pth
+
+4. Эксперимент: dinn_experiment_20251009_115243
+   MSE: 232421.734375
+   MAE: 276.568268
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251009_115243\model_checkpoint.pth
+
+5. Эксперимент: dinn_experiment_20251009_115802
+   MSE: 2493353.750000
+   MAE: 925.988281
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251009_115802\model_checkpoint.pth
+
+6. Эксперимент: dinn_experiment_20251009_120306
+   MSE: 296615.718750
+   MAE: 331.715363
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251009_120306\model_checkpoint.pth
+
+7. Эксперимент: dinn_experiment_20251009_155619
+   MSE: 209867.796875
+   MAE: 259.454132
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251009_155619\model_checkpoint.pth
+
+8. Эксперимент: dinn_experiment_20251009_160316
+   MSE: 771354.125000
+   MAE: 595.646423
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251009_160316\model_checkpoint.pth
+
+9. Эксперимент: dinn_experiment_20251009_160916
+   MSE: 273473824.000000
+   MAE: 9536.568359
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251009_160916\model_checkpoint.pth
+
+10. Эксперимент: dinn_experiment_20251009_161422
+   MSE: 1522840.125000
+   MAE: 866.323975
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251009_161422\model_checkpoint.pth
+
+11. Эксперимент: dinn_experiment_20251009_162015
+   MSE: 240768.468750
+   MAE: 269.759644
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251009_162015\model_checkpoint.pth
+
+12. Эксперимент: dinn_experiment_20251009_162530
+   MSE: 207554.750000
+   MAE: 256.427246
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251009_162530\model_checkpoint.pth
+
+13. Эксперимент: dinn_experiment_20251009_163102
+   MSE: 2318608.250000
+   MAE: 797.876221
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251009_163102\model_checkpoint.pth
+
+14. Эксперимент: dinn_experiment_20251009_163625
+   MSE: 45838324.000000
+   MAE: 4082.621582
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251009_163625\model_checkpoint.pth
+
+15. Эксперимент: dinn_experiment_20251010_151955
+   MSE: 202040.484375
+   MAE: 261.567871
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251010_151955\model_checkpoint.pth
+
+16. Эксперимент: dinn_experiment_20251011_180706
+   MSE: 214174.859375
+   MAE: 258.123535
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251011_180706\model_checkpoint.pth
+
+17. Эксперимент: dinn_experiment_20251011_181326
+   MSE: 613693120.000000
+   MAE: 19533.294922
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251011_181326\model_checkpoint.pth
+
+18. Эксперимент: dinn_experiment_20251011_182604
+   MSE: 202040.484375
+   MAE: 261.567871
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251011_182604\model_checkpoint.pth
+
+19. Эксперимент: dinn_experiment_20251011_183053
+   MSE: 242912.359375
+   MAE: 298.046326
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251011_183053\model_checkpoint.pth
+
+20. Эксперимент: dinn_experiment_20251011_183641
+   MSE: 449019.437500
+   MAE: 450.358948
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251011_183641\model_checkpoint.pth
+
