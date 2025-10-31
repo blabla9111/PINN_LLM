@@ -24,3 +24,5 @@ dist/
 .streamlit/secrets.toml
 runs/
 *.pth
+results/
+archive/

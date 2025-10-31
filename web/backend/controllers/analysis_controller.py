@@ -1,5 +1,5 @@
 from typing import Dict, Any
-from comment_classificator.match_loss_classification import predict_class_and_sub_class
+from web.backend.comment_classificator.match_loss_classification import predict_class_and_sub_class
 from web.backend.config.config_utils import get_config
 
 
