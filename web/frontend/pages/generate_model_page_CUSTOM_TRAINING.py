@@ -1,15 +1,15 @@
 import streamlit as st
 from web.backend.utils.utils import *
-from lib.loss_update import save, save_py
-from lib.create_file import create_file_in_tmp
-from lib.prompt_sender import *
-from lib.parser import *
+from web.backend.utils.loss_update_utils import save, save_py
+from web.backend.utils.create_file_utils import create_file_in_tmp
+from web.backend.utils.prompt_sender_utils import *
+from web.backend.utils.parser_utils import *
 import subprocess
 import time
 from huggingface_hub import InferenceClient
 import sys
 import matplotlib.pyplot as plt
-from lib.create_file import *
+from web.backend.utils.create_file_utils import *
 from lib.TensorBoardExperimentLogger import TensorBoardExperimentLogger
 
 # LLM_MODEL_NAME = "deepseek-ai/DeepSeek-V3.1"

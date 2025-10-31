@@ -1,6 +1,4 @@
 import os
-import tempfile
-from typing import Optional
 
 def download_temp_file(file_path: str, button_label: str = "📥 Скачать файл") -> None:
     """Скачать временный файл"""

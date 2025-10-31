@@ -1,6 +1,6 @@
 import os
 from typing import Dict, Any
-from lib.prompt_sender import create_get_loss_based_on_recommendation_prompt
+from web.backend.utils.prompt_sender_utils import create_get_loss_based_on_recommendation_prompt
 
 
 class PromptService:
@@ -24,8 +24,8 @@ class PromptService:
     
     def load_current_loss_function(self, model_type: str) -> str:
         """Загрузка текущей функции потерь"""
-        from lib.parser import get_loss_func_as_str
-        from lib.create_file import load_python_file_to_tmp
+        from web.backend.utils.parser_utils import get_loss_func_as_str
+        from web.backend.utils.create_file_utils import load_python_file_to_tmp
         
         supabase = self._get_supabase()
         loss_storage_path = self.config.get_loss_storage_path(model_type)

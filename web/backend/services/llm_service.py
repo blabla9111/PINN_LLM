@@ -1,6 +1,6 @@
 from web.backend.config.config_utils import get_config
-from lib.prompt_sender import send_prompt
-from lib.parser import load_text_to_json, llm_answer_to_python_code
+from web.backend.utils.prompt_sender_utils import send_prompt
+from web.backend.utils.parser_utils import load_text_to_json, llm_answer_to_python_code
 
 
 class LLMService:
@@ -25,7 +25,7 @@ class LLMService:
     
     def fix_code_error(self, code: str, error: str, prompt_path: str, answer_path: str) -> str:
         """Исправление ошибок в коде"""
-        from lib.prompt_sender import create_prompt_to_fix_error
+        from web.backend.utils.prompt_sender_utils import create_prompt_to_fix_error
         
         create_prompt_to_fix_error(prompt_path, code, error)
         return self.generate_code_from_prompt(prompt_path, answer_path)

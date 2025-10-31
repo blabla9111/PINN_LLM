@@ -1,6 +1,6 @@
 import time
 from typing import Tuple, Dict, Any
-from lib.TensorBoardExperimentLogger import TensorBoardExperimentLogger
+from web.backend.utils.tensorboard_logger import TensorBoardExperimentLogger
 
 from web.backend.config.config_utils import get_config
 from web.backend.services import LLMService, CodeValidationService, ModelTrainingService, PromptService
@@ -65,7 +65,7 @@ class ModelGenerationController:
                 progress_callback("💾 Сохранение сгенерированного кода...", 
                                 self.config.progress_steps['code_saving'])
             
-            from lib.loss_update import save_py
+            from web.backend.utils.loss_update_utils import save_py
             loss_file_path, content = save_py(self.config.paths.LOSS_FILE_PATH, generated_code)
 
             # Шаг 4: Валидация с исправлением ошибок
@@ -133,8 +133,8 @@ class ModelGenerationController:
                                 min(progress_value, self.config.progress_steps['error_correction']))
 
             # Исправление ошибки
-            from lib.prompt_sender import create_prompt_to_fix_error
-            from lib.loss_update import save_py
+            from web.backend.utils.prompt_sender_utils import create_prompt_to_fix_error
+            from web.backend.utils.loss_update_utils import save_py
             
             create_prompt_to_fix_error(
                 self.config.paths.PROMPT_FIX_ERROR_FILE_PATH, 

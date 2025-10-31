@@ -1,5 +1,5 @@
 import streamlit as st
-from lib.translator import translate
+from web.backend.utils.translator import translate
 
 # Импорт конфигурации и контроллеров
 from web.backend.config.config_utils import get_config

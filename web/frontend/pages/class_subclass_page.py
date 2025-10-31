@@ -1,6 +1,6 @@
 import streamlit as st
 from web.backend.controllers import AnalysisController
-from lib.translator import translate
+from web.backend.utils.translator import translate
 
 CLASS_TYPE_INFO = {
     "1": ["Поведение эпидемической кривой не соответствует ожиданиям эксперта.", {

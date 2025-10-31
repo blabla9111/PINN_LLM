@@ -1,7 +1,6 @@
 import streamlit as st
-import pandas as pd
 from web.backend.controllers import TrainingController
-from lib.translator import translate  # Импортируем готовый экземпляр
+from web.backend.utils.translator import translate  # Импортируем готовый экземпляр
 
 def start_page():
     # Получаем конфиг и клиент из session state
