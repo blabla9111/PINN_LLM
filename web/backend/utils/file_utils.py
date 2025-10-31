@@ -14,6 +14,7 @@ def download_temp_file(file_path: str, button_label: str = "📥 Скачать 
             data=file_data,
             file_name=file_name,
             mime="application/octet-stream",
+            on_click="ignore"
         )
     else:
         import streamlit as st
