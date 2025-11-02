@@ -1,5 +1,20 @@
 # PINN_LLM
 
+Expert-Guided PINN: Interactive Loss Function Adaptation via LLM for Epidemiological Forecasting
+
+
+## Установка зависимостей
+
+Для CPU версии:
+```bash
+pip install -r requirements.txt
+```
+## Запуск 
+```bash
+streamlit run streamlit_main.py
+```
+
+requirements_cpu_or_gpu.txt - альтернативные зависимости для GPU
 
 <!-- Абстрактная архитектура работы приложения
 ![alt text](image.png)
