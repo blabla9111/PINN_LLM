@@ -1,6 +1,7 @@
 import streamlit as st
-from web.backend.controllers import TrainingController
-from web.backend.utils.translator import translate  # Импортируем готовый экземпляр
+from web.backend.controllers import TrainingController, ValidationController
+from web.backend.utils.translator import translate  
+import json
 
 def start_page():
     # Получаем конфиг и клиент из session state
@@ -122,13 +123,30 @@ def start_page():
     with col_btn1:
         if st.button(translate("Отправить"), type="primary", key="submit_btn"):
             if comment.strip():
-                process_result = training_controller.process_user_comment(comment, st.session_state)
-                
-                if process_result['success']:
-                    st.session_state.current_page = "results"
-                    st.rerun()
+                val_controller = ValidationController()
+                result = val_controller.expert_comment_validation(st.session_state.comment_history, comment)
+                st.session_state.comment_history.append(("user", comment))
+                st.session_state.comment_history.append(("assistant", json.dumps(result, ensure_ascii=False)))
+                if result["is_valid"]:
+                    # нужно добавить translate
+                    st.success("✅ Комментарий принят")
+                    st.info(result["normalized_comment"])
+                    process_result = training_controller.process_user_comment(comment, st.session_state)
+
+                    if process_result['success']:
+                        st.session_state.current_page = "results"
+                        st.rerun()
+                    else:
+                        st.error(translate(f"Ошибка при обработке комментария: {process_result['error']}"))
                 else:
-                    st.error(translate(f"Ошибка при обработке комментария: {process_result['error']}"))
+                    # нужно добавить translate
+                    st.error("❌ Комментарий не принят")
+                    st.write("Причина:", result["reason"])
+                    if result.get("question"):
+                        st.write("❓ Наводящий вопрос:")
+                        st.info(result["question"])
+                
+
             else:
                 st.warning(translate("Пожалуйста, введите рекомендации по прогнозу модели перед отправкой"))
 
