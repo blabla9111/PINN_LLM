@@ -1,0 +1,188 @@
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+# from loss_dinn_LLM import loss_dinn
+
+
+
+
+
+class DINN(nn.Module):
+    def __init__(self, t, S_data, I_data, D_data, R_data, device, train_size):
+        super(DINN, self).__init__()
+        self.device = device
+        self.N = 6e6
+        self.t = torch.tensor(t, requires_grad=True, device=self.device)
+        self.t_float = self.t.float()
+        self.t_batch = torch.reshape(self.t_float, (len(self.t), 1))
+        self.S = torch.tensor(S_data, device=self.device)
+        self.I = torch.tensor(I_data, device=self.device)
+        self.D = torch.tensor(D_data, device=self.device)
+        self.R = torch.tensor(R_data, device=self.device)
+        self.train_size = train_size
+
+        self.losses = []
+
+        self.beta_tilda = torch.nn.Parameter(torch.rand(1, requires_grad=True, device=self.device))
+        self.gamma_tilda = torch.nn.Parameter(
+            torch.rand(1, requires_grad=True, device=self.device))
+
+        # Нормализация только по обучающей части (первые train_size точек)
+        self.S_max = max(self.S[:train_size])
+        self.I_max = max(self.I[:train_size])
+        self.D_max = max(self.D[:train_size])
+        self.R_max = max(self.R[:train_size])
+        self.S_min = min(self.S[:train_size])
+        self.I_min = min(self.I[:train_size])
+        self.D_min = min(self.D[:train_size])
+        self.R_min = min(self.R[:train_size])
+
+        self.S_hat = (self.S - self.S_min) / (self.S_max - self.S_min)
+        self.I_hat = (self.I - self.I_min) / (self.I_max - self.I_min)
+        self.D_hat = (self.D - self.D_min) / (self.D_max - self.D_min)
+        self.R_hat = (self.R - self.R_min) / (self.R_max - self.R_min)
+
+        self.m1 = torch.zeros((len(self.t), 4), device=self.device)
+        self.m1[:, 0] = 1
+        self.m2 = torch.zeros((len(self.t), 4), device=self.device)
+        self.m2[:, 1] = 1
+        self.m3 = torch.zeros((len(self.t), 4), device=self.device)
+        self.m3[:, 2] = 1
+        self.m4 = torch.zeros((len(self.t), 4), device=self.device)
+        self.m4[:, 3] = 1
+
+        self.net_sidr = self.Net_sidr().to(self.device)
+        self.params = list(self.net_sidr.parameters())
+        self.params.extend([self.beta_tilda, self.gamma_tilda])
+
+    @property
+    def beta(self):
+        return torch.tanh(self.beta_tilda)
+
+    @property
+    def gamma(self):
+        return torch.tanh(self.gamma_tilda)
+
+    class Net_sidr(nn.Module):
+        def __init__(self):
+            super(DINN.Net_sidr, self).__init__()
+            self.fc1 = nn.Linear(1, 200)
+            self.fc2 = nn.Linear(200, 100)
+            self.out = nn.Linear(100, 4)
+            self.out_alpha = nn.Linear(100, 1)
+
+        def forward(self, t_batch):
+            x = F.relu(self.fc1(t_batch))
+            x = F.tanh(self.fc2(x))
+            sidr = self.out(x)
+            alpha = self.out_alpha(x)
+            return sidr, alpha
+
+    def net_f(self, t_batch):
+        sidr_hat, alpha_hat = self.net_sidr(t_batch)
+
+        S_hat, I_hat, D_hat, R_hat = sidr_hat[:,
+                                              0], sidr_hat[:, 1], sidr_hat[:, 2], sidr_hat[:, 3]
+        
+        # S_t
+        # Без .sum() мы бы получили Якобиан размерности [train_size, train_size], а нам нужен вектор производных [train_size, 1].
+        S_hat_t = torch.autograd.grad(S_hat.sum(), t_batch, create_graph=True, retain_graph=True)[0]
+
+        # I_t
+        I_hat_t = torch.autograd.grad(I_hat.sum(), t_batch, create_graph=True, retain_graph=True)[0]
+
+        # D_t
+        D_hat_t = torch.autograd.grad(D_hat.sum(), t_batch, create_graph=True, retain_graph=True)[0]
+
+        # R_t
+        R_hat_t = torch.autograd.grad(R_hat.sum(), t_batch, create_graph=True, retain_graph=True)[0]
+
+        # Unnormalize
+        S = self.S_min + (self.S_max - self.S_min) * S_hat
+        I = self.I_min + (self.I_max - self.I_min) * I_hat
+        D = self.D_min + (self.D_max - self.D_min) * D_hat
+        R = self.R_min + (self.R_max - self.R_min) * R_hat
+
+        f1_hat = S_hat_t - (-(alpha_hat / self.N) * S * I) / \
+            (self.S_max - self.S_min)
+        f2_hat = I_hat_t - ((alpha_hat / self.N) * S * I - self.beta.squeeze()
+                            * I - self.gamma * I) / (self.I_max - self.I_min)
+        f3_hat = D_hat_t - (self.gamma * I) / (self.D_max - self.D_min)
+        f4_hat = R_hat_t - (self.beta.squeeze() * I) / \
+            (self.R_max - self.R_min)
+        
+        # print(f1_hat)
+        # print("="*100)
+
+        return f1_hat, f2_hat, f3_hat, f4_hat, S_hat, I_hat, D_hat, R_hat, alpha_hat
+
+    # def train(self, n_epochs, regul):
+    #     # Train
+    #     print('\nStarting training...\n')
+
+    #     self.optimizer = optim.Adam(self.params, lr=1e-4)
+    #     self.scheduler = optim.lr_scheduler.StepLR(self.optimizer, step_size=5000, gamma=0.1)
+
+    #     for epoch in range(n_epochs):
+    #         S_pred_list = []
+    #         I_pred_list = []
+    #         D_pred_list = []
+    #         R_pred_list = []
+    #         alpha_pred_list = []
+
+    #         f1, f2, f3, f4, S_pred, I_pred, D_pred, R_pred, alpha_pred = self.net_f(
+    #             self.t_batch)
+    #         self.optimizer.zero_grad()
+
+    #         S_pred_list.append(self.S_min + (self.S_max - self.S_min) * S_pred)
+    #         I_pred_list.append(self.I_min + (self.I_max - self.I_min) * I_pred)
+    #         D_pred_list.append(self.D_min + (self.D_max - self.D_min) * D_pred)
+    #         R_pred_list.append(self.R_min + (self.R_max - self.R_min) * R_pred)
+    #         alpha_pred_list.append(alpha_pred)
+    #         loss = loss_dinn(self.S_hat[:self.train_size], S_pred,
+    #                          self.I_hat[:self.train_size], I_pred,
+    #                          self.D_hat[:self.train_size], D_pred,
+    #                          self.R_hat[:self.train_size], R_pred,
+    #                          f1[:self.train_size],
+    #                          f2[:self.train_size],
+    #                          f3[:self.train_size],
+    #                          f4[:self.train_size], I_pred[-1], self.train_size)
+    #         # print("!!!!!!!!!!!!")
+    #         loss.backward()
+    #         self.optimizer.step()
+    #         self.scheduler.step()
+
+    #         self.losses.append(loss.item())
+
+    #         if epoch % 1000 == 0:
+    #             print('\nEpoch ', epoch)
+
+    #         # Loss + model parameters update
+    #         if epoch % 4000 == 0:
+    #             print('Loss is: ', loss)
+    #             print('Epoch: ', epoch)
+    #             print('dinn.beta', self.beta)
+    #             print('dinn.gamma', self.gamma)
+    #             print(alpha_pred.shape)
+
+    #     return S_pred_list, I_pred_list, D_pred_list, R_pred_list, alpha_pred_list
+
+    def predict(self, t_values=None):
+        """Получить прогноз модели для заданных временных точек"""
+        if t_values is None:
+            t_values = self.t_float
+
+        t_batch = torch.reshape(t_values, (len(t_values), 1))
+
+        with torch.no_grad():
+            sidr_hat, alpha_hat = self.net_sidr(t_batch)
+            S_hat, I_hat, D_hat, R_hat = sidr_hat[:,
+                                                  0], sidr_hat[:, 1], sidr_hat[:, 2], sidr_hat[:, 3]
+
+            # Денормализация
+            S_pred = self.S_min + (self.S_max - self.S_min) * S_hat
+            I_pred = self.I_min + (self.I_max - self.I_min) * I_hat
+            D_pred = self.D_min + (self.D_max - self.D_min) * D_hat
+            R_pred = self.R_min + (self.R_max - self.R_min) * R_hat
+
+        return S_pred.cpu(), I_pred.cpu(), D_pred.cpu(), R_pred.cpu(), alpha_hat.cpu()
