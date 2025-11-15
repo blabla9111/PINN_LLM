@@ -45,27 +45,56 @@ def peak_height_loss(I_pred, I_peak_height_expert):
 def slow_growth_penalty(I_pred, train_size):
     I_pred_peak_index = torch.argmax(I_pred[1:]).item()
     
-    print(f"DEBUG: peak_index={I_pred_peak_index}, train_size={train_size}")
+    # print(f"DEBUG: peak_index={I_pred_peak_index}, train_size={train_size}")
     
     if I_pred_peak_index <= train_size:
-        print("DEBUG: Peak is in training data, returning 0")
+        # print("DEBUG: Peak is in training data, returning 0")
         return torch.tensor(0.0, device=I_pred.device)
     
     I_before_peak_after_train_data = I_pred[train_size:I_pred_peak_index+1]
-    print(f"DEBUG: Points between train_size and peak: {len(I_before_peak_after_train_data)}")
+    # print(f"DEBUG: Points between train_size and peak: {len(I_before_peak_after_train_data)}")
     
     if len(I_before_peak_after_train_data) < 2:
-        print("DEBUG: Not enough points for growth calculation, returning 0")
+        # print("DEBUG: Not enough points for growth calculation, returning 0")
         return torch.tensor(0.0, device=I_pred.device)
     
     relative_growth = (I_before_peak_after_train_data[1:] - I_before_peak_after_train_data[:-1]) / (I_before_peak_after_train_data[:-1] + 1e-8)
-    print(f"DEBUG: Relative growth stats - min: {relative_growth.min().item():.4f}, max: {relative_growth.max().item():.4f}, mean: {relative_growth.mean().item():.4f}")
+    # print(f"DEBUG: Relative growth stats - min: {relative_growth.min().item():.4f}, max: {relative_growth.max().item():.4f}, mean: {relative_growth.mean().item():.4f}")
     
     penalty = torch.exp(-relative_growth * 10)
     result = torch.mean(penalty)
-    print(f"DEBUG: Penalty result: {result.item():.4f}")
+    # print(f"DEBUG: Penalty result: {result.item():.4f}")
     
     return result
+
+def rapid_growth_penalty(I_pred, train_size):
+    I_pred_peak_index = torch.argmax(I_pred[1:]).item()
+    
+    # print(f"DEBUG: peak_index={I_pred_peak_index}, train_size={train_size}")
+    
+    if I_pred_peak_index <= train_size:
+        # print("DEBUG: Peak is in training data, returning 0")
+        return torch.tensor(0.0, device=I_pred.device)
+    
+    I_before_peak_after_train_data = I_pred[train_size:I_pred_peak_index+1]
+    # print(f"DEBUG: Points between train_size and peak: {len(I_before_peak_after_train_data)}")
+    
+    if len(I_before_peak_after_train_data) < 2:
+        # print("DEBUG: Not enough points for growth calculation, returning 0")
+        return torch.tensor(0.0, device=I_pred.device)
+    
+    relative_growth = (I_before_peak_after_train_data[1:] - I_before_peak_after_train_data[:-1]) / (I_before_peak_after_train_data[:-1] + 1e-8)
+    # print(f"DEBUG: Relative growth stats - min: {relative_growth.min().item():.4f}, max: {relative_growth.max().item():.4f}, mean: {relative_growth.mean().item():.4f}")
+    
+    penalty = torch.exp(relative_growth * 10)
+    result = torch.mean(penalty)
+    # print(f"DEBUG: Penalty result: {result.item():.4f}")
+    excessive_growth = torch.relu(relative_growth ) # - growth_threshold
+    
+    # Smoother penalty function
+    penalty = torch.log(1.0 + excessive_growth)
+    
+    return torch.mean(penalty)
 
 
 

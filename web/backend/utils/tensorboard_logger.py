@@ -200,7 +200,7 @@ class TensorBoardExperimentLogger:
         self.writer.add_text("Training/LLM_model_name", model_name, 0)
         self.writer.add_text("Training/LLM_model_temperature", str(model_temperature), 0)
 
-    def save_experiment_config(self, n_epochs, w1, w2, w3, w4, w5, w6, peak_position, peak_height, description = "No description"):
+    def save_experiment_config(self, n_epochs, w1, w2, w3, w4, w5, w6, w7, peak_position, peak_height, description = "No description"):
         """Сохраняет конфигурацию эксперимента"""
         config_text = f"""
         ### 🧪 Конфигурация эксперимента
@@ -214,6 +214,7 @@ class TensorBoardExperimentLogger:
         - w4 (peak position): {w4}
         - w5 (peak height): {w5}
         - w6 (slow gtrowth): {w6}
+        - w6 (rapid gtrowth): {w7}
         - Peak position: {peak_position}
         - Peak height: {peak_height}
         
