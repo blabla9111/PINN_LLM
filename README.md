@@ -99,4 +99,4 @@ streamlit run streamlit_main.py
 
 ---
 
-**Note:** The project is research-oriented and currently serves as a proof-of-concept for integrating LLMs into expert-guided epidemiological modeling. Ensure you comply with the terms of service for Hugging Face and Supabase when deploying in production environments.
+**Note:** The project is research-oriented and currently serves as a proof-of-concept for integrating LLMs into expert-guided epidemiological modeling.
