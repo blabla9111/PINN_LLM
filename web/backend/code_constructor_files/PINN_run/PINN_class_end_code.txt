@@ -233,9 +233,9 @@ dinn = DINN(timesteps, susceptible, infected, dead, recovered, device, x)
 
 
 S_pred_list, I_pred_list, D_pred_list, R_pred_list, alpha_pred_list = dinn.train(
-    1000, regul=0.8)
+    10000, regul=0.8)
 S_pred_list, I_pred_list, D_pred_list, R_pred_list, alpha_pred_list = dinn.train(
-    2000, regul=0.8)
+    30000, regul=0.8)
 
 
 def save_model(model, filepath):

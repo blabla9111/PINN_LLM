@@ -64,7 +64,7 @@ class Translator:
         Returns:
             str: Код языка ('ru' или 'en')
         """
-        return st.session_state.get('language', 'ru')
+        return st.session_state.get('language', 'en')
     
     def set_language(self, lang: str) -> None:
         """
