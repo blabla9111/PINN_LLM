@@ -1,48 +1,102 @@
+Here's the updated **README** with Python version requirement:
+
+---
+
 # Expert-Guided PINN Framework
-## 🧠 О проекте
-Expert-Guided PINN — это система для интерактивного прогнозирования эпидемиологических кривых, которая позволяет эпидемиологам корректировать прогнозы с помощью простых текстовых комментариев, без необходимости глубокого понимания математической модели.
 
-![GIU](./Images/figure_gui.png)
+## 🧠 About the Project  
+Expert-Guided PINN is a system for interactive epidemiological forecasting that allows epidemiologists to adjust predictions using simple text comments, without requiring deep understanding of the underlying mathematical model.
 
-## 🎯 Цель
-Преодолеть разрыв между качественными экспертными знаниями (выраженными на естественном языке) и формальными математическими моделями. Система автоматически преобразует текстовые комментарии экспертов в модификации функции потерь физически информированной нейронной сети (PINN), делая процесс калибровки прогнозов доступным и динамическим.
+![GUI](./Images/figure_gui.png)
 
-## 🔧 Ключевые возможности
-📝 Текстовая обратная связь — Эксперт пишет комментарий на естественном языке
+## 🎯 Goal  
+To bridge the gap between qualitative expert knowledge (expressed in natural language) and formal mathematical models. The system automatically converts expert text comments into modifications of the loss function of a Physics-Informed Neural Network (PINN), making the forecast calibration process accessible and dynamic.
 
-🧩 Автоматическая классификация — BERT-модель определяет класс и подкласс комментария
+## 🔧 Key Features  
+📝 **Text-Based Feedback** — Experts provide comments in natural language  
+🧩 **Automatic Classification** — A BERT-based model determines the comment's class and subclass  
+🤖 **LLM Code Generation** — A large language model translates comments into loss function modifications  
+📊 **Dynamic PINN Adaptation** — The model retrains based on expert feedback  
+🔄 **Interactive Loop** — Experts see results and can refine comments iteratively  
 
-🤖 Генерация кода LLM — Языковая модель преобразует комментарий в модификации функции потерь
-
-📊 Динамическая адаптация PINN — Модель переобучается с учетом экспертной правки
-
-🔄 Интерактивный цикл — Эксперт видит результат и может уточнить комментарий
-
-Схема приложения:
+Application workflow:  
 ![app_scheme](./Images/figure_1.png)
 
-## Установка зависимостей
+## 🐍 Prerequisites
 
-Для CPU версии:
-```bash
-pip install -r requirements.txt
-```
-## Запуск 
+- **Python 3.11+** (required for compatibility with dependencies)
+- Stable internet connection (for Hugging Face and Supabase APIs)
+
+## ⚙️ Setup & Configuration
+
+### 1. Environment Configuration
+The system uses external services that require API keys:
+
+1. **Copy the example configuration file:**
+   ```bash
+   cp secrets_example.toml secrets.toml
+   ```
+
+2. **Edit `secrets.toml` with your credentials:**
+   ```toml
+   # Hugging Face Token (for LLM and classifier access)
+   HUGGINGFACE_HUB_TOKEN = "hf_***"
+   
+   # Supabase Database (SaaS PostgreSQL)
+   SUPABASE_URL = "https://***.supabase.co"
+   SUPABASE_KEY = "***"
+   
+   # LLM Model Configuration
+   LLM_MODEL_NAME = "meta-llama/Llama-3.3-70B-Instruct"
+   LLM_TEMPERATURE = "1.0"
+   
+   # App Configuration
+   APP_MODE = "DEV"  # DEV or PROD
+   DEBUG = "true"    # true or false
+   
+   # TensorBoard Configuration
+   ENABLE_TENSORBOARD = "true"  # true or false
+   ```
+
+### 2. Required Services
+
+#### **Hugging Face** 🤗
+- Provides access to:
+  - **LLM models** (Llama-3.3-70B-Instruct, DeepSeek-V3.1, etc.)
+  - **Hierarchical text classifier** (BERT-based model for comment classification)
+- Get your token at: [huggingface.co/settings/tokens](https://huggingface.co/settings/tokens)
+
+#### **Supabase** 🗄️
+- SaaS PostgreSQL database used for:
+  - Storing user sessions
+  - Saving forecast results
+  - Logging expert interactions
+- Create a free project at: [supabase.com](https://supabase.com)
+
+All necessary database configuration files, trained models and loss functions used are located in the `supabase/` folder.
+
+## 📦 Installation
+
+1. **Create and activate virtual environment (recommended):**
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # on Linux
+   venv\Scripts\activate # on Windows
+   ```
+
+2. **Install dependencies:**
+   For CPU version:
+   ```bash
+   pip install -r requirements.txt
+   ```
+   For GPU support use requirements_cpu_or_gpu.txt
+
+## 🚀 Running the Application
 ```bash
 streamlit run streamlit_main.py
 ```
 
-requirements_cpu_or_gpu.txt - альтернативные зависимости для GPU
 
-<!-- Абстрактная архитектура работы приложения
-![alt text](image.png)
+---
 
-
-Текущий рабочий промпт (prompt_1_1.json)
-![alt text](image-1.png)
-
-Промпт для исправления ошибок в лосс (prompt_fix_error.json)
-![alt text](image-2.png)
-
-
-B [НИР_пример_работы приложения.pdf](<НИР_пример_работы приложения.pdf>) можно посмотреть, как программа работает. -->
+**Note:** The project is research-oriented and currently serves as a proof-of-concept for integrating LLMs into expert-guided epidemiological modeling. Ensure you comply with the terms of service for Hugging Face and Supabase when deploying in production environments.
