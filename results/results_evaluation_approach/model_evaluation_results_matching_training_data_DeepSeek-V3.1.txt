@@ -1,0 +1,96 @@
+Результаты оценки моделей
+==================================================
+Всего обработано моделей: 18
+Ошибок: 0
+
+--------------------------------------------------
+1. Эксперимент: dinn_experiment_20251009_124633
+   MSE: 56346136.000000
+   MAE: 1940.534668
+   Путь: ../runs/test/1/DeepSeek-V3.1\dinn_experiment_20251009_124633\model_checkpoint.pth
+
+2. Эксперимент: dinn_experiment_20251009_125249
+   MSE: 213162.578125
+   MAE: 264.763092
+   Путь: ../runs/test/1/DeepSeek-V3.1\dinn_experiment_20251009_125249\model_checkpoint.pth
+
+3. Эксперимент: dinn_experiment_20251009_125803
+   MSE: 228222.843750
+   MAE: 281.881439
+   Путь: ../runs/test/1/DeepSeek-V3.1\dinn_experiment_20251009_125803\model_checkpoint.pth
+
+4. Эксперимент: dinn_experiment_20251009_130332
+   MSE: 237070.156250
+   MAE: 278.192719
+   Путь: ../runs/test/1/DeepSeek-V3.1\dinn_experiment_20251009_130332\model_checkpoint.pth
+
+5. Эксперимент: dinn_experiment_20251009_131017
+   MSE: 206611.906250
+   MAE: 256.304413
+   Путь: ../runs/test/1/DeepSeek-V3.1\dinn_experiment_20251009_131017\model_checkpoint.pth
+
+6. Эксперимент: dinn_experiment_20251012_092539
+   MSE: 124508992.000000
+   MAE: 7135.776855
+   Путь: ../runs/test/1/DeepSeek-V3.1\dinn_experiment_20251012_092539\model_checkpoint.pth
+
+7. Эксперимент: dinn_experiment_20251012_093513
+   MSE: 282266.843750
+   MAE: 308.243408
+   Путь: ../runs/test/1/DeepSeek-V3.1\dinn_experiment_20251012_093513\model_checkpoint.pth
+
+8. Эксперимент: dinn_experiment_20251012_094153
+   MSE: 270933216.000000
+   MAE: 16453.767578
+   Путь: ../runs/test/1/DeepSeek-V3.1\dinn_experiment_20251012_094153\model_checkpoint.pth
+
+9. Эксперимент: dinn_experiment_20251012_095003
+   MSE: 212868.843750
+   MAE: 255.398453
+   Путь: ../runs/test/1/DeepSeek-V3.1\dinn_experiment_20251012_095003\model_checkpoint.pth
+
+10. Эксперимент: dinn_experiment_20251012_095506
+   MSE: 212868.843750
+   MAE: 255.398453
+   Путь: ../runs/test/1/DeepSeek-V3.1\dinn_experiment_20251012_095506\model_checkpoint.pth
+
+11. Эксперимент: dinn_experiment_20251012_100021
+   MSE: 217627.375000
+   MAE: 262.856995
+   Путь: ../runs/test/1/DeepSeek-V3.1\dinn_experiment_20251012_100021\model_checkpoint.pth
+
+12. Эксперимент: dinn_experiment_20251012_100524
+   MSE: 299315.437500
+   MAE: 307.810669
+   Путь: ../runs/test/1/DeepSeek-V3.1\dinn_experiment_20251012_100524\model_checkpoint.pth
+
+13. Эксперимент: dinn_experiment_20251012_101035
+   MSE: 346412711936.000000
+   MAE: 44450.683594
+   Путь: ../runs/test/1/DeepSeek-V3.1\dinn_experiment_20251012_101035\model_checkpoint.pth
+
+14. Эксперимент: dinn_experiment_20251012_101649
+   MSE: 170515218432.000000
+   MAE: 31177.757812
+   Путь: ../runs/test/1/DeepSeek-V3.1\dinn_experiment_20251012_101649\model_checkpoint.pth
+
+15. Эксперимент: dinn_experiment_20251012_102249
+   MSE: 231829.046875
+   MAE: 263.768951
+   Путь: ../runs/test/1/DeepSeek-V3.1\dinn_experiment_20251012_102249\model_checkpoint.pth
+
+16. Эксперимент: dinn_experiment_20251012_102800
+   MSE: 74022104.000000
+   MAE: 6849.959961
+   Путь: ../runs/test/1/DeepSeek-V3.1\dinn_experiment_20251012_102800\model_checkpoint.pth
+
+17. Эксперимент: dinn_experiment_20251012_103315
+   MSE: 226080.359375
+   MAE: 262.209045
+   Путь: ../runs/test/1/DeepSeek-V3.1\dinn_experiment_20251012_103315\model_checkpoint.pth
+
+18. Эксперимент: dinn_experiment_20251012_103840
+   MSE: 212868.843750
+   MAE: 255.398453
+   Путь: ../runs/test/1/DeepSeek-V3.1\dinn_experiment_20251012_103840\model_checkpoint.pth
+

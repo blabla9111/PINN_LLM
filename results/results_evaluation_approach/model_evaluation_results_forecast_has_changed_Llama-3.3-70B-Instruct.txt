@@ -1,0 +1,246 @@
+Результаты оценки моделей
+==================================================
+Всего обработано моделей: 20
+Ошибок: 0
+
+--------------------------------------------------
+1. Эксперимент: dinn_experiment_20251009_092135
+   MSE: 292871712.000000
+   RMSE: 17113.494141
+   MAE: 12824.873047
+   R2: 0.697205
+ ==================================================
+   delta_mse: 29517072.000000
+   delta_rmse: 885.289062
+   delta_mae: 833.507812
+   delta_r2: 0.030517
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251009_092135\model_checkpoint.pth
+
+2. Эксперимент: dinn_experiment_20251009_110046
+   MSE: 552950784.000000
+   RMSE: 23514.906250
+   MAE: 15807.239258
+   R2: 0.428314
+ ==================================================
+   delta_mse: 289596144.000000
+   delta_rmse: 7286.701172
+   delta_mae: 3815.874023
+   delta_r2: 0.299408
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251009_110046\model_checkpoint.pth
+
+3. Эксперимент: dinn_experiment_20251009_110622
+   MSE: 232843680.000000
+   RMSE: 15259.215820
+   MAE: 11253.521484
+   R2: 0.759267
+ ==================================================
+   delta_mse: 30510960.000000
+   delta_rmse: 968.989258
+   delta_mae: 737.843750
+   delta_r2: 0.031545
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251009_110622\model_checkpoint.pth
+
+4. Эксперимент: dinn_experiment_20251009_115243
+   MSE: 178607808.000000
+   RMSE: 13364.422852
+   MAE: 9850.540039
+   R2: 0.815341
+ ==================================================
+   delta_mse: 84746832.000000
+   delta_rmse: 2863.782227
+   delta_mae: 2140.825195
+   delta_r2: 0.087618
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251009_115243\model_checkpoint.pth
+
+5. Эксперимент: dinn_experiment_20251009_115802
+   MSE: 215802384.000000
+   RMSE: 14690.213867
+   MAE: 11125.194336
+   R2: 0.776886
+ ==================================================
+   delta_mse: 47552256.000000
+   delta_rmse: 1537.991211
+   delta_mae: 866.170898
+   delta_r2: 0.049163
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251009_115802\model_checkpoint.pth
+
+6. Эксперимент: dinn_experiment_20251009_120306
+   MSE: 247217872.000000
+   RMSE: 15723.163086
+   MAE: 11609.894531
+   R2: 0.744406
+ ==================================================
+   delta_mse: 16136768.000000
+   delta_rmse: 505.041992
+   delta_mae: 381.470703
+   delta_r2: 0.016683
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251009_120306\model_checkpoint.pth
+
+7. Эксперимент: dinn_experiment_20251009_155619
+   MSE: 229290112.000000
+   RMSE: 15142.328125
+   MAE: 11168.332031
+   R2: 0.762941
+ ==================================================
+   delta_mse: 34064528.000000
+   delta_rmse: 1085.876953
+   delta_mae: 823.033203
+   delta_r2: 0.035219
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251009_155619\model_checkpoint.pth
+
+8. Эксперимент: dinn_experiment_20251009_160316
+   MSE: 450618656.000000
+   RMSE: 21227.781250
+   MAE: 16271.018555
+   R2: 0.534113
+ ==================================================
+   delta_mse: 187264016.000000
+   delta_rmse: 4999.576172
+   delta_mae: 4279.653320
+   delta_r2: 0.193609
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251009_160316\model_checkpoint.pth
+
+9. Эксперимент: dinn_experiment_20251009_160916
+   MSE: 3028946432.000000
+   RMSE: 55035.863281
+   MAE: 46986.562500
+   R2: -2.131574
+ ==================================================
+   delta_mse: 2765591792.000000
+   delta_rmse: 38807.658203
+   delta_mae: 34995.197266
+   delta_r2: 2.859297
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251009_160916\model_checkpoint.pth
+
+10. Эксперимент: dinn_experiment_20251009_161422
+   MSE: 534341910528.000000
+   RMSE: 730986.937500
+   MAE: 623028.312500
+   R2: -551.446716
+ ==================================================
+   delta_mse: 534078555888.000000
+   delta_rmse: 714758.732422
+   delta_mae: 611036.947266
+   delta_r2: 552.174439
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251009_161422\model_checkpoint.pth
+
+11. Эксперимент: dinn_experiment_20251009_162015
+   MSE: 239219280.000000
+   RMSE: 15466.714844
+   MAE: 11379.666992
+   R2: 0.752675
+ ==================================================
+   delta_mse: 24135360.000000
+   delta_rmse: 761.490234
+   delta_mae: 611.698242
+   delta_r2: 0.024953
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251009_162015\model_checkpoint.pth
+
+12. Эксперимент: dinn_experiment_20251009_162530
+   MSE: 187310400.000000
+   RMSE: 13686.138672
+   MAE: 10093.673828
+   R2: 0.806343
+ ==================================================
+   delta_mse: 76044240.000000
+   delta_rmse: 2542.066406
+   delta_mae: 1897.691406
+   delta_r2: 0.078621
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251009_162530\model_checkpoint.pth
+
+13. Эксперимент: dinn_experiment_20251009_163102
+   MSE: 130786369536.000000
+   RMSE: 361643.968750
+   MAE: 312141.468750
+   R2: -134.217728
+ ==================================================
+   delta_mse: 130523014896.000000
+   delta_rmse: 345415.763672
+   delta_mae: 300150.103516
+   delta_r2: 134.945450
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251009_163102\model_checkpoint.pth
+
+14. Эксперимент: dinn_experiment_20251009_163625
+   MSE: 454917920.000000
+   RMSE: 21328.804688
+   MAE: 16451.677734
+   R2: 0.529668
+ ==================================================
+   delta_mse: 191563280.000000
+   delta_rmse: 5100.599609
+   delta_mae: 4460.312500
+   delta_r2: 0.198054
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251009_163625\model_checkpoint.pth
+
+15. Эксперимент: dinn_experiment_20251010_151955
+   MSE: 171695600.000000
+   RMSE: 13103.266602
+   MAE: 9738.026367
+   R2: 0.822487
+ ==================================================
+   delta_mse: 91659040.000000
+   delta_rmse: 3124.938477
+   delta_mae: 2253.338867
+   delta_r2: 0.094765
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251010_151955\model_checkpoint.pth
+
+16. Эксперимент: dinn_experiment_20251011_180706
+   MSE: 247493088.000000
+   RMSE: 15731.913086
+   MAE: 11625.172852
+   R2: 0.744121
+ ==================================================
+   delta_mse: 15861552.000000
+   delta_rmse: 496.291992
+   delta_mae: 366.192383
+   delta_r2: 0.016399
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251011_180706\model_checkpoint.pth
+
+17. Эксперимент: dinn_experiment_20251011_181326
+   MSE: 1340629888.000000
+   RMSE: 36614.613281
+   MAE: 25728.210938
+   R2: -0.386054
+ ==================================================
+   delta_mse: 1077275248.000000
+   delta_rmse: 20386.408203
+   delta_mae: 13736.845703
+   delta_r2: 1.113776
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251011_181326\model_checkpoint.pth
+
+18. Эксперимент: dinn_experiment_20251011_182604
+   MSE: 171695600.000000
+   RMSE: 13103.266602
+   MAE: 9738.026367
+   R2: 0.822487
+ ==================================================
+   delta_mse: 91659040.000000
+   delta_rmse: 3124.938477
+   delta_mae: 2253.338867
+   delta_r2: 0.094765
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251011_182604\model_checkpoint.pth
+
+19. Эксперимент: dinn_experiment_20251011_183053
+   MSE: 292871712.000000
+   RMSE: 17113.494141
+   MAE: 12824.873047
+   R2: 0.697205
+ ==================================================
+   delta_mse: 29517072.000000
+   delta_rmse: 885.289062
+   delta_mae: 833.507812
+   delta_r2: 0.030517
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251011_183053\model_checkpoint.pth
+
+20. Эксперимент: dinn_experiment_20251011_183641
+   MSE: 148266336.000000
+   RMSE: 12176.466797
+   MAE: 9177.471680
+   R2: 0.846710
+ ==================================================
+   delta_mse: 115088304.000000
+   delta_rmse: 4051.738281
+   delta_mae: 2813.893555
+   delta_r2: 0.118988
+   Путь: ../runs/test/1/Llama-3.3-70B-Instruct\dinn_experiment_20251011_183641\model_checkpoint.pth
+

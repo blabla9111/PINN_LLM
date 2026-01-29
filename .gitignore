@@ -24,5 +24,5 @@ dist/
 .streamlit/secrets.toml
 runs/
 *.pth
-results/
+results/saved_losses
 archive/
