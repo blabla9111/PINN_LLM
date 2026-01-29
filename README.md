@@ -1,7 +1,3 @@
-Here's the updated **README** with Python version requirement:
-
----
-
 # Expert-Guided PINN Framework
 
 ## 🧠 About the Project  
