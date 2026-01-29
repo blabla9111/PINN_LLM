@@ -7,6 +7,10 @@ Here's the updated **README** with Python version requirement:
 ## 🧠 About the Project  
 Expert-Guided PINN is a system for interactive epidemiological forecasting that allows epidemiologists to adjust predictions using simple text comments, without requiring deep understanding of the underlying mathematical model.
 
+**🌐 Live Demo:** [pinnllm.streamlit.app](https://pinnllm.streamlit.app)
+
+📌 Status: MVP (Minimum Viable Product) – Research Prototype
+
 ![GUI](./Images/figure_gui.png)
 
 ## 🎯 Goal  
