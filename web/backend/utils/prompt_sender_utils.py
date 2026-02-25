@@ -197,6 +197,9 @@ def create_get_loss_based_on_recommendation_prompt(prompt_file_path: Union[str, 
         "You are a machine learning expert specializing in Physics-Informed Neural Networks (PINNs) "
         "and epidemiological modeling. Your task is to modify a loss function for a SIRD model "
         "to better align with epidemiological dynamics.\n"
+        "CONTEXT:\n"
+            "- I_hat[:train_size] is the historical observed data (reference data) which may not contain the peak of the epidemic\n"
+            "- I_pred is the current model forecast for the ENTIRE period (train + forecast)\n"
         "Follow these guidelines strictly:" +
         recommendations[comment_class]["class_info"] +
         recommendations[comment_class][comment_subclass] +
