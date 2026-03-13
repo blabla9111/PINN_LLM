@@ -115,17 +115,17 @@ class Nature_PINN(nn.Module):
     @property
     def beta(self):
         '''β(t) в диапазоне [0, 1]'''
-        return torch.sigmoid(self.net_beta(self.t_scaled))
+        return (torch.tanh(self.net_beta(self.t_scaled)) + 1 ) * 0.5
 
     @property
     def gamma(self):
         '''γ(t) в диапазоне [0, 0.5] -- предполагается, что меньше 2-х дней люди не болеют'''
-        return 0.5 * torch.sigmoid(self.net_gamma(self.t_scaled))
+        return (torch.tanh(self.net_gamma(self.t_scaled)) + 1 ) * 0.25
 
     @property
     def mu(self):
         '''μ(t) в диапазоне [0, 0.1] -- считаем, что летальность выше 10% маловероятна для гриппа'''
-        return 0.1 * torch.sigmoid(self.net_mu(self.t_scaled))
+        return (torch.tanh(self.net_mu(self.t_scaled)) + 1 ) * 0.05
 
     def net_f(self):
         '''ВЫчисление невязок'''
@@ -165,9 +165,9 @@ class Nature_PINN(nn.Module):
         R_t = (self.R_max - self.R_min) * R_hat_t
         D_t = (self.D_max - self.D_min) * D_hat_t
 
-        beta = torch.sigmoid(self.net_beta(t_scaled)) + 0.01
-        gamma = 0.5 * torch.sigmoid(self.net_gamma(t_scaled)) + 0.03
-        mu = 0.1 * torch.sigmoid(self.net_mu(t_scaled)) + 0.0001
+        beta = (torch.tanh(self.net_beta(t_scaled)) + 1 ) * 0.5 - 0.05
+        gamma = (torch.tanh(self.net_gamma(t_scaled)) + 1 ) * 0.25 
+        mu = (torch.tanh(self.net_mu(t_scaled)) + 1 ) * 0.05
 
         # Уравнения SIRD
         dS = - beta * I * S / self.N
@@ -187,9 +187,9 @@ class Nature_PINN(nn.Module):
         f_con = (S + I + R + D - self.N) / self.N
 
         # для ошибки по данным возьму нормализованные значения
-        return f_S, f_I, f_R, f_D, S_hat, I_hat, R_hat, D_hat, beta, gamma, mu
+        return f_S, f_I, f_R, f_D, S, I, R, D, beta, gamma, mu
 
-    def loss_function(self):
+    def loss_function(self, lambda_data, lambda_ode):
         '''Вычисление функции потерь'''
         f_S, f_I, f_R, f_D, S_pred, I_pred, R_pred, D_pred, beta, gamma, mu = self.net_f()
 
@@ -197,10 +197,10 @@ class Nature_PINN(nn.Module):
         idx = slice(self.train_size)
 
         # Ошибка на данных
-        loss_data = (1.0 * torch.mean((S_pred[idx] - self.S_hat[idx])**2) +
-                     1.0 * torch.mean((I_pred[idx] - self.I_hat[idx])**2) +
-                     1.0 * torch.mean((R_pred[idx] - self.R_hat[idx])**2) +
-                     1.0 * torch.mean((D_pred[idx] - self.D_hat[idx])**2))
+        loss_data = (1.0 * torch.mean((S_pred[idx] - self.S[idx])**2) +
+                     1.0 * torch.mean((I_pred[idx] - self.I[idx])**2) +
+                     1.0 * torch.mean((R_pred[idx] - self.R[idx])**2) +
+                     1.0 * torch.mean((D_pred[idx] - self.D[idx])**2))
 
         # Ошибка на начальных условиях
         # TODO пока отключу, это и так есть в невязке по данным
@@ -223,12 +223,12 @@ class Nature_PINN(nn.Module):
                     torch.mean((mu[1:] - mu[:-1])**2)) * 0.001
 
         # Итоговая потеря
-        total_loss = (1.0 * loss_data +
-                      1.0 * loss_phys)
+        total_loss = (lambda_data * loss_data +
+                      lambda_ode * loss_phys)
 
         return total_loss, loss_data, loss_phys
 
-    def train(self, n_epoch=20000):
+    def train(self, n_epoch=20000, lambda_data = 1.0, lambda_ode = 1.0):
         '''Обучение модели'''
         print('\n' + '='*60)
         print('НАЧАЛО ОБУЧЕНИЯ')
@@ -242,7 +242,7 @@ class Nature_PINN(nn.Module):
         for epoch in range(n_epoch):
             optimizer.zero_grad()
 
-            total_loss, loss_data, loss_phys = self.loss_function()
+            total_loss, loss_data, loss_phys = self.loss_function(lambda_data, lambda_ode)
             total_loss.backward()
 
             # Gradient clipping
@@ -266,10 +266,9 @@ class Nature_PINN(nn.Module):
                     t_scaled = 2.0 * (t_batch - self.lb) / \
                         (self.ub - self.lb) - 1.0
 
-                    beta = torch.sigmoid(self.net_beta(t_scaled)) + 0.01
-                    gamma = 0.5 * \
-                        torch.sigmoid(self.net_gamma(t_scaled)) + 0.03
-                    mu = 0.1 * torch.sigmoid(self.net_mu(t_scaled)) + 0.0001
+                    beta = (torch.tanh(self.net_beta(t_scaled)) + 1 ) * 0.5 - 0.05
+                    gamma = (torch.tanh(self.net_gamma(t_scaled)) + 1 ) * 0.25
+                    mu = (torch.tanh(self.net_mu(t_scaled)) + 1 ) * 0.05
 
                     beta_mean = beta.mean().item()
                     gamma_mean = gamma.mean().item()
@@ -293,6 +292,7 @@ class Nature_PINN(nn.Module):
 
         with torch.no_grad():
             states_hat = self.net_states(t_scaled)
+            print(states_hat)
             S_hat, I_hat, R_hat, D_hat = states_hat[:,
                                                     0], states_hat[:, 1], states_hat[:, 2], states_hat[:, 3]
 
@@ -303,10 +303,9 @@ class Nature_PINN(nn.Module):
             D = self.D_min + (self.D_max - self.D_min) * D_hat
 
             # Параметры (t_scaled могут быть новыми, поэтому не property вызов)
-            beta = torch.sigmoid(self.net_beta(t_scaled)).flatten() + 0.01
-            gamma = 0.5 * \
-                torch.sigmoid(self.net_gamma(t_scaled)).flatten() + 0.03
-            mu = 0.1 * torch.sigmoid(self.net_mu(t_scaled)).flatten() + 0.0001
+            beta = (torch.tanh(self.net_beta(t_scaled)).flatten() + 1 ) * 0.5 - 0.05
+            gamma = (torch.tanh(self.net_gamma(t_scaled)).flatten() + 1 ) * 0.25
+            mu = (torch.tanh(self.net_mu(t_scaled)).flatten() + 1 ) * 0.05
 
         return {
             'S': S.cpu().detach().numpy(),

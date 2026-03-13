@@ -17,7 +17,7 @@ class EpiParams(nn.Module):
         ''' TODO понять бы откуда брать beta, mu 
         и как их начальные значения влияют на последующий результат'''
         if init_params is None:
-            init_params = {'beta': 0.3, 'gamma': 0.1, 'mu': 0.01}
+            init_params = {'beta': 0.3, 'gamma': 0.1, 'mu': 0.04}
 
         # Инициализация в логитовом пространстве (как в статье)
         def to_logit(x):
@@ -41,12 +41,12 @@ class EpiParams(nn.Module):
     @property
     def beta(self):
         """β ∈ [0,1]"""
-        return (torch.tanh(self.beta_latent) + 1) * 0.5
+        return 1.0*(torch.tanh(self.beta_latent) + 1) * 0.5 - 0.0
 
     @property
     def gamma(self):
         """γ ∈ [0,1]"""
-        return (torch.tanh(self.gamma_latent) + 1) * 0.5
+        return (torch.tanh(self.gamma_latent) + 1) * 0.5 + 0.00
 
     @property
     def mu(self):
@@ -85,7 +85,6 @@ class TorchStandardScaler:
         x *= self.std
         x += self.mean
         return x
-
 
 class EINN_PINN(nn.Module):
     '''SIRD'''
@@ -194,7 +193,7 @@ class EINN_PINN(nn.Module):
 
         return f_S, f_I, f_R, f_D, S, I, R, D
 
-    def train_model(self, n_epoch=20000, lambda_data=1.0, lambda_ode=0.1):
+    def train_model(self, n_epoch=20000, lambda_data=1.0, lambda_ode=0.1, lambda_ic = 0.1, lambda_bc = 0.1):
         '''Обучение модели'''
         optimizer = optim.Adam(self.all_params, lr=1e-4)
         scheduler = optim.lr_scheduler.ReduceLROnPlateau(
@@ -217,13 +216,20 @@ class EINN_PINN(nn.Module):
             loss_data_D = F.mse_loss(
                 D[:self.train_size], self.D_data[:self.train_size])
 
-            loss_data = loss_data_S + loss_data_I + loss_data_R + 10 * loss_data_D
+            loss_data = loss_data_S + 1.0 * loss_data_I + loss_data_R + 10.0 * loss_data_D
 
             # Невязка по уравнениям
             loss_ode = torch.mean(f_S**2 + f_I**2 + f_R**2 + f_D**2)
 
+            loss_ic = torch.mean((S[0]-self.S_data[0])**2 +
+                                 (I[0]-self.I_data[0])**2 + 
+                                 (R[0]-self.R_data[0])**2 +
+                                 (D[0]-self.D_data[0])**2)
+
+            loss_bc = torch.mean((I[-1])**2)
+
             # Общая потеря
-            loss = lambda_data * loss_data + lambda_ode * loss_ode
+            loss = lambda_data * loss_data + lambda_ode * loss_ode + lambda_ic * loss_ic + lambda_bc * loss_bc 
 
             loss.backward()
             optimizer.step()
