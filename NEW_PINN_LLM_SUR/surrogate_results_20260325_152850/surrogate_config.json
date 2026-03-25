@@ -1,0 +1,9 @@
+{
+  "population": 1000,
+  "S0": 999,
+  "I0": 1,
+  "R0": 0,
+  "D0": 0,
+  "description": "SIRD surrogate model for fast epidemic simulation",
+  "timestamp": "20260325_152850"
+}
