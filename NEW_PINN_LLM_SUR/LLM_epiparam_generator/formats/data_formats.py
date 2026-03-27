@@ -1,6 +1,6 @@
 import re
 from datetime import datetime
-from typing import Dict
+from typing import Dict, List, Optional, Any, TypedDict, Annotated
 from dataclasses import dataclass, asdict
 from pydantic import BaseModel, Field, validator
 
@@ -57,6 +57,7 @@ class Episode:
     expert_comment: str = None
     accepted: bool = False
     iteration: int = None
+    reasoning: Optional[str] = None  # Added reasoning field
     
     def __post_init__(self):
         if self.timestamp is None:
@@ -68,25 +69,84 @@ class Episode:
     def to_prompt_format(self) -> str:
         """Format episode for prompt display"""
         status = "✓ ACCEPTED" if self.accepted else "✗ REJECTED"
-        return (
+        result = (
             f"**Iteration {self.iteration}:**\n"
             f"- Parameters: β={self.beta:.4f}, γ={self.gamma:.4f}, μ={self.mu:.5f}\n"
             f"- Results: peak at day {self.peak_position:.1f}, height {self.peak_height:.0f}, deaths {self.total_deaths:.0f}\n"
             f"- Status: {status}\n"
             f"- Expert comment: {self.expert_comment if self.expert_comment else 'None'}\n"
         )
+        
+        # Add reasoning if available
+        if self.reasoning:
+            result += f"- Reasoning: {self.reasoning}\n"
+        
+        return result
     
 
-class GraphState:
-    """State for LangGraph workflow"""
-    def __init__(self, data: Dict = None):
-        self.data = data or {}
+class CriticOutput(BaseModel):
+    """Pydantic model for critic agent output"""
+    reasoning: str = Field(description="Detailed reasoning for the decision")
+    decision: str = Field(description="Decision: accept, reject, or adjust. Write with a lowercase letter")
+    suggested_beta: Optional[float] = Field(default=None)
+    suggested_gamma: Optional[float] = Field(default=None)
+    suggested_mu: Optional[float] = Field(default=None)
+    confidence: str = Field(description="Confidence level: high, medium, low")
+    issues: List[str] = Field(default_factory=list)
     
-    def get(self, key, default=None):
-        return self.data.get(key, default)
+    @validator('decision')
+    def decision_validator(cls, v):
+        if v not in ['accept', 'reject', 'adjust']:
+            raise ValueError(f'decision must be accept/reject/adjust, got {v}')
+        return v
+
+
+# class GraphState:
+#     """State for LangGraph workflow"""
+#     def __init__(self, data: Dict = None):
+#         self.data = data or {}
     
-    def set(self, key, value):
-        self.data[key] = value
+#     def get(self, key, default=None):
+#         return self.data.get(key, default)
     
-    def to_dict(self):
-        return self.data
+#     def set(self, key, value):
+#         self.data[key] = value
+    
+#     def to_dict(self):
+#         return self.data
+    
+
+# ============================================
+# Graph State
+# ============================================
+
+class PipelineState(TypedDict):
+    """State for the LangGraph pipeline"""
+    # Task configuration
+    task_config: Dict[str, Any]
+    
+    # Current state
+    current_episode: Optional[Episode] 
+    expert_comment: Optional[str]
+    
+    # History
+    history: List[Episode]
+    
+    # Generation stage
+    generated_params: Optional[Dict]
+    
+    # Surrogate stage
+    surrogate_results: Optional[Dict]
+    
+    # Critic stage
+    critic_decision: Optional[str]
+    critic_reasoning: Optional[str]
+    suggested_params: Optional[Dict]
+    
+    # Final output
+    final_episode: Optional[Episode] 
+    
+    # Control
+    iteration: int
+    max_iterations: int
+    should_continue: bool
