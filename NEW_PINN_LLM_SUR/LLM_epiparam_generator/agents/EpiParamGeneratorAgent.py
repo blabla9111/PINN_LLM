@@ -8,7 +8,7 @@ from langchain_core.output_parsers import PydanticOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnableParallel, RunnablePassthrough
 
-from formats.data_formats import EpiParameters, Episode, GraphState
+from formats.data_formats import EpiParameters, Episode, PipelineState
 
 class LLMEpiParamGenerator:
     """
@@ -86,8 +86,8 @@ Return only the valid JSON object without any additional text.""")
         
         return prompt_template
     
-    def _format_history(self, history: List[Episode], max_episodes: int = 5) -> str:
-        """Format history episodes for prompt"""
+    def _format_history(self, history: List, max_episodes: int = 5) -> str:
+        """Format history episodes for prompt - handles both dict and Episode objects"""
         if not history:
             return "No previous episodes available."
         
@@ -96,59 +96,130 @@ Return only the valid JSON object without any additional text.""")
         
         formatted = ""
         for episode in recent_history:
-            formatted += episode.to_prompt_format() + "\n"
+            if isinstance(episode, dict):
+                formatted += f"""
+    Episode {episode.get('iteration', 'N/A')}:
+    - Parameters: β={episode.get('beta', 0):.4f}, γ={episode.get('gamma', 0):.4f}, μ={episode.get('mu', 0):.5f}
+    - Results: Peak at day {episode.get('peak_position', 0):.1f}, Deaths: {episode.get('total_deaths', 0):.0f}
+    - Accepted: {episode.get('accepted', False)}
+    - Reasoning: {episode.get('reasoning', 'No reasoning')[:100]}...
+    """
+            elif hasattr(episode, 'to_prompt_format'):
+                formatted += episode.to_prompt_format() + "\n"
+            else:
+                formatted += f"""
+    Episode {getattr(episode, 'iteration', 'N/A')}:
+    - Parameters: β={getattr(episode, 'beta', 0):.4f}, γ={getattr(episode, 'gamma', 0):.4f}, μ={getattr(episode, 'mu', 0):.5f}
+    - Results: Peak at day {getattr(episode, 'peak_position', 0):.1f}, Deaths: {getattr(episode, 'total_deaths', 0):.0f}
+    - Accepted: {getattr(episode, 'accepted', False)}
+    - Reasoning: {getattr(episode, 'reasoning', 'No reasoning')[:100]}...
+    """
         
         return formatted
     
-    def _format_stats_summary(self, history: List[Episode]) -> str:
-        """Generate statistical summary from history"""
+    def _format_stats_summary(self, history: List) -> str:
+        """Generate statistical summary from history - handles both dict and Episode objects"""
         if not history:
             return "No statistics available yet."
         
-        betas = [e.beta for e in history]
-        gammas = [e.gamma for e in history]
-        mus = [e.mu for e in history]
-        peaks = [e.peak_position for e in history if e.peak_position]
-        deaths = [e.total_deaths for e in history if e.total_deaths]
+        # Extract values handling both dict and object
+        betas = []
+        gammas = []
+        mus = []
+        peaks = []
+        deaths = []
+        
+        for item in history:
+            if isinstance(item, dict):
+                if item.get('beta') is not None:
+                    betas.append(item['beta'])
+                    gammas.append(item['gamma'])
+                    mus.append(item['mu'])
+                if item.get('peak_position'):
+                    peaks.append(item['peak_position'])
+                if item.get('total_deaths'):
+                    deaths.append(item['total_deaths'])
+            elif hasattr(item, 'beta'):
+                betas.append(item.beta)
+                gammas.append(item.gamma)
+                mus.append(item.mu)
+                if item.peak_position:
+                    peaks.append(item.peak_position)
+                if item.total_deaths:
+                    deaths.append(item.total_deaths)
+        
+        if not betas:
+            return "No valid parameter data in history."
+        
+        target_peak = self.task_config.get('target_peak', 30)
         
         # Find best episode based on target
-        target_peak = self.task_config.get('target_peak', 30)
-        best_episode = min(history, key=lambda x: abs(x.peak_position - target_peak)) if peaks else None
+        best_episode = None
+        best_error = float('inf')
+        
+        for item in history:
+            peak = item.get('peak_position') if isinstance(item, dict) else (item.peak_position if hasattr(item, 'peak_position') else None)
+            if peak:
+                error = abs(peak - target_peak)
+                if error < best_error:
+                    best_error = error
+                    best_episode = item
         
         summary = f"""
-**Parameter ranges explored:**
-- β: {min(betas):.4f} – {max(betas):.4f}
-- γ: {min(gammas):.4f} – {max(gammas):.4f}
-- μ: {min(mus):.5f} – {max(mus):.5f}
+    **Parameter ranges explored:**
+    - β: {min(betas):.4f} – {max(betas):.4f}
+    - γ: {min(gammas):.4f} – {max(gammas):.4f}
+    - μ: {min(mus):.5f} – {max(mus):.5f}
 
-**Results achieved:**
-- Peak position: {min(peaks):.1f} – {max(peaks):.1f} days (target: {target_peak})
-- Total deaths: {min(deaths):.0f} – {max(deaths):.0f}
+    **Results achieved:**
+    - Peak position: {min(peaks):.1f} – {max(peaks):.1f} days (target: {target_peak})
+    - Total deaths: {min(deaths):.0f} – {max(deaths):.0f}
 
-**Best attempt so far:**
-"""
+    **Best attempt so far:**
+    """
         if best_episode:
-            summary += f"""
-- β={best_episode.beta:.4f}, γ={best_episode.gamma:.4f}, μ={best_episode.mu:.5f}
-- Peak at day {best_episode.peak_position:.1f} with {best_episode.peak_height:.0f} infected
-- Total deaths: {best_episode.total_deaths:.0f}
-"""
+            if isinstance(best_episode, dict):
+                summary += f"""
+    - β={best_episode.get('beta', 0):.4f}, γ={best_episode.get('gamma', 0):.4f}, μ={best_episode.get('mu', 0):.5f}
+    - Peak at day {best_episode.get('peak_position', 0):.1f} with {best_episode.get('peak_height', 0):.0f} infected
+    - Total deaths: {best_episode.get('total_deaths', 0):.0f}
+    """
+            else:
+                summary += f"""
+    - β={best_episode.beta:.4f}, γ={best_episode.gamma:.4f}, μ={best_episode.mu:.5f}
+    - Peak at day {best_episode.peak_position:.1f} with {best_episode.peak_height:.0f} infected
+    - Total deaths: {best_episode.total_deaths:.0f}
+    """
         
         return summary
     
-    def _format_current_episode(self, episode: Episode) -> str:
-        """Format current episode for prompt"""
+    def _format_current_episode(self, episode) -> str:
+        """Format current episode for prompt - handles both dict and Episode object"""
         if not episode:
             return "No current episode available."
         
-        return f"""
-- β = {episode.beta:.4f}
-- γ = {episode.gamma:.4f}
-- μ = {episode.mu:.5f}
-- Peak position: {episode.peak_position:.1f} days
-- Peak height: {episode.peak_height:.0f} infected
-- Total deaths: {episode.total_deaths:.0f}
-"""
+        # Handle dictionary
+        if isinstance(episode, dict):
+            return f"""
+    - β = {episode.get('beta', 0):.4f}
+    - γ = {episode.get('gamma', 0):.4f}
+    - μ = {episode.get('mu', 0):.5f}
+    - Peak position: {episode.get('peak_position', 0):.1f} days
+    - Peak height: {episode.get('peak_height', 0):.0f} infected
+    - Total deaths: {episode.get('total_deaths', 0):.0f}
+    """
+        # Handle Episode object
+        elif hasattr(episode, 'beta'):
+            return f"""
+    - β = {episode.beta:.4f}
+    - γ = {episode.gamma:.4f}
+    - μ = {episode.mu:.5f}
+    - Peak position: {episode.peak_position:.1f} days
+    - Peak height: {episode.peak_height:.0f} infected
+    - Total deaths: {episode.total_deaths:.0f}
+    """
+        else:
+            return f"Unknown episode format: {type(episode)}"
     
     def _format_task_config(self) -> str:
         """Format task configuration for prompt"""
@@ -183,30 +254,56 @@ Return only the valid JSON object without any additional text.""")
         self.task_config = config
         print(f"✅ Task configured: {config.get('description', 'No description')}")
     
-    def add_to_history(self, episode: Episode):
-        """Add episode to history"""
-        episode.iteration = len(self.history) + 1
-        self.history.append(episode)
-        print(f"📝 Added episode {episode.iteration} to history")
+    def add_to_history(self, episode):
+        """Add episode to history - handles both dict and Episode objects"""
+        if isinstance(episode, dict):
+            # Convert dict to Episode object if you want to maintain consistency
+            from formats.data_formats import Episode
+            episode_obj = Episode(
+                beta=episode.get('beta', 0),
+                gamma=episode.get('gamma', 0),
+                mu=episode.get('mu', 0),
+                peak_position=episode.get('peak_position', 0),
+                peak_height=episode.get('peak_height', 0),
+                total_deaths=episode.get('total_deaths', 0),
+                expert_comment=episode.get('expert_comment'),
+                accepted=episode.get('accepted', False),
+                iteration=len(self.history) + 1,
+                reasoning=episode.get('reasoning'),
+                timestamp=episode.get('timestamp')
+            )
+            self.history.append(episode_obj)
+        else:
+            # It's already an Episode object
+            episode.iteration = len(self.history) + 1
+            self.history.append(episode)
+        
+        print(f"📝 Added episode {len(self.history)} to history")
     
-    def generate(self, state: GraphState) -> GraphState:
+    def generate(self, state: PipelineState) -> PipelineState:
         """
         Generate new parameters based on current state
-        
-        Args:
-            state: GraphState containing:
-                - current_episode: Episode object
-                - expert_comment: Optional expert feedback
-                
-        Returns:
-            Updated GraphState with generated parameters
         """
         print("=" * 60)
         print("🎯 LLM-EPIPARAM GENERATOR AGENT")
         print("=" * 60)
         
+        # Debug: print current iteration
+        current_iteration = state.get('iteration', 0)
+        print(f"📍 Current iteration from state: {current_iteration}")
+        
         # Extract data from state
         current_episode = state.get('current_episode')
+        
+        # Debug: print what current_episode looks like
+        if current_episode:
+            if isinstance(current_episode, dict):
+                print(f"📋 Current episode: dict with beta={current_episode.get('beta', 'N/A')}")
+            elif hasattr(current_episode, 'beta'):
+                print(f"📋 Current episode: Episode object with beta={current_episode.beta}")
+            else:
+                print(f"📋 Current episode: {type(current_episode)}")
+        
         expert_comment = state.get('expert_comment', "No expert comment provided.")
         
         if not current_episode:
@@ -244,7 +341,7 @@ Return only the valid JSON object without any additional text.""")
             print(f"🎯 Expected peak: day {parsed_output.expected_peak_position:.1f}")
             
             # Store generated parameters in state
-            state.set('generated_params', {
+            state['generated_params'] = {
                 'reasoning': parsed_output.reasoning,
                 'beta': parsed_output.beta,
                 'gamma': parsed_output.gamma,
@@ -253,16 +350,21 @@ Return only the valid JSON object without any additional text.""")
                 'expected_peak_height': parsed_output.expected_peak_height,
                 'expected_total_deaths': parsed_output.expected_total_deaths,
                 'confidence': parsed_output.confidence
-            })
+            }
+
+            state['iteration'] = state['iteration'] + 1
+            # print(f'iter = {state['iteration']}')
             
             return state
             
         except Exception as e:
             print(f"❌ Generation error: {e}")
-            state.set('generated_params', None)
-            state.set('generation_error', str(e))
+            import traceback
+            traceback.print_exc()
+            state['generated_params'] = None
+            state['generation_error'] = str(e)
             return state
     
-    def __call__(self, state: GraphState) -> GraphState:
+    def __call__(self, state: PipelineState) -> PipelineState:
         """Call the agent"""
         return self.generate(state)

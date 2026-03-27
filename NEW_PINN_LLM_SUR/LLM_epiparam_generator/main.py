@@ -1,23 +1,321 @@
-"""
-LLM-epiparam generator agent for SIRD model parameter optimization
-"""
-
-import json
-
-
-# Import your config and data structures
-import config
-from formats.data_formats import Episode, GraphState
+from formats.data_formats import PipelineState, Episode
 from agents.EpiParamGeneratorAgent import LLMEpiParamGenerator
+from agents.SurrogateModel import SurrogateAgent
+from agents.ParameterCriticAgent import ParameterCriticAgent
 
+from datetime import datetime
+from typing import Dict
 
+from langgraph.graph import StateGraph, END
+from langgraph.checkpoint.memory import MemorySaver
+import config
 
+class SurrogateNode:
+    """Node for surrogate model evaluation"""
+    
+    def __init__(self, surrogate_agent):
+        self.surrogate_agent = surrogate_agent
+    
+    def __call__(self, state: PipelineState) -> PipelineState:
+        print("=" * 60)
+        print("📊 SURROGATE MODEL")
+        print("=" * 60)
+        
+        # Получаем сгенерированные параметры
+        params = state.get('generated_params', {})
+        if not params:
+            print("❌ No parameters to evaluate")
+            return state
+        
+        # Добавляем начальные условия в state, если их нет
+        if 'initial_conditions' not in state:
+            # Используем значения по умолчанию из config или из task_config
+            task_config = state.get('task_config', {})
+            state['initial_conditions'] = {
+                'population': task_config.get('population', 10_000),
+                'S0': task_config.get('S0', 9_999),
+                'I0': task_config.get('I0', 1),
+                'R0': task_config.get('R0', 0),
+                'D0': task_config.get('D0', 0)
+            }
+        
+        # Вызываем суррогатного агента
+        state = self.surrogate_agent(state)
+        
+        # Результаты уже в state['surrogate_results']
+        results = state.get('surrogate_results', {})
+        
+        if results.get('success', False):
+            print(f"✅ Peak: {results['peak_position']:.1f} days")
+            print(f"✅ Deaths: {results['total_deaths']:.0f}")
+        else:
+            print(f"❌ Simulation failed: {results.get('error', 'Unknown error')}")
+        
+        return state
+    
+class HistoryNode:
+    """Node for managing history"""
+    
+    def __init__(self, generator=None):
+        self.generator = generator
+    
+    def __call__(self, state: PipelineState) -> PipelineState:
+        print("=" * 60)
+        print("📝 HISTORY MANAGER")
+        print("=" * 60)
+        
+        # Get current iteration
+        current_iteration = state.get('iteration', 0)
+        
+        # Get generated parameters and results
+        generated_params = state.get('generated_params', {})
+        surrogate_results = state.get('surrogate_results', {})
+        
+        # Create Episode object (only required fields are beta, gamma, mu)
+        from formats.data_formats import Episode
+        
+        episode = Episode(
+            beta=generated_params.get('beta', 0.0),
+            gamma=generated_params.get('gamma', 0.0),
+            mu=generated_params.get('mu', 0.0),
+            # Optional fields from surrogate results
+            peak_position=surrogate_results.get('peak_position', 0.0),
+            peak_height=surrogate_results.get('peak_height', 0.0),
+            total_deaths=surrogate_results.get('total_deaths', 0.0),
+            # Additional metadata
+            iteration=current_iteration,
+            expert_comment=state.get('expert_comment'),
+            accepted=(state.get('critic_decision') == 'accept'),
+            reasoning=state.get('critic_reasoning')
+        )
+        
+        # Add to history in state
+        history = state.get('history', [])
+        history.append(episode)
+        state['history'] = history
+        
+        # Update generator's history if available
+        if self.generator:
+            self.generator.add_to_history(episode)  # Pass Episode object directly
+        
+        # Always update current_episode for next iteration
+        state['current_episode'] = episode
+        
+        if state.get('critic_decision') == 'accept':
+            print(f"✅ Episode {current_iteration} accepted and added to history")
+        else:
+            print(f"❌ Episode {current_iteration} rejected")
+        
+        print(f"📊 Total history: {len(history)} episodes")
+        
+        return state
 
+class DecisionNode:
+    """Decision node for controlling the loop"""
+    
+    def __call__(self, state: PipelineState) -> str:
+        print("=" * 60)
+        print("⚖️ DECISION NODE")
+        print("=" * 60)
+        
+        decision = state.get('critic_decision', 'reject')
+        iteration = state.get('iteration', 0)
+        max_iterations = state.get('max_iterations', 10)
+        
+        print(f"Iteration: {iteration}/{max_iterations}")
+        print(f"Decision: {decision}")
+        
+        # Continue conditions
+        if decision == 'accept':
+            print("✅ Parameters accepted - ending loop")
+            return "end"
+        elif iteration >= max_iterations:
+            print(f"⚠️ Max iterations ({max_iterations}) reached - ending loop")
+            return "end"
+        else:
+            # 🔧 FIX: Increment iteration for the next loop
+            state['iteration'] = iteration + 1
+            print(f"🔄 Continuing loop with new generation (iteration {iteration + 1})")
+            return "continue"
+        
 
+# ============================================
+# LangGraph Pipeline
+# ============================================
+
+class OptimizationPipeline:
+    """
+    Complete optimization pipeline using LangGraph
+    """
+    
+    def __init__(self, llm, surrogate_agent=None, initial_conditions=None):
+        self.llm = llm
+        
+        # Создаем суррогатного агента
+        if surrogate_agent is None:
+            from agents.SurrogateModel import SurrogateAgent
+            self.surrogate_agent = SurrogateAgent(verbose=True)
+        else:
+            self.surrogate_agent = surrogate_agent
+        
+        # Сохраняем начальные условия для использования в pipeline
+        self.initial_conditions = initial_conditions or {
+            'population': 10_000,
+            'S0': 9_999,
+            'I0': 1,
+            'R0': 0,
+            'D0': 0
+        }
+        
+        # Create agents
+        self.generator = LLMEpiParamGenerator(llm)
+        self.critic = ParameterCriticAgent(llm)
+        
+        # Create nodes
+        self.surrogate_node = SurrogateNode(self.surrogate_agent)  # Передаем агента
+        self.history_node = HistoryNode(generator=self.generator)
+        self.decision_node = DecisionNode()
+        self.memory = MemorySaver()
+        
+        # Build graph
+        self.graph = self._build_graph()
+        
+    
+    def _build_graph(self) -> StateGraph:
+        """Build LangGraph workflow"""
+        
+        # Create graph with state
+        workflow = StateGraph(PipelineState)
+        
+        # Add nodes
+        workflow.add_node("generate", self.generator.generate)
+        workflow.add_node("surrogate", self.surrogate_node)
+        workflow.add_node("critic", self.critic)
+        workflow.add_node("history", self.history_node)
+        
+        # Add edges
+        workflow.set_entry_point("generate")
+        workflow.add_edge("generate", "surrogate")
+        workflow.add_edge("surrogate", "critic")
+        workflow.add_edge("critic", "history")
+        
+        # Add conditional edge
+        workflow.add_conditional_edges(
+            "history",
+            self.decision_node,
+            {
+                "continue": "generate",
+                "end": END
+            }
+        )
+        
+        return workflow.compile(checkpointer=self.memory)
+    
+    def run(
+        self,
+        task_config: Dict,
+        initial_params: Dict,
+        expert_comment: str = None,
+        max_iterations: int = 10
+    ) -> Dict:
+        """
+        Run the optimization pipeline
+        """
+        print("\n" + "=" * 60)
+        print("🚀 STARTING OPTIMIZATION PIPELINE")
+        print("=" * 60)
+        
+        # Convert initial_params dict to Episode object
+        from formats.data_formats import Episode
+        
+        initial_episode = Episode(
+            beta=initial_params.get('beta', 0.0),
+            gamma=initial_params.get('gamma', 0.0),
+            mu=initial_params.get('mu', 0.0),
+            peak_position=initial_params.get('peak_position', 0.0),
+            peak_height=initial_params.get('peak_height', 0.0),
+            total_deaths=initial_params.get('total_deaths', 0.0),
+            iteration=initial_params.get('iteration', 0),
+            expert_comment=expert_comment
+        )
+        
+        # Initial state with proper structure
+        initial_state: PipelineState = {
+            'task_config': task_config,
+            'current_episode': initial_episode,
+            'expert_comment': expert_comment,
+            'history': [],
+            'generated_params': {
+                'beta': initial_params.get('beta', 0.0),
+                'gamma': initial_params.get('gamma', 0.0),
+                'mu': initial_params.get('mu', 0.0)
+            },
+            'surrogate_results': None,
+            'critic_decision': None,
+            'critic_reasoning': None,
+            'suggested_params': None,
+            'final_episode': None,
+            'iteration': 0,
+            'max_iterations': max_iterations,
+            'should_continue': True,
+            # ✅ Добавляем начальные условия в state
+            'initial_conditions': {
+                'population': task_config.get('population', self.initial_conditions['population']),
+                'S0': task_config.get('S0', self.initial_conditions['S0']),
+                'I0': task_config.get('I0', self.initial_conditions['I0']),
+                'R0': task_config.get('R0', self.initial_conditions['R0']),
+                'D0': task_config.get('D0', self.initial_conditions['D0'])
+            },
+            # ✅ Добавляем параметры симуляции (опционально)
+            'simulation_params': {
+                't_max': task_config.get('t_max', 200),
+                'num_points': task_config.get('num_points', 1000)
+            }
+        }
+        
+        # Configure thread for checkpointing
+        config = {"configurable": {"thread_id": "optimization_1"}}
+        
+        self.critic.set_task_config(task_config)
+        
+        # Run the graph
+        final_state = self.graph.invoke(initial_state, config)
+        
+        print("\n" + "=" * 60)
+        print("🏁 PIPELINE COMPLETE")
+        print("=" * 60)
+        
+        # Get history and filter accepted episodes
+        history = final_state.get('history', [])
+        print(f"Total iterations: {len(history)}")
+        
+        # Filter accepted episodes (history contains Episode objects now)
+        accepted_episodes = [ep for ep in history if ep.accepted]
+        
+        # Display best parameters if any accepted episodes
+        if accepted_episodes:
+            best = accepted_episodes[-1]  # Last accepted episode
+            print(f"\n✅ Best accepted episode:")
+            print(f"   Parameters: β={best.beta:.4f}, γ={best.gamma:.4f}, μ={best.mu:.5f}")
+            print(f"   Peak at day {best.peak_position:.1f}")
+            print(f"   Total deaths: {best.total_deaths:.0f}")
+            print(f"   Reasoning: {best.reasoning if best.reasoning else 'No reasoning provided'}")
+        else:
+            print("\n⚠️ No episodes were accepted during the run")
+            
+            # Show the last episode even if not accepted
+            if history:
+                last = history[-1]
+                print(f"\n📊 Last attempted episode:")
+                print(f"   Parameters: β={last.beta:.4f}, γ={last.gamma:.4f}, μ={last.mu:.5f}")
+                print(f"   Peak at day {last.peak_position:.1f}")
+                print(f"   Status: {'Accepted' if last.accepted else 'Rejected'}")
+        
+        return final_state
 
 
 # ============================================
-# Usage example
+# Usage Example
 # ============================================
 
 if __name__ == "__main__":
@@ -32,45 +330,55 @@ if __name__ == "__main__":
     )
     chat = ChatHuggingFace(llm=llm)
     
-    # Create generator agent
-    generator = LLMEpiParamGenerator(llm=chat)
+    # Create pipeline
+    pipeline = OptimizationPipeline(llm=chat)
+    try:
+        # Get graph with xray to show all details
+        graph_png = pipeline.graph.get_graph(xray=True)
+        
+        # Draw as PNG bytes
+        png_bytes = graph_png.draw_mermaid_png()
+        
+        # Save to file
+        with open("SciResearch_agent.png", "wb") as f:
+            f.write(png_bytes)
+        
+        print("✅ Pipeline visualization saved to SciResearch_agent.png")
+        
+    except Exception as e:
+        print(f"❌ Error generating visualization: {e}")
+        print("Make sure you have installed: pip install matplotlib pillow")
     
-    # Configure task
-    generator.set_task_config({
+    # Configure task with initial conditions
+    task_config = {
         'description': 'Find parameters to achieve infection peak at day 30',
         'target_peak': 30,
-        'population': 1_000_000,
-        'I0': 100
-    })
+        'peak_tolerance': 5.0,
+        # Начальные условия для симуляции
+        'population': 10_000,
+        'S0': 9_999,
+        'I0': 1,
+        'R0': 0,
+        'D0': 0,
+        't_max': 200,
+        'num_points': 1000
+    }
     
-    # Create initial episode
-    current_episode = Episode(
-        beta=0.8,
-        gamma=0.2,
-        mu=0.02,
-        peak_position=45.0,
-        peak_height=15000,
-        total_deaths=8500,
-        expert_comment="Peak too late, need earlier peak",
-        accepted=False
+    # Initial parameters
+    initial_params = {
+        'beta': 0.8,
+        'gamma': 0.2,
+        'mu': 0.02,
+        'peak_position': 45.0,
+        'peak_height': 15000,
+        'total_deaths': 8500,
+        'iteration': 0
+    }
+    
+    # Run pipeline
+    result = pipeline.run(
+        task_config=task_config,
+        initial_params=initial_params,
+        expert_comment="Need earlier peak, around day 30",
+        max_iterations=1
     )
-    
-    # Add to history
-    generator.add_to_history(current_episode)
-    
-    # Create state
-    state = GraphState({
-        'current_episode': current_episode,
-        'expert_comment': "Peak should be around day 30, try increasing beta"
-    })
-    
-    # Generate new parameters
-    result_state = generator(state)
-    
-    # Display results
-    print("\n" + "=" * 60)
-    print("📊 GENERATION RESULTS")
-    print("=" * 60)
-    generated = result_state.get('generated_params')
-    if generated:
-        print(json.dumps(generated, indent=2, ensure_ascii=False))
