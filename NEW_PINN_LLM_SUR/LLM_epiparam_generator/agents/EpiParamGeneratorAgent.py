@@ -1,33 +1,64 @@
-# ============================================
-# LLM-epiparam generator agent
-# ============================================
+# agents/EpiParamGeneratorAgent.py
 
-from typing import Dict, List
-
+from typing import Dict, List, Optional
 from langchain_core.output_parsers import PydanticOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnableParallel, RunnablePassthrough
+from langchain_core.exceptions import OutputParserException
+from utils.RetryParser import RetryParser
 
 from formats.data_formats import EpiParameters, Episode, PipelineState
+from utils.PromptLogger import PromptLogger
+
 
 class LLMEpiParamGenerator:
     """
     LLM agent that generates epidemiological parameters for SIRD model
     """
     
-    def __init__(self, llm, output_class=EpiParameters):
+    def __init__(
+        self,
+        llm,
+        output_class=EpiParameters,
+        enable_logging: bool = True,
+        log_format: str = "json",
+        max_retries: int = 3,
+        retry_temperature: float = 0.3 
+    ):
         """
         Initialize the generator agent
         
         Args:
             llm: LangChain LLM instance (ChatHuggingFace)
             output_class: Pydantic class for output validation
+            enable_logging: Whether to enable prompt logging
+            log_format: Log format - "json" or "text"
         """
         self.llm = llm
         self.parser = PydanticOutputParser(pydantic_object=output_class)
         self.prompt = self._create_prompt()
         self.history: List[Episode] = []
         self.task_config: Dict = {}
+        
+        # Initialize logger
+        self.enable_logging = enable_logging
+        if enable_logging:
+            if log_format == "json":
+                self.logger = PromptLogger()
+        else:
+            self.logger = None
+
+        self.max_retries = max_retries
+        self.retry_temperature = retry_temperature
+        self.retry_parser = None
+        if self.retry_parser is None:
+            self.retry_parser = RetryParser(
+                llm=self.llm,
+                parser=self.parser,
+                max_retries=self.max_retries,
+                delay=1,
+                retry_temperature=self.retry_temperature
+            )
     
     def _create_prompt(self) -> ChatPromptTemplate:
         """Create the prompt template for parameter generation"""
@@ -64,22 +95,23 @@ Return ONLY valid JSON in the exact format specified. Do not include any additio
 ## 1. Task Configuration
 {task_config}
 
-## 2. Current Episode
+## 2. Current Episode (Previous Attempt)
 {current_episode}
 
-## 3. History of Previous Episodes
+## 3. History of Previous Attempts
 {history}
 
-## 4. Expert Comment
+## 4. Expert Comment (Goal to Achieve)
 {expert_comment}
 
-## 5. Statistical Summary
+## 5. Statistical Summary of Previous Attempts
 {stats_summary}
 
 ## 6. Target Metrics
 {target_metrics}
 
-Generate new parameters that will bring us closer to the target epidemic scenario.
+Generate new parameters that will bring us closer to the target epidemic scenario described in the Expert Comment.
+Use the history of previous attempts to learn what worked and what didn't.
 Return only the valid JSON object without any additional text.""")
         ],
             partial_variables={"format_instructions": self.parser.get_format_instructions()})
@@ -87,83 +119,53 @@ Return only the valid JSON object without any additional text.""")
         return prompt_template
     
     def _format_history(self, history: List, max_episodes: int = 5) -> str:
-        """Format history episodes for prompt - handles both dict and Episode objects"""
+        """Format history episodes for prompt - handles Episode objects only"""
         if not history:
-            return "No previous episodes available."
+            return "No previous attempts available."
         
-        # Take only last N episodes to keep prompt manageable
         recent_history = history[-max_episodes:]
         
         formatted = ""
         for episode in recent_history:
-            if isinstance(episode, dict):
-                formatted += f"""
-    Episode {episode.get('iteration', 'N/A')}:
-    - Parameters: β={episode.get('beta', 0):.4f}, γ={episode.get('gamma', 0):.4f}, μ={episode.get('mu', 0):.5f}
-    - Results: Peak at day {episode.get('peak_position', 0):.1f}, Deaths: {episode.get('total_deaths', 0):.0f}
-    - Accepted: {episode.get('accepted', False)}
-    - Reasoning: {episode.get('reasoning', 'No reasoning')[:100]}...
-    """
-            elif hasattr(episode, 'to_prompt_format'):
+            if hasattr(episode, 'to_prompt_format'):
                 formatted += episode.to_prompt_format() + "\n"
             else:
+                status = "✅ ACCEPTED" if getattr(episode, 'accepted', False) else "❌ REJECTED"
                 formatted += f"""
     Episode {getattr(episode, 'iteration', 'N/A')}:
     - Parameters: β={getattr(episode, 'beta', 0):.4f}, γ={getattr(episode, 'gamma', 0):.4f}, μ={getattr(episode, 'mu', 0):.5f}
-    - Results: Peak at day {getattr(episode, 'peak_position', 0):.1f}, Deaths: {getattr(episode, 'total_deaths', 0):.0f}
-    - Accepted: {getattr(episode, 'accepted', False)}
+    - Results: peak at day {getattr(episode, 'peak_position', 0):.1f}, height {getattr(episode, 'peak_height', 0):.0f}, deaths {getattr(episode, 'total_deaths', 0):.0f}
+    - Status: {status}
     - Reasoning: {getattr(episode, 'reasoning', 'No reasoning')[:100]}...
     """
         
         return formatted
     
     def _format_stats_summary(self, history: List) -> str:
-        """Generate statistical summary from history - handles both dict and Episode objects"""
+        """Generate statistical summary from history - handles Episode objects"""
         if not history:
             return "No statistics available yet."
         
-        # Extract values handling both dict and object
-        betas = []
-        gammas = []
-        mus = []
-        peaks = []
-        deaths = []
-        
-        for item in history:
-            if isinstance(item, dict):
-                if item.get('beta') is not None:
-                    betas.append(item['beta'])
-                    gammas.append(item['gamma'])
-                    mus.append(item['mu'])
-                if item.get('peak_position'):
-                    peaks.append(item['peak_position'])
-                if item.get('total_deaths'):
-                    deaths.append(item['total_deaths'])
-            elif hasattr(item, 'beta'):
-                betas.append(item.beta)
-                gammas.append(item.gamma)
-                mus.append(item.mu)
-                if item.peak_position:
-                    peaks.append(item.peak_position)
-                if item.total_deaths:
-                    deaths.append(item.total_deaths)
+        betas = [ep.beta for ep in history if hasattr(ep, 'beta')]
+        gammas = [ep.gamma for ep in history if hasattr(ep, 'gamma')]
+        mus = [ep.mu for ep in history if hasattr(ep, 'mu')]
+        peaks = [ep.peak_position for ep in history if hasattr(ep, 'peak_position') and ep.peak_position is not None]
+        deaths = [ep.total_deaths for ep in history if hasattr(ep, 'total_deaths') and ep.total_deaths is not None]
         
         if not betas:
             return "No valid parameter data in history."
         
         target_peak = self.task_config.get('target_peak', 30)
         
-        # Find best episode based on target
         best_episode = None
         best_error = float('inf')
         
-        for item in history:
-            peak = item.get('peak_position') if isinstance(item, dict) else (item.peak_position if hasattr(item, 'peak_position') else None)
-            if peak:
-                error = abs(peak - target_peak)
+        for ep in history:
+            if hasattr(ep, 'peak_position') and ep.peak_position:
+                error = abs(ep.peak_position - target_peak)
                 if error < best_error:
                     best_error = error
-                    best_episode = item
+                    best_episode = ep
         
         summary = f"""
     **Parameter ranges explored:**
@@ -178,14 +180,7 @@ Return only the valid JSON object without any additional text.""")
     **Best attempt so far:**
     """
         if best_episode:
-            if isinstance(best_episode, dict):
-                summary += f"""
-    - β={best_episode.get('beta', 0):.4f}, γ={best_episode.get('gamma', 0):.4f}, μ={best_episode.get('mu', 0):.5f}
-    - Peak at day {best_episode.get('peak_position', 0):.1f} with {best_episode.get('peak_height', 0):.0f} infected
-    - Total deaths: {best_episode.get('total_deaths', 0):.0f}
-    """
-            else:
-                summary += f"""
+            summary += f"""
     - β={best_episode.beta:.4f}, γ={best_episode.gamma:.4f}, μ={best_episode.mu:.5f}
     - Peak at day {best_episode.peak_position:.1f} with {best_episode.peak_height:.0f} infected
     - Total deaths: {best_episode.total_deaths:.0f}
@@ -194,30 +189,19 @@ Return only the valid JSON object without any additional text.""")
         return summary
     
     def _format_current_episode(self, episode) -> str:
-        """Format current episode for prompt - handles both dict and Episode object"""
+        """Format current episode for prompt - handles Episode object"""
         if not episode:
             return "No current episode available."
         
-        # Handle dictionary
-        if isinstance(episode, dict):
+        if hasattr(episode, 'beta'):
             return f"""
-    - β = {episode.get('beta', 0):.4f}
-    - γ = {episode.get('gamma', 0):.4f}
-    - μ = {episode.get('mu', 0):.5f}
-    - Peak position: {episode.get('peak_position', 0):.1f} days
-    - Peak height: {episode.get('peak_height', 0):.0f} infected
-    - Total deaths: {episode.get('total_deaths', 0):.0f}
-    """
-        # Handle Episode object
-        elif hasattr(episode, 'beta'):
-            return f"""
-    - β = {episode.beta:.4f}
-    - γ = {episode.gamma:.4f}
-    - μ = {episode.mu:.5f}
-    - Peak position: {episode.peak_position:.1f} days
-    - Peak height: {episode.peak_height:.0f} infected
-    - Total deaths: {episode.total_deaths:.0f}
-    """
+        - β = {episode.beta:.4f}
+        - γ = {episode.gamma:.4f}
+        - μ = {episode.mu:.5f}
+        - Peak at day {getattr(episode, 'peak_position', 0):.1f}
+        - Peak height: {getattr(episode, 'peak_height', 0):.0f} infected
+        - Total deaths: {getattr(episode, 'total_deaths', 0):.0f}
+        """
         else:
             return f"Unknown episode format: {type(episode)}"
     
@@ -254,31 +238,10 @@ Return only the valid JSON object without any additional text.""")
         self.task_config = config
         print(f"✅ Task configured: {config.get('description', 'No description')}")
     
-    def add_to_history(self, episode):
-        """Add episode to history - handles both dict and Episode objects"""
-        if isinstance(episode, dict):
-            # Convert dict to Episode object if you want to maintain consistency
-            from formats.data_formats import Episode
-            episode_obj = Episode(
-                beta=episode.get('beta', 0),
-                gamma=episode.get('gamma', 0),
-                mu=episode.get('mu', 0),
-                peak_position=episode.get('peak_position', 0),
-                peak_height=episode.get('peak_height', 0),
-                total_deaths=episode.get('total_deaths', 0),
-                expert_comment=episode.get('expert_comment'),
-                accepted=episode.get('accepted', False),
-                iteration=len(self.history) + 1,
-                reasoning=episode.get('reasoning'),
-                timestamp=episode.get('timestamp')
-            )
-            self.history.append(episode_obj)
-        else:
-            # It's already an Episode object
-            episode.iteration = len(self.history) + 1
-            self.history.append(episode)
-        
-        print(f"📝 Added episode {len(self.history)} to history")
+    def update_history(self, history: List[Episode]):
+        """Update history from critic agent"""
+        self.history = history
+        print(f"📚 Updated generator history with {len(history)} episodes")
     
     def generate(self, state: PipelineState) -> PipelineState:
         """
@@ -288,23 +251,19 @@ Return only the valid JSON object without any additional text.""")
         print("🎯 LLM-EPIPARAM GENERATOR AGENT")
         print("=" * 60)
         
-        # Debug: print current iteration
         current_iteration = state.get('iteration', 0)
         print(f"📍 Current iteration from state: {current_iteration}")
         
-        # Extract data from state
         current_episode = state.get('current_episode')
         
-        # Debug: print what current_episode looks like
-        if current_episode:
-            if isinstance(current_episode, dict):
-                print(f"📋 Current episode: dict with beta={current_episode.get('beta', 'N/A')}")
-            elif hasattr(current_episode, 'beta'):
-                print(f"📋 Current episode: Episode object with beta={current_episode.beta}")
-            else:
-                print(f"📋 Current episode: {type(current_episode)}")
+        # ✅ Экспертный комментарий всегда есть в state
+        expert_comment = state.get('expert_comment')
         
-        expert_comment = state.get('expert_comment', "No expert comment provided.")
+        # Проверяем наличие экспертного комментария
+        if expert_comment is None or expert_comment.strip() == "":
+            raise ValueError("❌ Expert comment is required but not provided in state!")
+        
+        print(f"📝 Expert comment: {expert_comment}")
         
         if not current_episode:
             print("❌ No current episode in state")
@@ -320,7 +279,7 @@ Return only the valid JSON object without any additional text.""")
             "target_metrics": self._format_target_metrics()
         }
         
-        # Create chain with retry mechanism
+        # Create chain
         chain = self.prompt | RunnableParallel(
             response=self.llm, 
             prompt=RunnablePassthrough()
@@ -330,15 +289,46 @@ Return only the valid JSON object without any additional text.""")
             print("🚀 Generating new parameters...")
             result = chain.invoke(prompt_inputs)
             
-            # Parse the response
+            # Get prompt text and response
+            prompt_text = result.get('prompt', {})
+            if hasattr(prompt_text, 'to_string'):
+                prompt_text_str = prompt_text.to_string()
+            else:
+                prompt_text_str = str(prompt_text)
+            
             raw_response = result.get('response', {}).content if hasattr(result.get('response', {}), 'content') else str(result)
             
-            # Use parser to validate
-            parsed_output = self.parser.parse(raw_response)
+            # Parse the response
+            parsed_output = self.retry_parser.parse(raw_response, prompt_text_str)
             
             print(f"✅ Generated: β={parsed_output.beta:.4f}, γ={parsed_output.gamma:.4f}, μ={parsed_output.mu:.5f}")
             print(f"💭 Reasoning: {parsed_output.reasoning[:100]}...")
-            print(f"🎯 Expected peak: day {parsed_output.expected_peak_position:.1f}")
+            
+            # Log prompt and response if logging is enabled
+            if self.enable_logging and self.logger:
+                context = {
+                    'task_config': self.task_config,
+                    'current_episode_beta': current_episode.beta if hasattr(current_episode, 'beta') else None,
+                    'current_episode_gamma': current_episode.gamma if hasattr(current_episode, 'gamma') else None,
+                    'current_episode_mu': current_episode.mu if hasattr(current_episode, 'mu') else None,
+                    'current_episode_accepted': getattr(current_episode, 'accepted', False),
+                    'history_length': len(self.history),
+                    'expert_comment': expert_comment
+                }
+                
+                metadata = {
+                    'iteration': current_iteration,
+                    'model': getattr(self.llm, 'model_id', 'unknown')
+                }
+                
+                self.logger.log_generator_prompt(
+                    prompt_text=prompt_text_str,
+                    response_text=raw_response,
+                    parsed_output=parsed_output,
+                    context=context,
+                    iteration=current_iteration,
+                    metadata=metadata
+                )
             
             # Store generated parameters in state
             state['generated_params'] = {
@@ -346,23 +336,17 @@ Return only the valid JSON object without any additional text.""")
                 'beta': parsed_output.beta,
                 'gamma': parsed_output.gamma,
                 'mu': parsed_output.mu,
-                'expected_peak_position': parsed_output.expected_peak_position,
-                'expected_peak_height': parsed_output.expected_peak_height,
-                'expected_total_deaths': parsed_output.expected_total_deaths,
                 'confidence': parsed_output.confidence
             }
 
             state['iteration'] = state['iteration'] + 1
-            # print(f'iter = {state['iteration']}')
             
             return state
             
-        except Exception as e:
-            print(f"❌ Generation error: {e}")
-            import traceback
-            traceback.print_exc()
+        except OutputParserException as e:
+            print(f"❌ All retry attempts failed: {e}")
             state['generated_params'] = None
-            state['generation_error'] = str(e)
+            state['generation_error'] = f"Parser error after {self.max_retries} retries: {str(e)}"
             return state
     
     def __call__(self, state: PipelineState) -> PipelineState:

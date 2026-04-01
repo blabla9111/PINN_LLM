@@ -14,9 +14,9 @@ class EpiParameters(BaseModel):
     beta: float = Field(description="Infection rate (0.1 - 1.0)")
     gamma: float = Field(description="Recovery rate (0.05 - 1.0)")
     mu: float = Field(description="Mortality rate (0.001 - 0.1)")
-    expected_peak_position: float = Field(description="Expected peak position in days")
-    expected_peak_height: float = Field(description="Expected peak height (number infected)")
-    expected_total_deaths: float = Field(description="Expected total deaths")
+    # expected_peak_position: float = Field(description="Expected peak position in days")
+    # expected_peak_height: float = Field(description="Expected peak height (number infected)")
+    # expected_total_deaths: float = Field(description="Expected total deaths")
     confidence: str = Field(description="Confidence level: high/medium/low")
     
     @validator('beta')
@@ -47,6 +47,7 @@ class EpiParameters(BaseModel):
 @dataclass
 class Episode:
     """Data class for storing parameter episodes"""
+    reasoning: Optional[str] = None  # Added reasoning field
     beta: float
     gamma: float
     mu: float
@@ -57,7 +58,7 @@ class Episode:
     expert_comment: str = None
     accepted: bool = False
     iteration: int = None
-    reasoning: Optional[str] = None  # Added reasoning field
+    
     
     def __post_init__(self):
         if self.timestamp is None:

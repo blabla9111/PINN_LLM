@@ -1,9 +1,7 @@
-from formats.data_formats import PipelineState, Episode
+from formats.data_formats import PipelineState
 from agents.EpiParamGeneratorAgent import LLMEpiParamGenerator
-from agents.SurrogateModel import SurrogateAgent
 from agents.ParameterCriticAgent import ParameterCriticAgent
 
-from datetime import datetime
 from typing import Dict
 
 from langgraph.graph import StateGraph, END
@@ -56,8 +54,16 @@ class SurrogateNode:
 class HistoryNode:
     """Node for managing history"""
     
-    def __init__(self, generator=None):
+    def __init__(self, generator=None, critic=None):
+        """
+        Initialize history node
+        
+        Args:
+            generator: Generator agent to update its history
+            critic: Critic agent to get history from
+        """
         self.generator = generator
+        self.critic = critic
     
     def __call__(self, state: PipelineState) -> PipelineState:
         print("=" * 60)
@@ -70,8 +76,10 @@ class HistoryNode:
         # Get generated parameters and results
         generated_params = state.get('generated_params', {})
         surrogate_results = state.get('surrogate_results', {})
+        critic_decision = state.get('critic_decision', 'reject')
+        critic_reasoning = state.get('critic_reasoning', '')
         
-        # Create Episode object (only required fields are beta, gamma, mu)
+        # Create Episode object with all available information
         from formats.data_formats import Episode
         
         episode = Episode(
@@ -85,8 +93,8 @@ class HistoryNode:
             # Additional metadata
             iteration=current_iteration,
             expert_comment=state.get('expert_comment'),
-            accepted=(state.get('critic_decision') == 'accept'),
-            reasoning=state.get('critic_reasoning')
+            accepted=(critic_decision == 'accept'),
+            reasoning=critic_reasoning
         )
         
         # Add to history in state
@@ -94,21 +102,33 @@ class HistoryNode:
         history.append(episode)
         state['history'] = history
         
-        # Update generator's history if available
+        # ✅ Update critic's history (critic stores episodes with evaluation results)
+        if self.critic:
+            self.critic.add_to_history(episode)
+            print(f"✅ Added episode {current_iteration} to critic history")
+        
+        # ✅ Update generator's history (for context in next generations)
         if self.generator:
-            self.generator.add_to_history(episode)  # Pass Episode object directly
+            # Generator needs history of all previous episodes for context
+            # But doesn't need to add episodes itself - just reference critic's history
+            # Synchronize generator's history with critic's history
+            self.generator.history = self.critic.history
+            print(f"✅ Synchronized generator history ({len(self.critic.history)} episodes)")
         
         # Always update current_episode for next iteration
         state['current_episode'] = episode
         
-        if state.get('critic_decision') == 'accept':
-            print(f"✅ Episode {current_iteration} accepted and added to history")
+        if critic_decision == 'accept':
+            print(f"✅ Episode {current_iteration} ACCEPTED and added to history")
         else:
-            print(f"❌ Episode {current_iteration} rejected")
+            print(f"❌ Episode {current_iteration} REJECTED and added to history")
         
         print(f"📊 Total history: {len(history)} episodes")
+        print(f"   - Accepted: {len([ep for ep in history if ep.accepted])}")
+        print(f"   - Rejected: {len([ep for ep in history if not ep.accepted])}")
         
         return state
+
 
 class DecisionNode:
     """Decision node for controlling the loop"""
@@ -168,18 +188,17 @@ class OptimizationPipeline:
         }
         
         # Create agents
-        self.generator = LLMEpiParamGenerator(llm)
-        self.critic = ParameterCriticAgent(llm)
+        self.generator = LLMEpiParamGenerator(llm, enable_logging=True, log_format="json")
+        self.critic = ParameterCriticAgent(llm, enable_logging=True, log_format="json")
         
-        # Create nodes
-        self.surrogate_node = SurrogateNode(self.surrogate_agent)  # Передаем агента
-        self.history_node = HistoryNode(generator=self.generator)
+        # ✅ Pass both generator and critic to history node
+        self.history_node = HistoryNode(generator=self.generator, critic=self.critic)
+        self.surrogate_node = SurrogateNode(self.surrogate_agent)
         self.decision_node = DecisionNode()
         self.memory = MemorySaver()
         
         # Build graph
         self.graph = self._build_graph()
-        
     
     def _build_graph(self) -> StateGraph:
         """Build LangGraph workflow"""
@@ -239,18 +258,29 @@ class OptimizationPipeline:
             expert_comment=expert_comment
         )
         
+        # ✅ Initialize critic history with initial episode
+        # This ensures the generator has context from the start
+        if initial_episode:
+            self.critic.add_to_history(initial_episode)
+            self.generator.history = self.critic.history
+            print(f"📚 Initialized history with 1 episode (initial parameters)")
+        
         # Initial state with proper structure
         initial_state: PipelineState = {
             'task_config': task_config,
             'current_episode': initial_episode,
             'expert_comment': expert_comment,
-            'history': [],
+            'history': [],  # Will be populated by history node
             'generated_params': {
                 'beta': initial_params.get('beta', 0.0),
                 'gamma': initial_params.get('gamma', 0.0),
                 'mu': initial_params.get('mu', 0.0)
             },
-            'surrogate_results': None,
+            'surrogate_results': {
+                'peak_position': initial_params.get('peak_position', 0.0),
+                'peak_height': initial_params.get('peak_height', 0.0),
+                'total_deaths': initial_params.get('total_deaths', 0.0)
+            },
             'critic_decision': None,
             'critic_reasoning': None,
             'suggested_params': None,
@@ -258,7 +288,6 @@ class OptimizationPipeline:
             'iteration': 0,
             'max_iterations': max_iterations,
             'should_continue': True,
-            # ✅ Добавляем начальные условия в state
             'initial_conditions': {
                 'population': task_config.get('population', self.initial_conditions['population']),
                 'S0': task_config.get('S0', self.initial_conditions['S0']),
@@ -266,7 +295,6 @@ class OptimizationPipeline:
                 'R0': task_config.get('R0', self.initial_conditions['R0']),
                 'D0': task_config.get('D0', self.initial_conditions['D0'])
             },
-            # ✅ Добавляем параметры симуляции (опционально)
             'simulation_params': {
                 't_max': task_config.get('t_max', 200),
                 'num_points': task_config.get('num_points', 1000)
@@ -285,11 +313,11 @@ class OptimizationPipeline:
         print("🏁 PIPELINE COMPLETE")
         print("=" * 60)
         
-        # Get history and filter accepted episodes
+        # Get history from final state
         history = final_state.get('history', [])
         print(f"Total iterations: {len(history)}")
         
-        # Filter accepted episodes (history contains Episode objects now)
+        # Filter accepted episodes
         accepted_episodes = [ep for ep in history if ep.accepted]
         
         # Display best parameters if any accepted episodes
@@ -311,6 +339,12 @@ class OptimizationPipeline:
                 print(f"   Peak at day {last.peak_position:.1f}")
                 print(f"   Status: {'Accepted' if last.accepted else 'Rejected'}")
         
+        # Show summary of all episodes
+        print("\n📊 History Summary:")
+        for i, ep in enumerate(history):
+            status = "✅ ACCEPTED" if ep.accepted else "❌ REJECTED"
+            print(f"   Episode {ep.iteration}: {status} | β={ep.beta:.4f}, γ={ep.gamma:.4f}, μ={ep.mu:.5f} | Peak={ep.peak_position:.1f}")
+        
         return final_state
 
 
@@ -329,6 +363,9 @@ if __name__ == "__main__":
         max_new_tokens=int(config.DEFAULT_MAX_TOKENS)
     )
     chat = ChatHuggingFace(llm=llm)
+
+    print("Temperature:", config.DEFAULT_TEMPERATURE)
+    print("LLM temperature:", llm.temperature)
     
     # Create pipeline
     pipeline = OptimizationPipeline(llm=chat)
@@ -380,5 +417,5 @@ if __name__ == "__main__":
         task_config=task_config,
         initial_params=initial_params,
         expert_comment="Need earlier peak, around day 30",
-        max_iterations=1
+        max_iterations=3
     )

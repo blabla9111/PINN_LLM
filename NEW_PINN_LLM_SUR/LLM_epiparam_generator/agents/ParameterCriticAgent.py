@@ -1,9 +1,12 @@
+# agents/ParameterCriticAgent.py
+
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import PydanticOutputParser
 
 from formats.data_formats import PipelineState, CriticOutput, Episode
+from utils.PromptLogger import PromptLogger
 from utils.RetryParser import RetryParser
-from typing import Dict, List
+from typing import Dict, List, Optional
 from langchain_core.runnables import RunnableParallel, RunnablePassthrough
 from langchain_core.exceptions import OutputParserException
 
@@ -17,7 +20,14 @@ class ParameterCriticAgent:
     Determines if parameters will change forecast according to expert comment
     """
     
-    def __init__(self, llm, max_retries=3, retry_temperature=0.3):
+    def __init__(
+        self,
+        llm,
+        max_retries=3,
+        retry_temperature=0.3,
+        enable_logging: bool = True,
+        log_format: str = "json"  # "json" or "text"
+    ):
         """
         Initialize the critic agent
         
@@ -25,6 +35,8 @@ class ParameterCriticAgent:
             llm: LangChain LLM instance (ChatHuggingFace)
             max_retries: Maximum number of retries for parsing
             retry_temperature: Temperature for retry attempts
+            enable_logging: Whether to enable prompt logging
+            log_format: Log format - "json" or "text"
         """
         self.llm = llm
         self.parser = PydanticOutputParser(pydantic_object=CriticOutput)
@@ -34,6 +46,16 @@ class ParameterCriticAgent:
         self.prompt = self._create_prompt()
         self.history: List[Episode] = []
         self.task_config: Dict = {}
+        
+        # Initialize logger
+        self.enable_logging = enable_logging
+        if enable_logging:
+            if log_format == "json":
+                self.logger = PromptLogger()
+            # else:
+            #     self.logger = SimplePromptLogger()
+        else:
+            self.logger = None
     
     def _create_prompt(self) -> ChatPromptTemplate:
         """Create the prompt template for parameter critique"""
@@ -70,7 +92,7 @@ Return ONLY valid JSON in the exact format specified. Do not include any additio
 **Target:** {target_metric}
 
 **Parameter constraints:**
-- β (infection rate): 0.1 – 3.0
+- β (infection rate): 0.1 – 1.0
 - γ (recovery rate): 0.05 – 1.0
 - μ (mortality rate): 0.001 – 0.1
 
@@ -231,9 +253,14 @@ Return only the JSON object.""")
             # Invoke chain
             result = chain.invoke(prompt_inputs)
             
-            # Extract response text
+            # Extract prompt text and response
+            prompt_text = result["prompt"]
+            if hasattr(prompt_text, 'to_string'):
+                prompt_text_str = prompt_text.to_string()
+            else:
+                prompt_text_str = str(prompt_text)
+            
             response_text = result["response"].content if hasattr(result["response"], 'content') else str(result["response"])
-            prompt_text = result["prompt"].to_string() if hasattr(result["prompt"], 'to_string') else str(result["prompt"])
             
             if self.retry_parser is None:
                 self.retry_parser = RetryParser(
@@ -245,7 +272,7 @@ Return only the JSON object.""")
                 )
             
             # Parse with retry
-            parsed_output = self.retry_parser.parse(response_text, prompt_text)
+            parsed_output = self.retry_parser.parse(response_text, prompt_text_str)
             
             print(f"✅ Decision: {parsed_output.decision.upper()}")
             print(f"💭 Reasoning: {parsed_output.reasoning[:150]}...")
@@ -253,6 +280,41 @@ Return only the JSON object.""")
             
             if parsed_output.issues:
                 print(f"⚠️ Issues: {', '.join(parsed_output.issues)}")
+            
+            # Log prompt and response if logging is enabled
+            if self.enable_logging and self.logger:
+                iteration = len(self.history) + 1
+                
+                context = {
+                    'task_config': self.task_config,
+                    'current_params': {
+                        'beta': current_episode.beta,
+                        'gamma': current_episode.gamma,
+                        'mu': current_episode.mu
+                    },
+                    'current_results': current_results,
+                    'new_params': new_params,
+                    'new_results': new_results,
+                    'changes': changes,
+                    'expert_comment': expert_comment
+                }
+                
+                metadata = {
+                    'iteration': iteration,
+                    'model': getattr(self.llm, 'model_id', 'unknown'),
+                    'temperature': getattr(self.llm, 'temperature', 'unknown'),
+                    'decision': parsed_output.decision,
+                    'confidence': parsed_output.confidence
+                }
+                
+                self.logger.log_critic_prompt(
+                    prompt_text=prompt_text_str,
+                    response_text=response_text,
+                    parsed_output=parsed_output,
+                    context=context,
+                    iteration=iteration,
+                    llm=self.llm 
+                )
             
             # Create episode with decision
             episode = Episode(
@@ -288,6 +350,33 @@ Return only the JSON object.""")
             
         except OutputParserException as e:
             print(f"❌ All retry attempts failed: {e}")
+            
+            # Log the error if logging is enabled
+            if self.enable_logging and self.logger:
+                try:
+                    error_context = {
+                        'error_type': 'OutputParserException',
+                        'error_message': str(e),
+                        'prompt_inputs': {k: str(v)[:500] for k, v in prompt_inputs.items()}
+                    }
+                    # Create a dummy parsed output for logging
+                    dummy_output = CriticOutput(
+                        decision='reject',
+                        reasoning=f"Parser error: {str(e)}",
+                        confidence=0.0,
+                        issues=['Parsing failed']
+                    )
+                    self.logger.log_critic_prompt(
+                        prompt_text=prompt_text_str if 'prompt_text_str' in locals() else "Error getting prompt",
+                        response_text=response_text if 'response_text' in locals() else str(e),
+                        parsed_output=dummy_output,
+                        context=error_context,
+                        iteration=len(self.history) + 1,
+                        metadata={'error': True, 'error_type': 'OutputParserException'}
+                    )
+                except Exception as log_error:
+                    print(f"⚠️ Could not log error: {log_error}")
+            
             # Return rejected episode on failure
             return Episode(
                 beta=new_params['beta'],
@@ -307,6 +396,31 @@ Return only the JSON object.""")
             import traceback
             traceback.print_exc()
             
+            # Log the error if logging is enabled
+            if self.enable_logging and self.logger:
+                try:
+                    error_context = {
+                        'error_type': type(e).__name__,
+                        'error_message': str(e),
+                        'traceback': traceback.format_exc()[:1000]
+                    }
+                    dummy_output = CriticOutput(
+                        decision='reject',
+                        reasoning=f"Critic error: {str(e)}",
+                        confidence=0.0,
+                        issues=['Critical error during evaluation']
+                    )
+                    self.logger.log_critic_prompt(
+                        prompt_text="Error occurred during critique",
+                        response_text=str(e),
+                        parsed_output=dummy_output,
+                        context=error_context,
+                        iteration=len(self.history) + 1,
+                        metadata={'error': True, 'error_type': type(e).__name__}
+                    )
+                except Exception as log_error:
+                    print(f"⚠️ Could not log error: {log_error}")
+            
             return Episode(
                 beta=new_params['beta'],
                 gamma=new_params['gamma'],
@@ -321,6 +435,7 @@ Return only the JSON object.""")
             )
     
     def __call__(self, state: PipelineState) -> PipelineState:
+        """Call the critic agent"""
         episode = self.critique(
             current_episode=state.get('current_episode'),
             new_params=state.get('generated_params'),
