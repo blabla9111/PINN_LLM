@@ -3,6 +3,8 @@ from agents.EpiParamGeneratorAgent import LLMEpiParamGenerator
 from agents.ParameterCriticAgent import ParameterCriticAgent
 
 from typing import Dict
+from agents.BaseLLMClient import BaseLLMClient  
+from typing import Union 
 
 from langgraph.graph import StateGraph, END
 from langgraph.checkpoint.memory import MemorySaver
@@ -168,8 +170,9 @@ class OptimizationPipeline:
     Complete optimization pipeline using LangGraph
     """
     
-    def __init__(self, llm, surrogate_agent=None, initial_conditions=None):
+    def __init__(self, llm: Union[BaseLLMClient, object], surrogate_agent=None, initial_conditions=None):
         self.llm = llm
+        self.is_base_client = isinstance(llm, BaseLLMClient)  
         
         # Создаем суррогатного агента
         if surrogate_agent is None:
@@ -188,8 +191,11 @@ class OptimizationPipeline:
         }
         
         # Create agents
-        self.generator = LLMEpiParamGenerator(llm, enable_logging=True, log_format="json")
-        self.critic = ParameterCriticAgent(llm, enable_logging=True, log_format="json")
+
+        llm_for_agents = self._get_llm_for_agents()
+
+        self.generator = LLMEpiParamGenerator(llm_for_agents, enable_logging=True, log_format="json")
+        self.critic = ParameterCriticAgent(llm_for_agents, enable_logging=True, log_format="json")
         
         # ✅ Pass both generator and critic to history node
         self.history_node = HistoryNode(generator=self.generator, critic=self.critic)
@@ -199,6 +205,42 @@ class OptimizationPipeline:
         
         # Build graph
         self.graph = self._build_graph()
+
+    def _get_llm_for_agents(self):
+        """Get LLM object compatible with agents (langchain format)"""
+        if self.is_base_client:
+            return self._create_langchain_compatible_llm()
+        return self.llm
+    
+    def _create_langchain_compatible_llm(self):
+        """Create wrapper for BaseLLMClient"""
+        from langchain_core.language_models.llms import LLM
+        from typing import Any, List, Mapping, Optional
+        
+        class LLMClientWrapper(LLM):
+            client: BaseLLMClient
+            
+            @property
+            def _llm_type(self) -> str:
+                return "base_llm_client_wrapper"
+            
+            def _call(self, prompt: str, stop: Optional[List[str]] = None, **kwargs) -> str:
+                response = self.client.invoke(prompt)
+                return response.content
+            
+            @property
+            def _identifying_params(self) -> Mapping[str, Any]:
+                return {"model": self.client.model_name}
+            
+            @property
+            def temperature(self):
+                return self.client.temperature
+            
+            @temperature.setter
+            def temperature(self, value):
+                self.client.temperature = value
+        
+        return LLMClientWrapper(client=self.llm)
     
     def _build_graph(self) -> StateGraph:
         """Build LangGraph workflow"""
@@ -353,22 +395,15 @@ class OptimizationPipeline:
 # ============================================
 
 if __name__ == "__main__":
-    from langchain_huggingface import HuggingFaceEndpoint, ChatHuggingFace
+    from agents.LLMFactory import LLMFactory
     
     # Initialize LLM
-    llm = HuggingFaceEndpoint(
-        repo_id=config.DEFAULT_MODEL_NAME,
-        huggingfacehub_api_token=config.HUGGINGFACE_TOKEN,
-        temperature=float(config.DEFAULT_TEMPERATURE),
-        max_new_tokens=int(config.DEFAULT_MAX_TOKENS)
-    )
-    chat = ChatHuggingFace(llm=llm)
+    llm_client = LLMFactory.from_config(config.LLM_CONFIG)
 
-    print("Temperature:", config.DEFAULT_TEMPERATURE)
-    print("LLM temperature:", llm.temperature)
+    print(f"🚀 Using LLM: {llm_client.get_model_info()}")
     
-    # Create pipeline
-    pipeline = OptimizationPipeline(llm=chat)
+    # Create pipeline с BaseLLMClient
+    pipeline = OptimizationPipeline(llm=llm_client)
     try:
         # Get graph with xray to show all details
         graph_png = pipeline.graph.get_graph(xray=True)
@@ -417,5 +452,5 @@ if __name__ == "__main__":
         task_config=task_config,
         initial_params=initial_params,
         expert_comment="Need earlier peak, around day 30",
-        max_iterations=3
+        max_iterations=1
     )

@@ -47,7 +47,7 @@ class EpiParameters(BaseModel):
 @dataclass
 class Episode:
     """Data class for storing parameter episodes"""
-    reasoning: Optional[str] = None  # Added reasoning field
+    
     beta: float
     gamma: float
     mu: float
@@ -58,6 +58,7 @@ class Episode:
     expert_comment: str = None
     accepted: bool = False
     iteration: int = None
+    reasoning: Optional[str] = None  # Added reasoning field
     
     
     def __post_init__(self):

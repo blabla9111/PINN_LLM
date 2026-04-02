@@ -9,6 +9,8 @@ from utils.RetryParser import RetryParser
 
 from formats.data_formats import EpiParameters, Episode, PipelineState
 from utils.PromptLogger import PromptLogger
+from agents.BaseLLMClient import BaseLLMClient, LLMResponse
+
 
 
 class LLMEpiParamGenerator:
@@ -34,7 +36,10 @@ class LLMEpiParamGenerator:
             enable_logging: Whether to enable prompt logging
             log_format: Log format - "json" or "text"
         """
-        self.llm = llm
+        # Сохраняем llm_client
+        self.llm_client = llm if isinstance(llm, BaseLLMClient) else None
+        self.llm = llm  # для обратной совместимости
+
         self.parser = PydanticOutputParser(pydantic_object=output_class)
         self.prompt = self._create_prompt()
         self.history: List[Episode] = []
@@ -53,13 +58,55 @@ class LLMEpiParamGenerator:
         self.retry_parser = None
         if self.retry_parser is None:
             self.retry_parser = RetryParser(
-                llm=self.llm,
+                llm=self._get_llm_for_retry(),
                 parser=self.parser,
                 max_retries=self.max_retries,
                 delay=1,
                 retry_temperature=self.retry_temperature
             )
     
+
+    def _get_llm_for_retry(self):
+        """Получить LLM объект для retry parser"""
+        if self.llm_client:
+            # Для BaseLLMClient нужно адаптировать под интерфейс langchain
+            # Создаем обертку или используем напрямую
+            return self._create_langchain_compatible_llm()
+        return self.llm
+    
+    def _create_langchain_compatible_llm(self):
+        """Создать обертку для BaseLLMClient для совместимости с langchain"""
+        from langchain_core.language_models.llms import LLM
+        from typing import Any, List, Mapping, Optional
+        
+        class LLMClientWrapper(LLM):
+            client: BaseLLMClient
+            
+            @property
+            def _llm_type(self) -> str:
+                return "base_llm_client_wrapper"
+            
+            def _call(self, prompt: str, stop: Optional[List[str]] = None, **kwargs) -> str:
+                response = self.client.invoke(prompt)
+                return response.content
+            
+            @property
+            def _identifying_params(self) -> Mapping[str, Any]:
+                return {"model": self.client.model_name}
+        
+        return LLMClientWrapper(client=self.llm_client)
+    
+    def _call_llm(self, prompt: str) -> str:
+        """Вызов LLM через унифицированный интерфейс"""
+        if self.llm_client:
+            response = self.llm_client.invoke(prompt)
+            return response.content
+        elif hasattr(self.llm, 'invoke'):
+            response = self.llm.invoke(prompt)
+            return response.content if hasattr(response, 'content') else str(response)
+        else:
+            raise ValueError("No valid LLM client available")
+
     def _create_prompt(self) -> ChatPromptTemplate:
         """Create the prompt template for parameter generation"""
         
