@@ -1,6 +1,7 @@
 from formats.data_formats import PipelineState
 from agents.EpiParamGeneratorAgent import LLMEpiParamGenerator
-from agents.ParameterCriticAgent import ParameterCriticAgent
+# from agents.ParameterCriticAgent import ParameterCriticAgent
+from agents.ReActCriticAgent import DeterministicCriticAgent
 
 from typing import Dict
 from agents.BaseLLMClient import BaseLLMClient  
@@ -106,8 +107,9 @@ class HistoryNode:
         
         # ✅ Update critic's history (critic stores episodes with evaluation results)
         if self.critic:
-            self.critic.add_to_history(episode)
-            print(f"✅ Added episode {current_iteration} to critic history")
+            # Проверяем, нет ли уже такого эпизода
+            if not any(e.iteration == episode.iteration for e in self.critic.history):
+                self.critic.add_to_history(episode)
         
         # ✅ Update generator's history (for context in next generations)
         if self.generator:
@@ -195,7 +197,13 @@ class OptimizationPipeline:
         llm_for_agents = self._get_llm_for_agents()
 
         self.generator = LLMEpiParamGenerator(llm_for_agents, enable_logging=True, log_format="json")
-        self.critic = ParameterCriticAgent(llm_for_agents, enable_logging=True, log_format="json")
+        # self.critic = ParameterCriticAgent(llm_for_agents, enable_logging=True, log_format="json")
+        self.critic = DeterministicCriticAgent(
+                                        llm_for_agents, 
+                                        enable_logging=True, 
+                                        log_format="json",
+                                        max_retries=3
+                                    )
         
         # ✅ Pass both generator and critic to history node
         self.history_node = HistoryNode(generator=self.generator, critic=self.critic)
@@ -290,6 +298,7 @@ class OptimizationPipeline:
         from formats.data_formats import Episode
         
         initial_episode = Episode(
+            reasoning=initial_params.get('reasoning', None),
             beta=initial_params.get('beta', 0.0),
             gamma=initial_params.get('gamma', 0.0),
             mu=initial_params.get('mu', 0.0),
@@ -303,8 +312,11 @@ class OptimizationPipeline:
         # ✅ Initialize critic history with initial episode
         # This ensures the generator has context from the start
         if initial_episode:
-            self.critic.add_to_history(initial_episode)
-            self.generator.history = self.critic.history
+            # Очищаем перед инициализацией
+            self.critic.history = []
+            # Присваиваем напрямую, без add_to_history
+            self.critic.history = [initial_episode]
+            self.generator.history = [initial_episode]
             print(f"📚 Initialized history with 1 episode (initial parameters)")
         
         # Initial state with proper structure
@@ -312,7 +324,7 @@ class OptimizationPipeline:
             'task_config': task_config,
             'current_episode': initial_episode,
             'expert_comment': expert_comment,
-            'history': [],  # Will be populated by history node
+            'history': [initial_episode],  # Will be populated by history node
             'generated_params': {
                 'beta': initial_params.get('beta', 0.0),
                 'gamma': initial_params.get('gamma', 0.0),
@@ -325,7 +337,7 @@ class OptimizationPipeline:
             },
             'critic_decision': None,
             'critic_reasoning': None,
-            'suggested_params': None,
+            # 'suggested_params': None,
             'final_episode': None,
             'iteration': 0,
             'max_iterations': max_iterations,
@@ -385,7 +397,7 @@ class OptimizationPipeline:
         print("\n📊 History Summary:")
         for i, ep in enumerate(history):
             status = "✅ ACCEPTED" if ep.accepted else "❌ REJECTED"
-            print(f"   Episode {ep.iteration}: {status} | β={ep.beta:.4f}, γ={ep.gamma:.4f}, μ={ep.mu:.5f} | Peak={ep.peak_position:.1f}")
+            print(f"   Episode {ep.iteration}: {status} | β={ep.beta:.4f}, γ={ep.gamma:.4f}, μ={ep.mu:.5f} | Peak={ep.peak_position:.1f} days, Height={ep.peak_height:.0f}")
         
         return final_state
 
@@ -423,26 +435,26 @@ if __name__ == "__main__":
     
     # Configure task with initial conditions
     task_config = {
-        'description': 'Find parameters to achieve infection peak at day 30',
-        'target_peak': 30,
+        'description': 'Optimization of SIRD model parameters',
+        # 'target_peak': 30,
         'peak_tolerance': 5.0,
         # Начальные условия для симуляции
-        'population': 10_000,
-        'S0': 9_999,
+        'population': 1000,
+        'S0': 999,
         'I0': 1,
         'R0': 0,
         'D0': 0,
-        't_max': 200,
+        't_max': 400,
         'num_points': 1000
     }
     
     # Initial parameters
     initial_params = {
-        'beta': 0.8,
-        'gamma': 0.2,
-        'mu': 0.02,
-        'peak_position': 45.0,
-        'peak_height': 15000,
+        'beta': 0.095,
+        'gamma': 0.0436,
+        'mu': 0.00242,
+        'peak_position': 140,
+        'peak_height': 165,
         'total_deaths': 8500,
         'iteration': 0
     }
@@ -451,6 +463,6 @@ if __name__ == "__main__":
     result = pipeline.run(
         task_config=task_config,
         initial_params=initial_params,
-        expert_comment="Need earlier peak, around day 30",
-        max_iterations=1
+        expert_comment="Need later andlower peak",
+        max_iterations=10
     )

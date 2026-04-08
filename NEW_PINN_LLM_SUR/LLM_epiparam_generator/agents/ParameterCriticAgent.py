@@ -28,7 +28,7 @@ class ParameterCriticAgent:
         max_retries=3,
         retry_temperature=0.3,
         enable_logging: bool = True,
-        log_format: str = "json"  # "json" or "text"
+        log_format: str = "json"  # "json" 
     ):
         """
         Initialize the critic agent
@@ -116,100 +116,83 @@ class ParameterCriticAgent:
         """Create the prompt template for parameter critique"""
         
         prompt_template = ChatPromptTemplate(messages=[
-            ("system", """You are an expert epidemiologist specialized in evaluating SIRD model parameters. Your task is to determine whether new epidemiological parameters will successfully change the forecast according to the expert's comment.
+            ("system", """You are an expert epidemiologist evaluating SIRD model parameters.
 
-**Your role:**
-- Analyze how the new parameters differ from current parameters
-- Evaluate whether the changes align with the expert's intentions
-- Assess if the surrogate model results show the expected changes
-- Decide if parameters are good enough to train PINN
+    **YOUR TASK:** Determine if new parameters achieve the expert's intended direction.
 
-**Key evaluation criteria:**
-1. DIRECTION OF CHANGE: Do the new parameters move in the direction requested by the expert?
-2. MAGNITUDE OF CHANGE: Is the change significant enough to affect the forecast?
-3. SURROGATE RESULTS: Does the surrogate model show the expected changes?
-4. PARAMETER VALIDITY: Are parameters within acceptable ranges?
+    **VALID PARAMETER RANGES:**
+    - β (infection rate): 0.0-1.0
+    - γ (recovery rate): 0.0-1.0  
+    - μ (mortality rate): 0.0-0.1
 
-**Decision types:**
-- ACCEPT: Parameters are good, changes align with expert comment, ready for PINN training
-- REJECT: Parameters are wrong direction or invalid, need completely new generation
-- ADJUST: Parameters are close but need small corrections
+    **CRITICAL RULE - FOLLOW EXACTLY:**
 
-{format_instructions}
+    You MUST look at the expert comment and determine what SINGLE METRIC the expert wants to change.
 
-Return ONLY valid JSON in the exact format specified. Do not include any additional text."""),
+    Then check ONLY that metric. DO NOT mention or evaluate any other metric in your reasoning or decision.
+
+    **Mapping expert words to metrics:**
+    | Expert says | Check ONLY this |
+    |-------------|-----------------|
+    | "later", "earlier", "move peak", "shift peak", "peak position" | Peak position |
+    | "higher", "lower", "peak should be", "increase peak", "decrease peak" | Peak height |
+
+    **Your decision logic:**
+    - ACCEPT → The metric expert asked for moved in the correct direction
+    - REJECT → The metric expert asked for moved in the WRONG direction
+    - ADJUST → Correct direction but wrong magnitude
+
+    **STRICT PROHIBITION:**
+    - NEVER mention peak height if expert asked about position
+    - NEVER mention peak position if expert asked about height
+    - NEVER reject because an unmentioned metric changed
+
+    **Examples of CORRECT behavior:**
+    - Expert: "Move peak later" + Peak: 140→145, Height: 165→150 → ACCEPT (height not mentioned, so ignore it)
+    - Expert: "Peak should be higher" + Height: 165→170, Peak: 140→135 → ACCEPT (position not mentioned, so ignore it)
+    - Expert: "Need later peak" + Peak: 140→145 → ACCEPT
+    - Expert: "Need later peak" + Peak: 140→135 → REJECT
+
+    {format_instructions}
+
+    Return ONLY valid JSON. No additional text."""),
             
-            ("human", """Please evaluate the following epidemiological parameters:
+            ("human", """## Expert Comment
+    {expert_comment}
 
-## 1. Problem Statement
+    ## Baseline
+    - Peak day: {baseline_peak:.1f}
+    - Peak height: {baseline_height:.0f} infected
 
-**Task:** {task_description}
-**Target:** {target_metric}
+    ## New Parameters
+    - Peak day: {new_peak:.1f}
+    - Peak height: {new_height:.0f} infected
 
-**Parameter constraints:**
-- β (infection rate): 0.1 – 1.0
-- γ (recovery rate): 0.05 – 1.0
-- μ (mortality rate): 0.001 – 0.1
+    ## Change
+    - Peak position: {peak_change:+.1f} days ({peak_direction})
+    - Peak height: {height_change:+.0f} infected ({height_direction})
 
----
+    ## Your Analysis
 
-## 2. Current Parameters (Previous Iteration)
+    **Step 1: What metric does the expert want to change?**
+    Look at "{expert_comment}". The expert is asking to change: ___________ (write ONLY "peak position" or "peak height")
 
-- β = {current_beta:.4f}
-- γ = {current_gamma:.4f}
-- μ = {current_mu:.5f}
+    **Step 2: Check ONLY that metric**
+    - If expert wants peak position: Is {new_peak} > {baseline_peak}? (for "later") or < (for "earlier")?
+    - If expert wants peak height: Is {new_height} > {baseline_height}? (for "higher") or < (for "lower")?
 
-**Current results:**
-- Peak position: {current_peak:.1f} days
-- Peak height: {current_height:.0f} infected
-- Total deaths: {current_deaths:.0f}
+    **Step 3: Decision**
+    - If answer to Step 2 is YES → ACCEPT
+    - If answer to Step 2 is NO → REJECT
 
----
+    **Step 4: Output JSON**
 
-## 3. New Parameters (To Evaluate)
-
-- β = {new_beta:.4f}
-- γ = {new_gamma:.4f}
-- μ = {new_mu:.5f}
-
-**New results (from surrogate model):**
-- Peak position: {new_peak:.1f} days
-- Peak height: {new_height:.0f} infected
-- Total deaths: {new_deaths:.0f}
-
----
-
-## 4. Changes Observed
-
-- Peak position change: {peak_change:+.1f} days ({peak_direction})
-- Peak height change: {height_change:+.0f} infected ({height_direction})
-- Deaths change: {deaths_change:+.0f} ({deaths_direction})
-
----
-
-## 5. Expert Comment
-
-{expert_comment}
-
----
-
-## 6. Evaluation Questions
-
-1. Do the new parameters move in the direction requested by the expert?
-2. Is the magnitude of change appropriate?
-3. Does the surrogate model show the expected changes in behavior?
-4. Are the parameters valid and within ranges?
-5. Should these parameters be accepted for PINN training?
-
-Based on your analysis, decide: ACCEPT, REJECT, or ADJUST.
-Provide detailed reasoning and, if adjusting, suggest corrected values.
-
-Return only the JSON object.""")
+    Return JSON only.""")
         ],
-            partial_variables={"format_instructions": self.parser.get_format_instructions()})
+        partial_variables={"format_instructions": self.parser.get_format_instructions()})
         
         return prompt_template
-    
+
     def _format_changes(self, current: Dict, new: Dict) -> Dict:
         """Calculate and format changes between iterations"""
         peak_change = new.get('peak_position', 0) - current.get('peak_position', 0)
@@ -237,7 +220,7 @@ Return only the JSON object.""")
     
     def critique(
         self,
-        current_episode: Episode,
+        baseline_episode: Episode,
         new_params: Dict,
         new_results: Dict,
         expert_comment: str
@@ -260,9 +243,9 @@ Return only the JSON object.""")
         
         # Prepare current results from episode
         current_results = {
-            'peak_position': current_episode.peak_position or 0,
-            'peak_height': current_episode.peak_height or 0,
-            'total_deaths': current_episode.total_deaths or 0
+            'peak_position': baseline_episode.peak_position or 0,
+            'peak_height': baseline_episode.peak_height or 0,
+            'total_deaths': baseline_episode.total_deaths or 0
         }
         
         # Calculate changes
@@ -273,26 +256,31 @@ Return only the JSON object.""")
         target_desc = f"peak at day {target_peak}" if target_peak != 'Not specified' else self.task_config.get('target_metric', 'optimize epidemic parameters')
         
         prompt_inputs = {
-            "task_description": self.task_config.get('description', 'Optimize epidemic parameters'),
-            "target_metric": target_desc,
-            "current_beta": current_episode.beta,
-            "current_gamma": current_episode.gamma,
-            "current_mu": current_episode.mu,
-            "current_peak": current_results['peak_position'],
-            "current_height": current_results['peak_height'],
-            "current_deaths": current_results['total_deaths'],
+            # Baseline parameters (как ожидает промпт)
+            "baseline_beta": baseline_episode.beta,
+            "baseline_gamma": baseline_episode.gamma,
+            "baseline_mu": baseline_episode.mu,
+            "baseline_peak": current_results['peak_position'],
+            "baseline_height": current_results['peak_height'],
+            "baseline_deaths": current_results['total_deaths'],
+            
+            # New parameters
             "new_beta": new_params.get('beta', 0),
             "new_gamma": new_params.get('gamma', 0),
             "new_mu": new_params.get('mu', 0),
             "new_peak": new_results.get('peak_position', 0),
             "new_height": new_results.get('peak_height', 0),
             "new_deaths": new_results.get('total_deaths', 0),
+            
+            # Changes
             "peak_change": changes['peak_change'],
             "peak_direction": changes['peak_direction'],
             "height_change": changes['height_change'],
             "height_direction": changes['height_direction'],
             "deaths_change": changes['deaths_change'],
             "deaths_direction": changes['deaths_direction'],
+            
+            # Expert comment
             "expert_comment": expert_comment if expert_comment else "No expert comment provided."
         }
         
@@ -330,7 +318,7 @@ Return only the JSON object.""")
             parsed_output = self.retry_parser.parse(response_text, prompt_text_str)
             
             print(f"✅ Decision: {parsed_output.decision.upper()}")
-            print(f"💭 Reasoning: {parsed_output.reasoning[:150]}...")
+            print(f"💭 Reasoning: {parsed_output.reasoning}")
             print(f"📊 Confidence: {parsed_output.confidence}")
             
             if parsed_output.issues:
@@ -343,9 +331,9 @@ Return only the JSON object.""")
                 context = {
                     'task_config': self.task_config,
                     'current_params': {
-                        'beta': current_episode.beta,
-                        'gamma': current_episode.gamma,
-                        'mu': current_episode.mu
+                        'beta': baseline_episode.beta,
+                        'gamma': baseline_episode.gamma,
+                        'mu': baseline_episode.mu
                     },
                     'current_results': current_results,
                     'new_params': new_params,
@@ -355,19 +343,17 @@ Return only the JSON object.""")
                 }
                 
                 metadata = {
-                    'iteration': iteration,
-                    'model': getattr(self.llm, 'model_id', 'unknown'),
-                    'temperature': getattr(self.llm, 'temperature', 'unknown'),
                     'decision': parsed_output.decision,
                     'confidence': parsed_output.confidence
                 }
-                
+
                 self.logger.log_critic_prompt(
                     prompt_text=prompt_text_str,
                     response_text=response_text,
                     parsed_output=parsed_output,
                     context=context,
                     iteration=iteration,
+                    metadata=metadata,  # ← добавить
                     llm=self.llm 
                 )
             
@@ -390,16 +376,18 @@ Return only the JSON object.""")
             
             # If decision is adjust and suggestions provided, create adjusted episode
             if parsed_output.decision == 'adjust':
-                suggested_beta = parsed_output.suggested_beta or new_params['beta']
-                suggested_gamma = parsed_output.suggested_gamma or new_params['gamma']
-                suggested_mu = parsed_output.suggested_mu or new_params['mu']
+                # suggested_beta = parsed_output.suggested_beta or new_params['beta']
+                # suggested_gamma = parsed_output.suggested_gamma or new_params['gamma']
+                # suggested_mu = parsed_output.suggested_mu or new_params['mu']
                 
-                print(f"🔄 Suggested adjustments: β={suggested_beta:.4f}, γ={suggested_gamma:.4f}, μ={suggested_mu:.5f}")
+                # print(f"🔄 Suggested adjustments: β={suggested_beta:.4f}, γ={suggested_gamma:.4f}, μ={suggested_mu:.5f}")
                 
-                # Store suggested params in episode for pipeline use
-                episode.suggested_beta = suggested_beta
-                episode.suggested_gamma = suggested_gamma
-                episode.suggested_mu = suggested_mu
+                # # Store suggested params in episode for pipeline use
+                # episode.suggested_beta = suggested_beta
+                # episode.suggested_gamma = suggested_gamma
+                # episode.suggested_mu = suggested_mu
+
+                print(f"🔄 Parameters need adjustment according to critic")
             
             return episode
             
@@ -490,16 +478,27 @@ Return only the JSON object.""")
             )
     
     def __call__(self, state: PipelineState) -> PipelineState:
-        """Call the critic agent"""
+        # baseline_episode - это episode с iteration=0 (начальные параметры)
+        history = state.get('history', [])
+        baseline_episode = None
+        for ep in history:
+            if ep.iteration == 0:
+                baseline_episode = ep
+                break
+        
+        if baseline_episode is None:
+            # Если нет истории, используем current_episode как baseline
+            baseline_episode = state.get('current_episode')
+        
         episode = self.critique(
-            current_episode=state.get('current_episode'),
+            baseline_episode=baseline_episode,  # ← новое
             new_params=state.get('generated_params'),
             new_results=state.get('surrogate_results'),
             expert_comment=state.get('expert_comment')
         )
-
+        
         state['critic_decision'] = 'accept' if episode.accepted else 'reject'
         state['critic_reasoning'] = episode.reasoning
         state['final_episode'] = episode
-
+        
         return state

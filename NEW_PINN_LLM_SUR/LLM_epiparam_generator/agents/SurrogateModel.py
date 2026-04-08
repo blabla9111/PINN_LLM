@@ -25,17 +25,17 @@ class SIRDSurrogate:
         self.D0 = D0
         
     def ode_system(self, t, y, beta, gamma, mu):
-        """Система дифференциальных уравнений SIRD"""
         S, I, R, D = y
-        dSdt = -beta * S * I
-        dIdt = beta * S * I - gamma * I - mu * I
+        N = self.population
+        dSdt = -beta * S * I / N
+        dIdt = beta * S * I / N - gamma * I - mu * I
         dRdt = gamma * I
         dDdt = mu * I
         return [dSdt, dIdt, dRdt, dDdt]
     
-    # ✅ ИСПРАВЛЕНО: убираем лишние параметры, они уже есть в self
+    
     def simulate(self, beta: float, gamma: float, mu: float, 
-                 t_max: int = 200, num_points: int = 1000) -> Dict[str, Any]:
+                 t_max: int = None, num_points: int = 1000) -> Dict[str, Any]:
         """
         Симуляция SIRD модели
         
@@ -162,7 +162,6 @@ class SurrogateAgent:
             'total_recovered': float(result['total_recovered']),
             'total_deaths': float(result['total_deaths']),
             'final_infected': float(result['final_infected']),
-            # Не сохраняем массивы t, I, S, R, D чтобы избежать проблем с сериализацией
         }
     
     def __call__(self, state: Dict) -> Dict:
@@ -239,7 +238,7 @@ class SurrogateAgent:
         
         # Параметры симуляции (с значениями по умолчанию)
         sim_params = state.get('simulation_params', {})
-        t_max = sim_params.get('t_max', 200)
+        t_max = sim_params.get('t_max', 400)
         num_points = sim_params.get('num_points', 1000)
         
         if self.verbose:

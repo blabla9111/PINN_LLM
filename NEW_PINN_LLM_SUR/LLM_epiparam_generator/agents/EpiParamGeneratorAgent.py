@@ -120,18 +120,26 @@ class LLMEpiParamGenerator:
 - Balance exploration and exploitation in the parameter space
 
 **Key epidemiological relationships:**
-- Higher β → earlier and higher infection peak
-- Lower β → later and lower infection peak
-- Higher γ → earlier and lower peak (faster recovery)
-- Lower γ → later and higher peak (slower recovery)
-- Higher μ → lower peak, more deaths
-- Lower μ → higher peak, fewer deaths
+- **R0 = β/(γ+μ) > 1.0** (epidemic will grow, not die out)
 
 **Optimization strategy:**
 1. Start with reasonable parameter ranges
 2. Adjust based on expert feedback
 3. Learn from successful and failed attempts
-4. Consider trade-offs between peak timing, peak height, and mortality
+4. Consider trade-offs between peak timing, peak height           
+
+**FLEXIBLE PARAMETER UPDATES:**
+- In the FIRST 2-3 iterations, change ONLY ONE parameter at a time
+- This creates a clear cause-effect relationship for the critic to learn from
+- You do NOT need to change all parameters (β, γ, μ) in every iteration
+- Changing 1 or 2 parameters is perfectly acceptable
+- The only requirement is that at least ONE parameter changes from the previous iteration
+- Keeping some parameters stable helps isolate the effect of changes
+             
+**MAGNITUDE CONSTRAINT - TINY STEPS ONLY:**
+- Change parameters by MAXIMUM ±0.0005 from the current/baseline value
+- Example: if β = 0.0950, you can change to 0.0945-0.0955 only
+- This ensures very fine-grained optimization and prevents overshooting
 
 {format_instructions}
 
@@ -156,6 +164,20 @@ Return ONLY valid JSON in the exact format specified. Do not include any additio
 
 ## 6. Target Metrics
 {target_metrics}
+                    
+## 7. BALANCE ANALYSIS (CRITICAL!)
+Based on the history above, check if you are FOCUSING ONLY ON ONE METRIC:
+
+
+
+**You cannot change any parameter by more than a range from its current value.**
+
+Current values:
+- β = {current_beta:.4f} (allowed range: {beta_min:.4f} to {beta_max:.4f})
+- γ = {current_gamma:.4f} (allowed range: {gamma_min:.4f} to {gamma_max:.4f})
+- μ = {current_mu:.5f} (allowed range: {mu_min:.5f} to {mu_max:.5f})
+
+**Your generated parameters MUST stay within these ranges.**
 
 Generate new parameters that will bring us closer to the target epidemic scenario described in the Expert Comment.
 Use the history of previous attempts to learn what worked and what didn't.
@@ -316,14 +338,37 @@ Return only the valid JSON object without any additional text.""")
             print("❌ No current episode in state")
             return state
         
+        history_from_state = state.get('history', [])
+
+        if current_episode and hasattr(current_episode, 'beta'):
+            current_beta = current_episode.beta
+            current_gamma = current_episode.gamma
+            current_mu = current_episode.mu
+
+        beta_min = current_beta - 0.001
+        beta_max = current_beta + 0.001
+        gamma_min = current_gamma - 0.001
+        gamma_max = current_gamma + 0.001
+        mu_min = current_mu - 0.0001
+        mu_max = current_mu + 0.0001
+        
         # Prepare prompt inputs
         prompt_inputs = {
             "task_config": self._format_task_config(),
             "current_episode": self._format_current_episode(current_episode),
-            "history": self._format_history(self.history),
+            "history": self._format_history(history_from_state),
             "expert_comment": expert_comment,
-            "stats_summary": self._format_stats_summary(self.history),
-            "target_metrics": self._format_target_metrics()
+            "stats_summary": self._format_stats_summary(history_from_state),
+            "target_metrics": self._format_target_metrics(),
+            "current_beta": current_beta,
+            "current_gamma": current_gamma,
+            "current_mu": current_mu,
+            "beta_min": beta_min,
+            "beta_max": beta_max,
+            "gamma_min": gamma_min,
+            "gamma_max": gamma_max,
+            "mu_min": mu_min,
+            "mu_max": mu_max
         }
         
         # Create chain
@@ -349,7 +394,7 @@ Return only the valid JSON object without any additional text.""")
             parsed_output = self.retry_parser.parse(raw_response, prompt_text_str)
             
             print(f"✅ Generated: β={parsed_output.beta:.4f}, γ={parsed_output.gamma:.4f}, μ={parsed_output.mu:.5f}")
-            print(f"💭 Reasoning: {parsed_output.reasoning[:100]}...")
+            print(f"💭 Reasoning: {parsed_output.reasoning}")
             
             # Log prompt and response if logging is enabled
             if self.enable_logging and self.logger:
@@ -369,13 +414,14 @@ Return only the valid JSON object without any additional text.""")
                 }
                 
                 self.logger.log_generator_prompt(
-                    prompt_text=prompt_text_str,
-                    response_text=raw_response,
-                    parsed_output=parsed_output,
-                    context=context,
-                    iteration=current_iteration,
-                    metadata=metadata
-                )
+                                        prompt_text=prompt_text_str,
+                                        response_text=raw_response,
+                                        parsed_output=parsed_output,
+                                        context=context,
+                                        iteration=current_iteration,
+                                        metadata=metadata,
+                                        llm=self.llm 
+                                    )
             
             # Store generated parameters in state
             state['generated_params'] = {

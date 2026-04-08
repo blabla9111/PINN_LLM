@@ -7,6 +7,8 @@ from datetime import datetime
 from typing import Dict, Any, Optional
 from pathlib import Path
 
+import config
+
 
 class PromptLogger:
     """
@@ -40,47 +42,40 @@ class PromptLogger:
         """Get formatted timestamp"""
         return datetime.now().strftime("%Y%m%d_%H%M%S_%f")[:-3]
 
-    def _extract_llm_metadata(self, llm) -> Dict[str, Any]:
+    def _extract_llm_metadata(self, llm=None) -> Dict[str, Any]:
         """
-        Extract LLM metadata (temperature, model, tokens)
-        Works with:
-        - ChatHuggingFace
-        - HuggingFaceEndpoint
-        - LangChain LLMs
+        Extract LLM metadata directly from config
         """
-        metadata = {}
-
-        try:
-            # ChatHuggingFace wrapper
-            if hasattr(llm, "llm"):
-                inner_llm = llm.llm
-            else:
-                inner_llm = llm
-
-            # Temperature
-            if hasattr(inner_llm, "temperature"):
-                metadata["temperature"] = inner_llm.temperature
-
-            # Max tokens
-            if hasattr(inner_llm, "max_new_tokens"):
-                metadata["max_tokens"] = inner_llm.max_new_tokens
-
-            if hasattr(inner_llm, "max_tokens"):
-                metadata["max_tokens"] = inner_llm.max_tokens
-
-            # Model name
-            if hasattr(inner_llm, "repo_id"):
-                metadata["model"] = inner_llm.repo_id
-
-            if hasattr(inner_llm, "model"):
-                metadata["model"] = inner_llm.model
-
-            if hasattr(inner_llm, "model_name"):
-                metadata["model"] = inner_llm.model_name
-
-        except Exception as e:
-            metadata["metadata_error"] = str(e)
-
+        metadata = {
+            "provider": config.LLM_PROVIDER,
+            "model": config.DEFAULT_MODEL_NAME,
+            "temperature": config.DEFAULT_TEMPERATURE,
+            "max_tokens": config.DEFAULT_MAX_TOKENS,
+        }
+        
+        # Добавляем специфичные параметры в зависимости от провайдера
+        if config.LLM_PROVIDER == "huggingface":
+            metadata["use_api"] = config.HF_USE_API
+            metadata["device"] = config.HF_DEVICE
+            metadata["model"] = config.HF_MODEL
+            metadata["temperature"] = config.HF_TEMPERATURE
+            metadata["max_tokens"] = config.HF_MAX_TOKENS
+            
+        elif config.LLM_PROVIDER == "openai":
+            metadata["model"] = config.OPENAI_MODEL
+            
+        elif config.LLM_PROVIDER == "vllm":
+            metadata["model"] = config.VLLM_MODEL
+            metadata["temperature"] = config.VLLM_TEMPERATURE
+            metadata["max_tokens"] = config.VLLM_MAX_TOKENS
+            metadata["tensor_parallel_size"] = config.VLLM_TENSOR_PARALLEL
+            
+        elif config.LLM_PROVIDER == "lmstudio":
+            metadata["model"] = config.LMSTUDIO_MODEL
+            metadata["temperature"] = config.LMSTUDIO_TEMPERATURE
+            metadata["max_tokens"] = config.LMSTUDIO_MAX_TOKENS
+            metadata["base_url"] = config.LMSTUDIO_BASE_URL
+        
         return metadata
 
     def _save_log(self, data: Dict[str, Any], log_type: str, subdir: Path) -> str:

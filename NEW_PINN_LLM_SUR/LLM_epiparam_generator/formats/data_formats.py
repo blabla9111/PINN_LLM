@@ -2,7 +2,7 @@ import re
 from datetime import datetime
 from typing import Dict, List, Optional, Any, TypedDict, Annotated
 from dataclasses import dataclass, asdict
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator, validator
 
 # ============================================
 # Pydantic models for output parsing
@@ -10,10 +10,11 @@ from pydantic import BaseModel, Field, validator
 
 class EpiParameters(BaseModel):
     """Pydantic model for LLM output validation"""
+    
+    beta: float = Field(description="Infection rate (0.0 - 1.0)")
+    gamma: float = Field(description="Recovery rate (0.00 - 1.0)")
+    mu: float = Field(description="Mortality rate (0.000 - 0.1)")
     reasoning: str = Field(description="Detailed justification for parameter choices")
-    beta: float = Field(description="Infection rate (0.1 - 1.0)")
-    gamma: float = Field(description="Recovery rate (0.05 - 1.0)")
-    mu: float = Field(description="Mortality rate (0.001 - 0.1)")
     # expected_peak_position: float = Field(description="Expected peak position in days")
     # expected_peak_height: float = Field(description="Expected peak height (number infected)")
     # expected_total_deaths: float = Field(description="Expected total deaths")
@@ -21,20 +22,20 @@ class EpiParameters(BaseModel):
     
     @validator('beta')
     def beta_validator(cls, v):
-        if not (0.1 <= v <= 3.0):
-            raise ValueError(f'beta must be between 0.1 and 3.0, got {v}')
+        if not (0.0 <= v <= 3.0):
+            raise ValueError(f'beta must be between 0.0 and 1.0, got {v}')
         return v
     
     @validator('gamma')
     def gamma_validator(cls, v):
-        if not (0.05 <= v <= 1.0):
-            raise ValueError(f'gamma must be between 0.05 and 1.0, got {v}')
+        if not (0.0 <= v <= 1.0):
+            raise ValueError(f'gamma must be between 0.00 and 1.0, got {v}')
         return v
     
     @validator('mu')
     def mu_validator(cls, v):
-        if not (0.001 <= v <= 0.1):
-            raise ValueError(f'mu must be between 0.001 and 0.1, got {v}')
+        if not (0.00 <= v <= 0.1):
+            raise ValueError(f'mu must be between 0.000 and 0.1, got {v}')
         return v
     
     @validator('confidence')
@@ -47,10 +48,11 @@ class EpiParameters(BaseModel):
 @dataclass
 class Episode:
     """Data class for storing parameter episodes"""
-    
+     
     beta: float
     gamma: float
     mu: float
+    reasoning: Optional[str]
     peak_position: float = None
     peak_height: float = None
     total_deaths: float = None
@@ -58,7 +60,7 @@ class Episode:
     expert_comment: str = None
     accepted: bool = False
     iteration: int = None
-    reasoning: Optional[str] = None  # Added reasoning field
+    
     
     
     def __post_init__(self):
@@ -90,18 +92,28 @@ class CriticOutput(BaseModel):
     """Pydantic model for critic agent output"""
     reasoning: str = Field(description="Detailed reasoning for the decision")
     decision: str = Field(description="Decision: accept, reject, or adjust. Write with a lowercase letter")
-    suggested_beta: Optional[float] = Field(default=None)
-    suggested_gamma: Optional[float] = Field(default=None)
-    suggested_mu: Optional[float] = Field(default=None)
-    confidence: str = Field(description="Confidence level: high, medium, low")
+    # suggested_beta: Optional[float] = Field(default=None)
+    # suggested_gamma: Optional[float] = Field(default=None)
+    # suggested_mu: Optional[float] = Field(default=None)
+    confidence: str = Field(default="medium", description="Confidence level: high, medium, low")
     issues: List[str] = Field(default_factory=list)
     
-    @validator('decision')
+    @field_validator('decision', mode='before')
+    @classmethod
     def decision_validator(cls, v):
+        """Convert decision to lowercase and validate"""
+        if isinstance(v, str):
+            v = v.lower().strip()
         if v not in ['accept', 'reject', 'adjust']:
             raise ValueError(f'decision must be accept/reject/adjust, got {v}')
         return v
 
+class ExpertIntent(BaseModel):
+            cares_about_position: bool = Field(description="Whether expert cares about peak position")
+            position_direction: str = Field(description="Expected direction: 'later', 'earlier', or 'any'")
+            cares_about_height: bool = Field(description="Whether expert cares about peak height")
+            height_direction: str = Field(description="Expected direction: 'higher', 'lower', or 'any'")
+            reasoning: str = Field(description="Brief parsing reasoning")
 
 # class GraphState:
 #     """State for LangGraph workflow"""
@@ -143,7 +155,7 @@ class PipelineState(TypedDict):
     # Critic stage
     critic_decision: Optional[str]
     critic_reasoning: Optional[str]
-    suggested_params: Optional[Dict]
+    # suggested_params: Optional[Dict]
     
     # Final output
     final_episode: Optional[Episode] 
