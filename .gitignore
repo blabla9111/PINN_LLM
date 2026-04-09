@@ -26,3 +26,6 @@ runs/
 *.pth
 results/saved_losses
 archive/
+logs/
+PINN_comparison_results/
+PINN_agent_results/

@@ -136,10 +136,6 @@ class LLMEpiParamGenerator:
 - The only requirement is that at least ONE parameter changes from the previous iteration
 - Keeping some parameters stable helps isolate the effect of changes
              
-**MAGNITUDE CONSTRAINT - TINY STEPS ONLY:**
-- Change parameters by MAXIMUM ±0.0005 from the current/baseline value
-- Example: if β = 0.0950, you can change to 0.0945-0.0955 only
-- This ensures very fine-grained optimization and prevents overshooting
 
 {format_instructions}
 
@@ -170,14 +166,7 @@ Based on the history above, check if you are FOCUSING ONLY ON ONE METRIC:
 
 
 
-**You cannot change any parameter by more than a range from its current value.**
 
-Current values:
-- β = {current_beta:.4f} (allowed range: {beta_min:.4f} to {beta_max:.4f})
-- γ = {current_gamma:.4f} (allowed range: {gamma_min:.4f} to {gamma_max:.4f})
-- μ = {current_mu:.5f} (allowed range: {mu_min:.5f} to {mu_max:.5f})
-
-**Your generated parameters MUST stay within these ranges.**
 
 Generate new parameters that will bring us closer to the target epidemic scenario described in the Expert Comment.
 Use the history of previous attempts to learn what worked and what didn't.
@@ -345,12 +334,12 @@ Return only the valid JSON object without any additional text.""")
             current_gamma = current_episode.gamma
             current_mu = current_episode.mu
 
-        beta_min = current_beta - 0.001
-        beta_max = current_beta + 0.001
-        gamma_min = current_gamma - 0.001
-        gamma_max = current_gamma + 0.001
-        mu_min = current_mu - 0.0001
-        mu_max = current_mu + 0.0001
+        beta_min = current_beta - 0.01
+        beta_max = current_beta + 0.01
+        gamma_min = current_gamma - 0.01
+        gamma_max = current_gamma + 0.01
+        mu_min = current_mu - 0.001
+        mu_max = current_mu + 0.001
         
         # Prepare prompt inputs
         prompt_inputs = {

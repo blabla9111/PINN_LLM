@@ -159,6 +159,8 @@ class PipelineState(TypedDict):
     
     # Final output
     final_episode: Optional[Episode] 
+
+    pinn_results: Optional[Dict]
     
     # Control
     iteration: int
