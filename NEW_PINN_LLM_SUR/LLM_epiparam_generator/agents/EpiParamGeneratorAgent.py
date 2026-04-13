@@ -143,8 +143,20 @@ Return ONLY valid JSON in the exact format specified. Do not include any additio
 
             ("human", """Please generate new epidemiological parameters for the SIRD model based on the following information:
 
+## 0. Parameter Sensitivity Map (CRITICAL - read first!)
+{sensitivity_map}
+
 ## 1. Task Configuration
 {task_config}
+             
+**🚨 CRITICAL: PARAMETER BOUNDS (READ FIRST)**
+
+You MUST generate parameters within these EXACT bounds:
+- β (infection rate): between {beta_min:.5f} and {beta_max:.5f}
+- γ (recovery rate): between {gamma_min:.5f} and {gamma_max:.5f}
+- μ (mortality rate): between {mu_min:.6f} and {mu_max:.6f}
+
+**DO NOT suggest values outside these ranges! They will be rejected.**
 
 ## 2. Current Episode (Previous Attempt)
 {current_episode}
@@ -291,6 +303,56 @@ Return only the valid JSON object without any additional text.""")
         
         return metrics
     
+    def _format_sensitivity_map(self, sensitivity_map: dict) -> str:
+        """Форматирует карту чувствительности для вставки в промпт"""
+        
+        if not sensitivity_map:
+            return "No sensitivity map available."
+        
+        baseline = sensitivity_map['baseline']
+        
+        text = f"""
+    **PARAMETER SENSITIVITY MAP (computed around your baseline):**
+
+    Baseline: β={baseline['beta']:.4f}, γ={baseline['gamma']:.4f}, μ={baseline['mu']:.5f}
+    Baseline peak: position={baseline['peak_position']:.1f} days, height={baseline['peak_height']:.0f} infected
+
+    **How parameters affect the peak:**
+
+    ┌──────────┬─────────────┬──────────────────────┬─────────────────────┐
+    │ Parameter│ Change      │ Peak position Δ      │ Peak height Δ       │
+    ├──────────┼─────────────┼──────────────────────┼─────────────────────┤
+    """
+        
+        # Beta
+        for i, var in enumerate(sensitivity_map['beta']['variations']):
+            res = sensitivity_map['beta']['results'][i]
+            text += f"│ β        │ {var:+.0%}        │ {res['position_delta']:+.1f} days             │ {res['height_delta']:+.0f} infected          │\n"
+        
+        text += "├──────────┼─────────────┼──────────────────────┼─────────────────────┤\n"
+        
+        # Gamma
+        for i, var in enumerate(sensitivity_map['gamma']['variations']):
+            res = sensitivity_map['gamma']['results'][i]
+            text += f"│ γ        │ {var:+.0%}        │ {res['position_delta']:+.1f} days             │ {res['height_delta']:+.0f} infected          │\n"
+        
+        text += "├──────────┼─────────────┼──────────────────────┼─────────────────────┤\n"
+        
+        # Mu
+        for i, var in enumerate(sensitivity_map['mu']['variations']):
+            res = sensitivity_map['mu']['results'][i]
+            text += f"│ μ        │ {var:+.0%}        │ {res['position_delta']:+.1f} days             │ {res['height_delta']:+.0f} infected          │\n"
+        
+        text += """└──────────┴─────────────┴──────────────────────┴─────────────────────┘
+
+    
+
+    **How to use this map:**
+    To achieve desired peak changes, combine parameter adjustments proportionally.
+    """
+        
+        return text
+    
     def set_task_config(self, config: Dict):
         """Set the task configuration"""
         self.task_config = config
@@ -334,12 +396,19 @@ Return only the valid JSON object without any additional text.""")
             current_gamma = current_episode.gamma
             current_mu = current_episode.mu
 
-        beta_min = current_beta - 0.01
-        beta_max = current_beta + 0.01
-        gamma_min = current_gamma - 0.01
-        gamma_max = current_gamma + 0.01
-        mu_min = current_mu - 0.001
-        mu_max = current_mu + 0.001
+        # current_beta = current_episode.beta
+        # current_gamma = current_episode.gamma
+        # current_mu = current_episode.mu
+        
+        beta_min = current_beta - 0.001
+        beta_max = current_beta + 0.001
+        gamma_min = current_gamma - 0.001
+        gamma_max = current_gamma + 0.001
+        mu_min = current_mu - 0.0001
+        mu_max = current_mu + 0.0001
+
+        sensitivity_map = state.get('sensitivity_map', {})
+        sensitivity_text = self._format_sensitivity_map(sensitivity_map)
         
         # Prepare prompt inputs
         prompt_inputs = {
@@ -357,7 +426,8 @@ Return only the valid JSON object without any additional text.""")
             "gamma_min": gamma_min,
             "gamma_max": gamma_max,
             "mu_min": mu_min,
-            "mu_max": mu_max
+            "mu_max": mu_max,
+            "sensitivity_map": sensitivity_text
         }
         
         # Create chain

@@ -30,6 +30,270 @@ from langgraph.checkpoint.memory import MemorySaver
 import config
 
 
+class SensitivityNode:
+    """Node for computing parameter sensitivity map"""
+    
+    def __init__(self, surrogate_agent):
+        self.surrogate_agent = surrogate_agent
+    
+    def __call__(self, state: PipelineState) -> PipelineState:
+        print("=" * 80)
+        print("📊 SENSITIVITY MAP COMPUTATION (EXTENDED)")
+        print("=" * 80)
+        
+        # Получаем baseline параметры
+        task_config = state.get('task_config', {})
+        sim_params = state.get('simulation_params', {})
+        
+        beta = task_config.get('beta', 0.1)
+        gamma = task_config.get('gamma', 0.05)
+        mu = task_config.get('mu', 0.001)
+        
+        population = task_config.get('population', 10000)
+        S0 = task_config.get('S0', 9999)
+        I0 = task_config.get('I0', 1)
+        R0 = task_config.get('R0', 0)
+        D0 = task_config.get('D0', 0)
+        
+        t_max = sim_params.get('t_max', 200)
+        num_points = sim_params.get('num_points', 1000)
+        
+        print(f"\n📍 BASELINE PARAMETERS:")
+        print(f"   β = {beta:.6f}")
+        print(f"   γ = {gamma:.6f}")
+        print(f"   μ = {mu:.6f}")
+        print(f"   Population: {population:,}, S0={S0:,}, I0={I0:,}")
+        
+        # Расширенные вариации
+        variations_single = [-0.02, -0.01, 0.01, 0.02]   # 6 вариаций
+        
+        sensitivity = {
+            'beta': {'variations': [], 'results': []},
+            'gamma': {'variations': [], 'results': []},
+            'mu': {'variations': [], 'results': []},
+            'combined': {'variations': [], 'results': []},  # комбинированные изменения
+            'baseline': {}
+        }
+        
+        # Считаем baseline
+        print("\n   Computing baseline...")
+        baseline_result = self._simulate(
+            beta, gamma, mu, 
+            population, S0, I0, R0, D0,
+            t_max, num_points
+        )
+        base_pos = baseline_result['peak_position']
+        base_h = baseline_result['peak_height']
+        
+        sensitivity['baseline'] = {
+            'beta': beta, 'gamma': gamma, 'mu': mu,
+            'peak_position': base_pos,
+            'peak_height': base_h
+        }
+        print(f"   Baseline: peak={base_pos:.1f}, height={base_h:.0f}")
+        
+        # ============================================================
+        # 1. ОДИНОЧНЫЕ ВАРИАЦИИ (расширенные)
+        # ============================================================
+        
+        # Beta sensitivity
+        print("\n   Computing beta sensitivity (6 variations)...")
+        for var in variations_single:
+            beta_test = beta * (1 + var)
+            result = self._simulate(
+                beta_test, gamma, mu,
+                population, S0, I0, R0, D0,
+                t_max, num_points
+            )
+            if result:
+                sensitivity['beta']['variations'].append(var)
+                sensitivity['beta']['results'].append({
+                    'beta': beta_test,
+                    'gamma': gamma,
+                    'mu': mu,
+                    'peak_position': result['peak_position'],
+                    'peak_height': result['peak_height'],
+                    'position_delta': result['peak_position'] - base_pos,
+                    'height_delta': result['peak_height'] - base_h
+                })
+        
+        # Gamma sensitivity
+        print("\n   Computing gamma sensitivity (6 variations)...")
+        for var in variations_single:
+            gamma_test = gamma * (1 + var)
+            result = self._simulate(
+                beta, gamma_test, mu,
+                population, S0, I0, R0, D0,
+                t_max, num_points
+            )
+            if result:
+                sensitivity['gamma']['variations'].append(var)
+                sensitivity['gamma']['results'].append({
+                    'beta': beta,
+                    'gamma': gamma_test,
+                    'mu': mu,
+                    'peak_position': result['peak_position'],
+                    'peak_height': result['peak_height'],
+                    'position_delta': result['peak_position'] - base_pos,
+                    'height_delta': result['peak_height'] - base_h
+                })
+        
+        # Mu sensitivity
+        print("\n   Computing mu sensitivity (6 variations)...")
+        for var in variations_single:
+            mu_test = mu * (1 + var) if mu > 0 else 0.001 * (1 + var)
+            result = self._simulate(
+                beta, gamma, mu_test,
+                population, S0, I0, R0, D0,
+                t_max, num_points
+            )
+            if result:
+                sensitivity['mu']['variations'].append(var)
+                sensitivity['mu']['results'].append({
+                    'beta': beta,
+                    'gamma': gamma,
+                    'mu': mu_test,
+                    'peak_position': result['peak_position'],
+                    'peak_height': result['peak_height'],
+                    'position_delta': result['peak_position'] - base_pos,
+                    'height_delta': result['peak_height'] - base_h
+                })
+        
+        # ============================================================
+        # 2. КОМБИНИРОВАННЫЕ ВАРИАЦИИ
+        # ============================================================
+        print("\n   Computing combined variations...")
+        
+        # Полезные комбинации
+        combinations = [
+            # (beta_var, gamma_var, mu_var, description)
+            (+0.05, -0.05, 0.0, "β↑ γ↓"),
+            (-0.05, +0.05, 0.0, "β↓ γ↑"),
+            (+0.05, +0.05, 0.0, "β↑ γ↑"),
+            (-0.05, -0.05, 0.0, "β↓ γ↓"),
+            (+0.10, -0.10, 0.0, "β↑↑ γ↓↓"),
+            (-0.10, +0.10, 0.0, "β↓↓ γ↑↑"),
+            (+0.05, 0.0, +0.05, "β↑ μ↑"),
+            (-0.05, 0.0, -0.05, "β↓ μ↓"),
+        ]
+        
+        for beta_var, gamma_var, mu_var, desc in combinations:
+            beta_test = beta * (1 + beta_var)
+            gamma_test = gamma * (1 + gamma_var)
+            mu_test = mu * (1 + mu_var) if mu > 0 else 0.001
+            
+            result = self._simulate(
+                beta_test, gamma_test, mu_test,
+                population, S0, I0, R0, D0,
+                t_max, num_points
+            )
+            if result:
+                sensitivity['combined']['variations'].append(desc)
+                sensitivity['combined']['results'].append({
+                    'beta': beta_test,
+                    'gamma': gamma_test,
+                    'mu': mu_test,
+                    'peak_position': result['peak_position'],
+                    'peak_height': result['peak_height'],
+                    'position_delta': result['peak_position'] - base_pos,
+                    'height_delta': result['peak_height'] - base_h
+                })
+                print(f"      {desc}: peak {result['peak_position']:.1f} (Δ{result['peak_position']-base_pos:+.1f}), "
+                      f"height {result['peak_height']:.0f} (Δ{result['peak_height']-base_h:+.0f})")
+        
+        # ============================================================
+        # КРАСИВЫЙ ВЫВОД
+        # ============================================================
+        print("\n" + "=" * 80)
+        print("📈 EXTENDED SENSITIVITY MAP")
+        print("=" * 80)
+        print(f"\n   BASELINE: position = {base_pos:.1f} days, height = {base_h:.0f} infected")
+        print(f"   Parameters: β={beta:.5f}, γ={gamma:.5f}, μ={mu:.6f}")
+        
+        # Таблица для Beta
+        print("\n   " + "─" * 75)
+        print("   β (infection rate) sensitivity:")
+        print("   " + "─" * 75)
+        print(f"   {'Change':<10} {'β value':<12} {'Peak day':<12} {'Δ day':<12} {'Peak height':<14} {'Δ height':<12} {'Δh/Δβ':<10}")
+        print("   " + "─" * 75)
+        for i, var in enumerate(sensitivity['beta']['variations']):
+            res = sensitivity['beta']['results'][i]
+            sensitivity_ratio = res['height_delta'] / (res['beta'] - beta) if res['beta'] != beta else 0
+            print(f"   {var:+.0%}        {res['beta']:.5f}      {res['peak_position']:.1f}         {res['position_delta']:+.1f}         {res['peak_height']:.0f}           {res['height_delta']:+.0f}        {sensitivity_ratio:.0f}")
+        
+        # Таблица для Gamma
+        print("\n   " + "─" * 75)
+        print("   γ (recovery rate) sensitivity:")
+        print("   " + "─" * 75)
+        print(f"   {'Change':<10} {'γ value':<12} {'Peak day':<12} {'Δ day':<12} {'Peak height':<14} {'Δ height':<12} {'Δh/Δγ':<10}")
+        print("   " + "─" * 75)
+        for i, var in enumerate(sensitivity['gamma']['variations']):
+            res = sensitivity['gamma']['results'][i]
+            sensitivity_ratio = res['height_delta'] / (res['gamma'] - gamma) if res['gamma'] != gamma else 0
+            print(f"   {var:+.0%}        {res['gamma']:.5f}      {res['peak_position']:.1f}         {res['position_delta']:+.1f}         {res['peak_height']:.0f}           {res['height_delta']:+.0f}        {sensitivity_ratio:.0f}")
+        
+        # Таблица для комбинированных
+        print("\n   " + "─" * 75)
+        print("   COMBINED variations:")
+        print("   " + "─" * 75)
+        print(f"   {'Pattern':<12} {'Peak day':<12} {'Δ day':<12} {'Peak height':<14} {'Δ height':<12}")
+        print("   " + "─" * 75)
+        for i, desc in enumerate(sensitivity['combined']['variations']):
+            res = sensitivity['combined']['results'][i]
+            print(f"   {desc:<12} {res['peak_position']:.1f}         {res['position_delta']:+.1f}         {res['peak_height']:.0f}           {res['height_delta']:+.0f}")
+        
+        # ============================================================
+        # ИНТЕРПРЕТАЦИЯ
+        # ============================================================
+        print("\n   " + "─" * 75)
+        print("   📋 INTERPRETATION & RULES OF THUMB:")
+        print("   " + "─" * 75)
+        
+        # Анализ чувствительности
+        beta_sensitivity_pos = sum([r['position_delta'] for r in sensitivity['beta']['results']]) / len(sensitivity['beta']['results'])
+        beta_sensitivity_h = sum([r['height_delta'] for r in sensitivity['beta']['results']]) / len(sensitivity['beta']['results'])
+        gamma_sensitivity_pos = sum([r['position_delta'] for r in sensitivity['gamma']['results']]) / len(sensitivity['gamma']['results'])
+        gamma_sensitivity_h = sum([r['height_delta'] for r in sensitivity['gamma']['results']]) / len(sensitivity['gamma']['results'])
+        
+        print(f"\n   • β +10% → peak moves {'EARLIER' if beta_sensitivity_pos < 0 else 'LATER'} by {abs(beta_sensitivity_pos*2):.1f} days, height {'INCREASES' if beta_sensitivity_h > 0 else 'DECREASES'} by {abs(beta_sensitivity_h*2):.0f}")
+        print(f"   • γ +10% → peak moves {'EARLIER' if gamma_sensitivity_pos < 0 else 'LATER'} by {abs(gamma_sensitivity_pos*2):.1f} days, height {'INCREASES' if gamma_sensitivity_h > 0 else 'DECREASES'} by {abs(gamma_sensitivity_h*2):.0f}")
+        print(f"   • μ has minimal effect on peak (< 1 day), mainly affects total deaths")
+        
+    
+        
+        # Сохраняем в state
+        state['sensitivity_map'] = sensitivity
+        
+        print("\n" + "=" * 80)
+        print("✅ Extended sensitivity map computed and saved to state")
+        print("=" * 80)
+        
+        return state
+    
+    def _simulate(self, beta, gamma, mu, population, S0, I0, R0, D0, t_max, num_points):
+        """Вспомогательный метод для симуляции"""
+        temp_state = {
+            'generated_params': {'beta': beta, 'gamma': gamma, 'mu': mu},
+            'initial_conditions': {
+                'population': population, 'S0': S0, 'I0': I0, 'R0': R0, 'D0': D0
+            },
+            'simulation_params': {'t_max': t_max, 'num_points': num_points}
+        }
+        result_state = self.surrogate_agent(temp_state)
+        return result_state.get('surrogate_results', {})
+    
+    def _simulate(self, beta, gamma, mu, population, S0, I0, R0, D0, t_max, num_points):
+        """Вспомогательный метод для симуляции"""
+        temp_state = {
+            'generated_params': {'beta': beta, 'gamma': gamma, 'mu': mu},
+            'initial_conditions': {
+                'population': population, 'S0': S0, 'I0': I0, 'R0': R0, 'D0': D0
+            },
+            'simulation_params': {'t_max': t_max, 'num_points': num_points}
+        }
+        result_state = self.surrogate_agent(temp_state)
+        return result_state.get('surrogate_results', {})
+
 class SurrogateNode:
     """Node for surrogate model evaluation"""
     
@@ -187,20 +451,23 @@ class PINNNode:
     
     def __init__(self, pinn_agent: PINNAgent):
         self.pinn_agent = pinn_agent
+        self._original_n_epoch = pinn_agent.n_epoch  # запоминаем оригинал
     
     def __call__(self, state: PipelineState) -> PipelineState:
-        """Execute PINN agent"""
         print("=" * 60)
         print("🧠 PINN NODE")
         print("=" * 60)
         
-        # Проверяем, нужно ли запускать PINN
-        # Запускаем только если параметры были приняты критиком
         decision = state.get('critic_decision', 'reject')
         
         if decision == 'accept':
-            print("✅ Parameters accepted, running PINN...")
+            print("✅ Parameters accepted, running PINN (validation mode: 1 epoch)...")
+            
+            # ✅ Временно ставим 1 эпоху
+            self.pinn_agent.n_epoch = 1
             state = self.pinn_agent(state)
+            # ✅ Возвращаем обратно
+            self.pinn_agent.n_epoch = self._original_n_epoch
         else:
             print(f"⏭️ Parameters rejected, skipping PINN")
             state['pinn_results'] = {
@@ -227,7 +494,8 @@ class OptimizationPipeline:
         surrogate_agent=None, 
         initial_conditions=None,
         pinn_agent: Optional[PINNAgent] = None,  # Новый параметр
-        use_pinn: bool = True  # Флаг для включения/отключения PINN
+        use_pinn: bool = True,  # Флаг для включения/отключения PINN
+        # critic_mode: str = "primary"
     ):
         self.llm = llm
         self.is_base_client = isinstance(llm, BaseLLMClient)
@@ -276,7 +544,8 @@ class OptimizationPipeline:
                                         llm_for_agents, 
                                         enable_logging=True, 
                                         log_format="json",
-                                        max_retries=3
+                                        max_retries=3,
+                                        # decision_mode=critic_mode
                                     )
         
         # Pass both generator and critic to history node
@@ -328,8 +597,11 @@ class OptimizationPipeline:
         """Build LangGraph workflow - PINN runs after history, then ends"""
         
         workflow = StateGraph(PipelineState)
+
+        sensitivity_node = SensitivityNode(self.surrogate_agent)
         
         # Add nodes
+        workflow.add_node("sensitivity", sensitivity_node)
         workflow.add_node("generate", self.generator.generate)
         workflow.add_node("surrogate", self.surrogate_node)
         workflow.add_node("critic", self.critic)
@@ -338,8 +610,9 @@ class OptimizationPipeline:
         if self.use_pinn and self.pinn_node:
             workflow.add_node("pinn", self.pinn_node)
         
-        # Add edges
-        workflow.set_entry_point("generate")
+        # Add edges 
+        workflow.set_entry_point("sensitivity")
+        workflow.add_edge("sensitivity", "generate")
         workflow.add_edge("generate", "surrogate")
         workflow.add_edge("surrogate", "critic")
         workflow.add_edge("critic", "history")
@@ -399,8 +672,8 @@ class OptimizationPipeline:
     expert_comment: str = None,
     max_iterations: int = 10,
     population: int = 10000,
-    S0: int = 9999,
-    I0: int = 1,
+    S0: int = 9900,
+    I0: int = 100,
     R0: int = 0,
     D0: int = 0,
     t_max: int = 200,
@@ -504,6 +777,9 @@ class OptimizationPipeline:
         # ============================================================
         task_config = {
             'description': f'Optimization from baseline: β={beta}, γ={gamma}, μ={mu}',
+            'beta': beta,          
+            'gamma': gamma,       
+            'mu': mu,               
             'baseline_peak': baseline_peak_position,
             'baseline_height': baseline_peak_height,
             'baseline_deaths': baseline_total_deaths,
@@ -1112,7 +1388,8 @@ def main():
     pipeline = OptimizationPipeline(
         llm=llm_client,
         pinn_agent=pinn_agent,
-        use_pinn=True
+        use_pinn=True,
+        # critic_mode="both"
     )
     print("   ✅ Pipeline created")
     
@@ -1132,7 +1409,10 @@ def main():
     baseline_gamma = 0.034483
     baseline_mu = 0.005296
     
-    expert_comment = "Need higher peak"
+    # expert_comment = "Need higher peak"
+    # expert_comment = "Mask mandate will be introduced"
+    expert_comment = "The peak should be 10,000 higher and later"
+    # expert_comment = "First move the peak LATER"
 
     print("\n" + "-" * 60)
     print("📌 STEP 6: Test parameters")
@@ -1153,10 +1433,10 @@ def main():
         gamma=baseline_gamma,
         mu=baseline_mu,
         expert_comment=expert_comment,
-        max_iterations=5,
-        population=1000,
-        S0=999,
-        I0=1,
+        max_iterations=10,
+        population=10000,
+        S0=9900,
+        I0=100,
         t_max=400,
         pinn_data=pinn_data
     )

@@ -1,6 +1,6 @@
 import re
 from datetime import datetime
-from typing import Dict, List, Optional, Any, TypedDict, Annotated
+from typing import Dict, List, Optional, Any, TypedDict, Annotated, Literal
 from dataclasses import dataclass, asdict
 from pydantic import BaseModel, Field, field_validator, validator
 
@@ -113,6 +113,7 @@ class ExpertIntent(BaseModel):
             position_direction: str = Field(description="Expected direction: 'later', 'earlier', or 'any'")
             cares_about_height: bool = Field(description="Whether expert cares about peak height")
             height_direction: str = Field(description="Expected direction: 'higher', 'lower', or 'any'")
+            primary_metric: Literal["position", "height", "both"] = "both"
             reasoning: str = Field(description="Brief parsing reasoning")
 
 # class GraphState:

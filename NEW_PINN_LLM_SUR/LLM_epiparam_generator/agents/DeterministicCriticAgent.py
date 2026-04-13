@@ -1,11 +1,11 @@
-# agents/ReActCriticAgent.py
+# agents/DeterministicCriticAgent.py
 
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import PydanticOutputParser
 
 from formats.data_formats import PipelineState, Episode, ExpertIntent
 from utils.PromptLogger import PromptLogger
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from agents.BaseLLMClient import BaseLLMClient
 import json
@@ -13,8 +13,8 @@ import re
 
 class DeterministicCriticAgent:
     """
-    Simplified critic agent - LLM parses expert comment, deterministic tools check changes.
-    No LangChain agents - direct and reliable.
+    Universal critic agent.
+    Parses ANY expert comment → expected peak change → checks if achieved.
     """
     
     def __init__(
@@ -22,7 +22,9 @@ class DeterministicCriticAgent:
         llm,
         max_retries=3,
         enable_logging: bool = True,
-        log_format: str = "json"
+        log_format: str = "json",
+        position_threshold: float = 0.0,
+        height_threshold_relative: float = 0.0,
     ):
         self.llm_client = llm if isinstance(llm, BaseLLMClient) else None
         self.llm = llm
@@ -30,144 +32,168 @@ class DeterministicCriticAgent:
         self.history: List[Episode] = []
         self.task_config: Dict = {}
         
+        self.position_threshold = position_threshold
+        self.height_threshold_relative = height_threshold_relative
+        
         self.enable_logging = enable_logging
-        if enable_logging and log_format == "json":
-            self.logger = PromptLogger()
-        else:
-            self.logger = None
-        
-        
+        self.logger = PromptLogger() if (enable_logging and log_format == "json") else None
         
         self.intent_parser = PydanticOutputParser(pydantic_object=ExpertIntent)
-        
-        # ПОТОМ создаем промпт, который использует парсер
         self.intent_prompt = self._create_intent_prompt()
     
     def _create_intent_prompt(self) -> ChatPromptTemplate:
-        """Create prompt for parsing expert intent"""
+        """Universal prompt: extract expected peak change from ANY comment."""
         
         template = ChatPromptTemplate.from_messages([
-            ("system", """Parse the expert comment to extract requirements.
+            ("system", """You are an epidemiologist. Analyze the expert comment and determine the EXPECTED CHANGE in the INFECTED (I) PEAK.
 
-    Rules:
-    - "later"/"earlier"/"shift" → cares about peak position
-    - "higher"/"lower"/"increase"/"decrease" → cares about peak height
-    - If both mentioned → mark both as True
-    - If unclear → mark both as True with direction "any"
+The infected peak has exactly two properties:
+1. position: when the peak occurs → "later", "earlier", or "unchanged"
+2. height: maximum number of infected → "higher", "lower", or "unchanged"
 
-    {format_instructions}
+**YOUR TASK:**
+For ANY expert comment, infer how the peak should change. If the comment implies no change to a property, set it to "unchanged".
 
-    Return ONLY valid JSON."""),
+**INFERENCE RULES:**
+- Comments about restrictive measures (mask, lockdown, distancing) → peak LATER and LOWER
+- Comments about relaxing measures (reopen, lift) → peak EARLIER and HIGHER
+- Comments about vaccination → peak LOWER, position UNCHANGED
+- Comments about new variants (more transmissible) → peak EARLIER and HIGHER
+- Comments about prolonged/dragging epidemic → peak LATER, height UNCHANGED
+- Comments about mortality/treatment → BOTH UNCHANGED (doesn't affect I-peak)
+- If comment explicitly mentions direction, use that
+
+**OUTPUT FORMAT:**
+{format_instructions}
+
+Return ONLY valid JSON."""),
             ("human", "Expert comment: {expert_comment}")
         ])
         
-        # Частичное заполнение переменных
         return template.partial(format_instructions=self.intent_parser.get_format_instructions())
     
-    # ========== ДЕТЕРМИНИРОВАННЫЕ ИНСТРУМЕНТЫ ==========
+    # ========== УНИВЕРСАЛЬНЫЕ ПРОВЕРКИ ==========
     
-    def _check_position(self, baseline: float, new: float, direction: str) -> dict:
-        """Deterministic position check"""
-        if direction == "later":
-            ok = new > baseline
-            desc = f"moved later: {baseline:.1f} → {new:.1f}"
-        elif direction == "earlier":
-            ok = new < baseline
-            desc = f"moved earlier: {baseline:.1f} → {new:.1f}"
-        else:
-            ok = True
-            desc = f"changed: {baseline:.1f} → {new:.1f}"
+    def _check_position(self, baseline: float, new: float, expected: str) -> dict:
+        """
+        Check if peak position changed as expected.
+        expected ∈ {"later", "earlier", "unchanged"}
+        """
+        change = new - baseline
+        is_significant = abs(change) >= self.position_threshold if self.position_threshold > 0 else abs(change) > 1e-6
         
-        return {"ok": ok, "description": desc, "change": new - baseline}
+        if expected == "later":
+            ok = change > 0 and is_significant
+            desc = f"moved later: {baseline:.1f} → {new:.1f}" if ok else f"expected later, but moved {new:.1f}"
+        elif expected == "earlier":
+            ok = change < 0 and is_significant
+            desc = f"moved earlier: {baseline:.1f} → {new:.1f}" if ok else f"expected earlier, but moved {new:.1f}"
+        else:  # unchanged
+            ok = not is_significant
+            desc = f"remained stable: {baseline:.1f} → {new:.1f}" if ok else f"changed unexpectedly: {baseline:.1f} → {new:.1f}"
+        
+        return {"ok": ok, "description": desc, "change": change, "is_significant": is_significant}
     
-    def _check_height(self, baseline: float, new: float, direction: str) -> dict:
-        """Deterministic height check"""
-        if direction == "higher":
-            ok = new > baseline
-            desc = f"increased: {baseline:.0f} → {new:.0f}"
-        elif direction == "lower":
-            ok = new < baseline
-            desc = f"decreased: {baseline:.0f} → {new:.0f}"
-        else:
-            ok = True
-            desc = f"changed: {baseline:.0f} → {new:.0f}"
+    def _check_height(self, baseline: float, new: float, expected: str) -> dict:
+        """
+        Check if peak height changed as expected.
+        expected ∈ {"higher", "lower", "unchanged"}
+        """
+        change = new - baseline
+        relative_change = abs(change) / baseline if baseline > 0 else 0
+        is_significant = relative_change >= self.height_threshold_relative if self.height_threshold_relative > 0 else abs(change) > 1e-6
         
-        return {"ok": ok, "description": desc, "change": new - baseline}
+        if expected == "higher":
+            ok = change > 0 and is_significant
+            desc = f"increased: {baseline:.0f} → {new:.0f}" if ok else f"expected higher, but got {new:.0f}"
+        elif expected == "lower":
+            ok = change < 0 and is_significant
+            desc = f"decreased: {baseline:.0f} → {new:.0f}" if ok else f"expected lower, but got {new:.0f}"
+        else:  # unchanged
+            ok = not is_significant
+            desc = f"remained stable: {baseline:.0f} → {new:.0f}" if ok else f"changed unexpectedly: {baseline:.0f} → {new:.0f}"
+        
+        return {"ok": ok, "description": desc, "change": change, "is_significant": is_significant}
     
-    def _make_decision(self, pos_check: dict, height_check: dict, 
-                      care_pos: bool, care_height: bool) -> dict:
-        """Deterministic decision"""
-        pos_ok = not care_pos or pos_check["ok"]
-        height_ok = not care_height or height_check["ok"]
-        
-        if pos_ok and height_ok:
+    def _make_decision(self, pos_check: dict, height_check: dict) -> dict:
+        """
+        Simple decision: accept ONLY if ALL expectations are met.
+        """
+        if pos_check["ok"] and height_check["ok"]:
             decision = "accept"
-            reasoning = "Parameters changed in expected direction"
-        elif not pos_ok and not height_ok:
-            decision = "reject"
-            reasoning = "Parameters changed in wrong direction"
+            reasoning = f"Position: {pos_check['description']}. Height: {height_check['description']}"
         else:
-            decision = "adjust"
-            reasoning = "Partial success - some metrics need adjustment"
-        
-        # Добавляем детали
-        details = []
-        if care_pos:
-            details.append(f"Position: {pos_check['description']}")
-        if care_height:
-            details.append(f"Height: {height_check['description']}")
-        
-        if details:
-            reasoning += ". " + "; ".join(details)
+            decision = "reject"
+            reasons = []
+            if not pos_check["ok"]:
+                reasons.append(f"Position: {pos_check['description']}")
+            if not height_check["ok"]:
+                reasons.append(f"Height: {height_check['description']}")
+            reasoning = "; ".join(reasons)
         
         return {"decision": decision, "reasoning": reasoning}
     
-    # ========== ОСНОВНЫЕ МЕТОДЫ ==========
+    # ========== ПАРСИНГ ==========
     
     def _parse_intent(self, comment: str) -> dict:
-        """Parse expert intent with LLM or fallback"""
+        """Parse expert intent with LLM, fallback to keyword matching."""
         if not comment:
-            return {"cares_about_position": True, "position_direction": "any",
-                   "cares_about_height": True, "height_direction": "any"}
+            return {"position_expected": "unchanged", "height_expected": "unchanged"}
         
         try:
             chain = self.intent_prompt | self.llm
             result = chain.invoke({"expert_comment": comment})
             text = result.content if hasattr(result, 'content') else str(result)
             
-            # Извлекаем JSON
             json_match = re.search(r'\{.*\}', text, re.DOTALL)
             if json_match:
-                return json.loads(json_match.group())
+                parsed = json.loads(json_match.group())
+                return {
+                    "position_expected": parsed.get("position_direction", "unchanged"),
+                    "height_expected": parsed.get("height_direction", "unchanged")
+                }
             return json.loads(text)
-        except:
-            # Fallback: keyword matching
-            low = comment.lower()
-            care_pos = any(w in low for w in ["later", "earlier", "shift", "peak", "position"])
-            care_height = any(w in low for w in ["higher", "lower", "increase", "decrease", "height"])
             
-            pos_dir = "any"
-            if "later" in low: pos_dir = "later"
-            elif "earlier" in low: pos_dir = "earlier"
-            
-            height_dir = "any"
-            if "higher" in low or "increase" in low: height_dir = "higher"
-            elif "lower" in low or "decrease" in low: height_dir = "lower"
-            
-            return {
-                "cares_about_position": care_pos or not (care_pos or care_height),
-                "position_direction": pos_dir,
-                "cares_about_height": care_height or not (care_pos or care_height),
-                "height_direction": height_dir
-            }
+        except Exception as e:
+            print(f"   ⚠️ LLM failed, using fallback: {e}")
+            return self._fallback_parse(comment)
+    
+    def _fallback_parse(self, comment: str) -> dict:
+        """Keyword-based fallback."""
+        low = comment.lower()
+        
+        # Position expectations
+        if any(w in low for w in ["later", "delay", "prolong", "extend"]):
+            pos_exp = "later"
+        elif any(w in low for w in ["earlier", "sooner", "accelerate"]):
+            pos_exp = "earlier"
+        else:
+            pos_exp = "unchanged"
+        
+        # Height expectations
+        if any(w in low for w in ["higher", "increase", "surge", "more cases"]):
+            height_exp = "higher"
+        elif any(w in low for w in ["lower", "decrease", "reduce", "fewer", "flatten"]):
+            height_exp = "lower"
+        else:
+            height_exp = "unchanged"
+        
+        # Корректировка для мер
+        mitigation = ["mask", "lockdown", "quarantine", "distance", "restrict"]
+        if any(w in low for w in mitigation):
+            pos_exp = "later"
+            height_exp = "lower"
+        
+        return {"position_expected": pos_exp, "height_expected": height_exp}
+    
+    # ========== ОСНОВНЫЕ МЕТОДЫ ==========
     
     def set_task_config(self, config: Dict):
         self.task_config = config
-        print(f"✅ Critic task configured: {config.get('description', 'No description')}")
+        print(f"✅ Critic configured")
     
     def add_to_history(self, episode: Episode):
         self.history.append(episode)
-        print(f"📝 Added episode {episode.iteration} to history")
     
     def critique(
         self,
@@ -176,9 +202,8 @@ class DeterministicCriticAgent:
         new_results: Dict,
         expert_comment: str
     ) -> Episode:
-        """Main evaluation method"""
         print("=" * 60)
-        print("🔍 CRITIC AGENT (Deterministic Tools)")
+        print("🔍 CRITIC AGENT")
         print("=" * 60)
         
         baseline_peak = baseline_episode.peak_position or 0
@@ -190,29 +215,28 @@ class DeterministicCriticAgent:
         print(f"📊 New:      peak={new_peak:.1f}, height={new_height:.0f}")
         print(f"💬 Expert:   {expert_comment}")
         
-        # 1. Парсим намерения
-        print("\n🔍 Parsing expert intent...")
+        # Парсим ожидания
+        print("\n🔍 Analyzing expected peak change...")
         intent = self._parse_intent(expert_comment)
-        print(f"   Position: {intent['cares_about_position']} ({intent['position_direction']})")
-        print(f"   Height:   {intent['cares_about_height']} ({intent['height_direction']})")
+        pos_exp = intent["position_expected"]
+        height_exp = intent["height_expected"]
+        print(f"   Expected position: {pos_exp}")
+        print(f"   Expected height:   {height_exp}")
         
-        # 2. Детерминированные проверки
-        print("\n⚙️ Running checks...")
-        pos_check = self._check_position(baseline_peak, new_peak, intent['position_direction'])
-        height_check = self._check_height(baseline_height, new_height, intent['height_direction'])
+        # Проверяем
+        print("\n⚙️ Checking...")
+        pos_check = self._check_position(baseline_peak, new_peak, pos_exp)
+        height_check = self._check_height(baseline_height, new_height, height_exp)
         print(f"   Position: {'✓' if pos_check['ok'] else '✗'} {pos_check['description']}")
         print(f"   Height:   {'✓' if height_check['ok'] else '✗'} {height_check['description']}")
         
-        # 3. Принимаем решение
-        print("\n⚖️ Making decision...")
-        decision = self._make_decision(pos_check, height_check, 
-                                       intent['cares_about_position'],
-                                       intent['cares_about_height'])
+        # Решение
+        print("\n⚖️ Decision...")
+        decision = self._make_decision(pos_check, height_check)
         
-        print(f"✅ Decision: {decision['decision'].upper()}")
+        print(f"✅ {decision['decision'].upper()}")
         print(f"💭 {decision['reasoning']}")
         
-        # Создаем эпизод
         episode = Episode(
             beta=new_params['beta'],
             gamma=new_params['gamma'],
@@ -232,6 +256,7 @@ class DeterministicCriticAgent:
     def __call__(self, state: PipelineState) -> PipelineState:
         history = state.get('history', [])
         baseline_episode = None
+        
         for ep in history:
             if ep.iteration == 0:
                 baseline_episode = ep
@@ -239,6 +264,8 @@ class DeterministicCriticAgent:
         
         if baseline_episode is None:
             baseline_episode = state.get('current_episode')
+            if baseline_episode is None:
+                raise ValueError("No baseline episode")
         
         episode = self.critique(
             baseline_episode=baseline_episode,
