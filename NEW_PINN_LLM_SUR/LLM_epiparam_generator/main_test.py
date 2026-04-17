@@ -20,6 +20,7 @@ import config
 from formats.data_formats import PipelineState
 from agents.EpiParamGeneratorAgent import LLMEpiParamGenerator
 from agents.DeterministicCriticAgent import DeterministicCriticAgent
+from agents.IntentParserAgent import IntentParserAgent
 
 from typing import Dict, Optional
 from agents.BaseLLMClient import BaseLLMClient  
@@ -539,14 +540,18 @@ class OptimizationPipeline:
         # Create agents
         llm_for_agents = self._get_llm_for_agents()
 
+        self.intent_parser = IntentParserAgent(llm_for_agents)
         self.generator = LLMEpiParamGenerator(llm_for_agents, enable_logging=True, log_format="json")
         self.critic = DeterministicCriticAgent(
-                                        llm_for_agents, 
-                                        enable_logging=True, 
-                                        log_format="json",
-                                        max_retries=3,
-                                        # decision_mode=critic_mode
-                                    )
+                                                llm_for_agents,
+                                                enable_logging=True,
+                                                log_format="json",
+                                                max_retries=3,
+                                                position_threshold=5.0,
+                                                height_threshold_relative=0.10,
+                                                position_tolerance=250.0,           # ±5 дней для "unchanged"
+                                                height_tolerance_relative=0.80    # ±5% для "unchanged"
+                                            )
         
         # Pass both generator and critic to history node
         self.history_node = HistoryNode(generator=self.generator, critic=self.critic)
@@ -600,8 +605,10 @@ class OptimizationPipeline:
 
         sensitivity_node = SensitivityNode(self.surrogate_agent)
         
+        
         # Add nodes
         workflow.add_node("sensitivity", sensitivity_node)
+        workflow.add_node("intent", self.intent_parser)
         workflow.add_node("generate", self.generator.generate)
         workflow.add_node("surrogate", self.surrogate_node)
         workflow.add_node("critic", self.critic)
@@ -612,7 +619,8 @@ class OptimizationPipeline:
         
         # Add edges 
         workflow.set_entry_point("sensitivity")
-        workflow.add_edge("sensitivity", "generate")
+        workflow.add_edge("sensitivity", "intent")
+        workflow.add_edge("intent", "generate")
         workflow.add_edge("generate", "surrogate")
         workflow.add_edge("surrogate", "critic")
         workflow.add_edge("critic", "history")
@@ -1348,7 +1356,7 @@ def main():
         'I': covid_cases['I'].tolist(),
         'R': covid_cases['R'].tolist(),
         'D': covid_cases['D'].tolist(),
-        'train_size': 180,
+        'train_size': 120,
     }
     
     # ============================================================
@@ -1409,10 +1417,12 @@ def main():
     baseline_gamma = 0.034483
     baseline_mu = 0.005296
     
-    # expert_comment = "Need higher peak"
+    expert_comment = "Need later peak"
     # expert_comment = "Mask mandate will be introduced"
-    expert_comment = "The peak should be 10,000 higher and later"
-    # expert_comment = "First move the peak LATER"
+    # expert_comment = "The peak should be higher and later"
+    # expert_comment = "First move the peak LATER. Hieght is unimportant"
+    # expert_comment =  "The infection rate graph shows an excessively sharp decline after the peak – in reality, the epidemic's 'tail' should be longer."
+    # expert_comment = "Quarantine measures were introduced late – the peak should shift by 7-10 days."
 
     print("\n" + "-" * 60)
     print("📌 STEP 6: Test parameters")
@@ -1433,7 +1443,7 @@ def main():
         gamma=baseline_gamma,
         mu=baseline_mu,
         expert_comment=expert_comment,
-        max_iterations=10,
+        max_iterations=100,
         population=10000,
         S0=9900,
         I0=100,

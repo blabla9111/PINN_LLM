@@ -25,6 +25,8 @@ class DeterministicCriticAgent:
         log_format: str = "json",
         position_threshold: float = 0.0,
         height_threshold_relative: float = 0.0,
+        position_tolerance: float = 5.0,
+        height_tolerance_relative: float = 0.05,
     ):
         self.llm_client = llm if isinstance(llm, BaseLLMClient) else None
         self.llm = llm
@@ -40,6 +42,8 @@ class DeterministicCriticAgent:
         
         self.intent_parser = PydanticOutputParser(pydantic_object=ExpertIntent)
         self.intent_prompt = self._create_intent_prompt()
+        self.position_tolerance = position_tolerance
+        self.height_tolerance_relative = height_tolerance_relative
     
     def _create_intent_prompt(self) -> ChatPromptTemplate:
         """Universal prompt: extract expected peak change from ANY comment."""
@@ -89,8 +93,13 @@ Return ONLY valid JSON."""),
             ok = change < 0 and is_significant
             desc = f"moved earlier: {baseline:.1f} → {new:.1f}" if ok else f"expected earlier, but moved {new:.1f}"
         else:  # unchanged
-            ok = not is_significant
-            desc = f"remained stable: {baseline:.1f} → {new:.1f}" if ok else f"changed unexpectedly: {baseline:.1f} → {new:.1f}"
+            # ✅ Толерантность: ±position_tolerance дней считается "unchanged"
+            within_tolerance = abs(change) <= self.position_tolerance
+            ok = within_tolerance
+            if within_tolerance:
+                desc = f"remained stable: {baseline:.1f} → {new:.1f} (Δ={change:+.1f} within ±{self.position_tolerance})"
+            else:
+                desc = f"changed unexpectedly: {baseline:.1f} → {new:.1f} (Δ={change:+.1f} > ±{self.position_tolerance})"
         
         return {"ok": ok, "description": desc, "change": change, "is_significant": is_significant}
     
@@ -110,8 +119,13 @@ Return ONLY valid JSON."""),
             ok = change < 0 and is_significant
             desc = f"decreased: {baseline:.0f} → {new:.0f}" if ok else f"expected lower, but got {new:.0f}"
         else:  # unchanged
-            ok = not is_significant
-            desc = f"remained stable: {baseline:.0f} → {new:.0f}" if ok else f"changed unexpectedly: {baseline:.0f} → {new:.0f}"
+            # ✅ Толерантность: ±height_tolerance_relative считается "unchanged"
+            within_tolerance = relative_change <= self.height_tolerance_relative
+            ok = within_tolerance
+            if within_tolerance:
+                desc = f"remained stable: {baseline:.0f} → {new:.0f} ({relative_change*100:.1f}% within ±{self.height_tolerance_relative*100:.0f}%)"
+            else:
+                desc = f"changed unexpectedly: {baseline:.0f} → {new:.0f} ({relative_change*100:.1f}% > ±{self.height_tolerance_relative*100:.0f}%)"
         
         return {"ok": ok, "description": desc, "change": change, "is_significant": is_significant}
     
@@ -200,7 +214,9 @@ Return ONLY valid JSON."""),
         baseline_episode: Episode,
         new_params: Dict,
         new_results: Dict,
-        expert_comment: str
+        expert_comment: str,
+        position_expected: str = None,    
+        height_expected: str = None       
     ) -> Episode:
         print("=" * 60)
         print("🔍 CRITIC AGENT")
@@ -215,11 +231,17 @@ Return ONLY valid JSON."""),
         print(f"📊 New:      peak={new_peak:.1f}, height={new_height:.0f}")
         print(f"💬 Expert:   {expert_comment}")
         
-        # Парсим ожидания
-        print("\n🔍 Analyzing expected peak change...")
-        intent = self._parse_intent(expert_comment)
-        pos_exp = intent["position_expected"]
-        height_exp = intent["height_expected"]
+        # ✅ Используем переданные ожидания, если есть; иначе парсим
+        if position_expected is not None and height_expected is not None:
+            pos_exp = position_expected
+            height_exp = height_expected
+            print(f"\n📍 Using pre-parsed expectations (from IntentParser):")
+        else:
+            print("\n🔍 Analyzing expected peak change...")
+            intent = self._parse_intent(expert_comment)
+            pos_exp = intent["position_expected"]
+            height_exp = intent["height_expected"]
+        
         print(f"   Expected position: {pos_exp}")
         print(f"   Expected height:   {height_exp}")
         
@@ -267,11 +289,18 @@ Return ONLY valid JSON."""),
             if baseline_episode is None:
                 raise ValueError("No baseline episode")
         
+        # ✅ Берем готовые ожидания из state (уже распарсены IntentParser)
+        position_expected = state.get('expected_position', 'unchanged')
+        height_expected = state.get('expected_height', 'unchanged')
+        
+        # ✅ Передаем их в critique
         episode = self.critique(
             baseline_episode=baseline_episode,
             new_params=state.get('generated_params'),
             new_results=state.get('surrogate_results'),
-            expert_comment=state.get('expert_comment')
+            expert_comment=state.get('expert_comment'),
+            position_expected=position_expected,    # ✅ новый параметр
+            height_expected=height_expected         # ✅ новый параметр
         )
         
         state['critic_decision'] = 'accept' if episode.accepted else 'reject'

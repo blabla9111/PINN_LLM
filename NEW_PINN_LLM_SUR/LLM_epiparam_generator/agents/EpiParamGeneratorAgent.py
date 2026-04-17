@@ -143,8 +143,24 @@ Return ONLY valid JSON in the exact format specified. Do not include any additio
 
             ("human", """Please generate new epidemiological parameters for the SIRD model based on the following information:
 
-## 0. Parameter Sensitivity Map (CRITICAL - read first!)
+## 🎯 TARGET PEAK DIRECTION (from expert comment)
+Expected position change: **{expected_position}**
+Expected height change: **{expected_height}**
+
+
+## 0. Parameter Sensitivity Map — YOUR CHEAT SHEET
 {sensitivity_map}
+
+**How to use the Sensitivity Map:**
+- This map shows EXACTLY how changing each parameter affects the peak.
+- It was computed SPECIFICALLY for your current baseline parameters.
+- Use it to make INFORMED, PRECISE adjustments — NOT random guesses.
+
+**Example of using the map:**
+- If expected_position = "later" → look at the map: which parameter change gives POSITIVE Δ day?
+- If expected_height = "higher" → look at the map: which parameter change gives POSITIVE Δ height?
+- Combine adjustments proportionally to achieve both goals.
+
 
 ## 1. Task Configuration
 {task_config}
@@ -378,12 +394,20 @@ Return only the valid JSON object without any additional text.""")
         
         # ✅ Экспертный комментарий всегда есть в state
         expert_comment = state.get('expert_comment')
+
         
         # Проверяем наличие экспертного комментария
         if expert_comment is None or expert_comment.strip() == "":
             raise ValueError("❌ Expert comment is required but not provided in state!")
         
+        expected_position = state.get('expected_position', 'unchanged')
+        expected_height = state.get('expected_height', 'unchanged')
+        direction_hint = state.get('direction_hint', '')
+        
         print(f"📝 Expert comment: {expert_comment}")
+        print(f"🎯 Expected: position={expected_position}, height={expected_height}")
+        if direction_hint:
+            print(f"💡 Hint: {direction_hint}")
         
         if not current_episode:
             print("❌ No current episode in state")
@@ -400,12 +424,12 @@ Return only the valid JSON object without any additional text.""")
         # current_gamma = current_episode.gamma
         # current_mu = current_episode.mu
         
-        beta_min = current_beta - 0.001
-        beta_max = current_beta + 0.001
-        gamma_min = current_gamma - 0.001
-        gamma_max = current_gamma + 0.001
-        mu_min = current_mu - 0.0001
-        mu_max = current_mu + 0.0001
+        beta_min = current_beta - 0.005
+        beta_max = current_beta + 0.005
+        gamma_min = current_gamma - 0.0005
+        gamma_max = current_gamma + 0.0005
+        mu_min = current_mu - 0.00005
+        mu_max = current_mu + 0.00005
 
         sensitivity_map = state.get('sensitivity_map', {})
         sensitivity_text = self._format_sensitivity_map(sensitivity_map)
@@ -427,7 +451,10 @@ Return only the valid JSON object without any additional text.""")
             "gamma_max": gamma_max,
             "mu_min": mu_min,
             "mu_max": mu_max,
-            "sensitivity_map": sensitivity_text
+            "sensitivity_map": sensitivity_text,
+            "expected_position": expected_position,   
+            "expected_height": expected_height,        
+            "direction_hint": direction_hint,         
         }
         
         # Create chain

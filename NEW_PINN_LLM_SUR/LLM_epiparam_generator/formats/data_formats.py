@@ -143,6 +143,9 @@ class PipelineState(TypedDict):
     # Current state
     current_episode: Optional[Episode] 
     expert_comment: Optional[str]
+
+    expected_position: Optional[str]   # "later", "earlier", "unchanged"
+    expected_height: Optional[str]     # "higher", "lower", "unchanged"
     
     # History
     history: List[Episode]
