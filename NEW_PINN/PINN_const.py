@@ -17,7 +17,7 @@ class EpiParams(nn.Module):
         ''' TODO понять бы откуда брать beta, mu 
         и как их начальные значения влияют на последующий результат'''
         if init_params is None:
-            init_params = {'beta': 0.3, 'gamma': 0.1, 'mu': 0.04}
+            init_params = {'beta': 0.3, 'gamma': 0.1, 'mu': 0.01}
 
         # Инициализация в логитовом пространстве (как в статье)
         def to_logit(x):
