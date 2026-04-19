@@ -216,7 +216,7 @@ class EINN_PINN(nn.Module):
             loss_data_D = F.mse_loss(
                 D[:self.train_size], self.D_data[:self.train_size])
 
-            loss_data = loss_data_S + 1.0 * loss_data_I + loss_data_R + 10.0 * loss_data_D
+            loss_data = loss_data_S + 10.0 * loss_data_I + loss_data_R + 1.0 * loss_data_D
 
             # Невязка по уравнениям
             loss_ode = torch.mean(f_S**2 + f_I**2 + f_R**2 + f_D**2)
