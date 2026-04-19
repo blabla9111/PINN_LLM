@@ -17,7 +17,7 @@ class EpiParams(nn.Module):
         ''' TODO понять бы откуда брать beta, mu 
         и как их начальные значения влияют на последующий результат'''
         if init_params is None:
-            init_params = {'beta': 0.3, 'gamma': 0.1, 'mu': 0.01}
+            init_params = {'beta': 0.3, 'gamma': 0.1, 'mu': 0.04}
 
         # Инициализация в логитовом пространстве (как в статье)
         def to_logit(x):
@@ -89,7 +89,7 @@ class TorchStandardScaler:
 class EINN_PINN(nn.Module):
     '''SIRD'''
 
-    def __init__(self, t, S_data, I_data, R_data, D_data, population, train_size, device='cpu'):
+    def __init__(self, t, S_data, I_data, R_data, D_data, population, train_size, init_params=None, device='cpu'):
         super().__init__()
         self.device = device
         self.N = population
@@ -129,7 +129,7 @@ class EINN_PINN(nn.Module):
             nn.Linear(128, 4)  # S, I, R, D
         ).to(device)
 
-        self.params = EpiParams(self.N, device=device)
+        self.params = EpiParams(self.N,init_params = init_params, device=device)
 
         # Параметры для оптимизации
         self.all_params = list(self.state_net.parameters()) + \
