@@ -424,11 +424,11 @@ Return only the valid JSON object without any additional text.""")
         # current_gamma = current_episode.gamma
         # current_mu = current_episode.mu
         
-        beta_min = current_beta - 0.005
-        beta_max = current_beta + 0.005
-        gamma_min = current_gamma - 0.0005
+        beta_min = current_beta - 0.05
+        beta_max = current_beta + 0.05
+        gamma_min = current_gamma - 0.005
         gamma_max = current_gamma + 0.0005
-        mu_min = current_mu - 0.00005
+        mu_min = current_mu - 0.0005
         mu_max = current_mu + 0.00005
 
         sensitivity_map = state.get('sensitivity_map', {})

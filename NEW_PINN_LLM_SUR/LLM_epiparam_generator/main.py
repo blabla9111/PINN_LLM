@@ -722,7 +722,7 @@ if __name__ == "__main__":
         gamma=0.042,
         mu=0.0025,
         expert_comment="Need higher peak",
-        max_iterations=10,
+        max_iterations=100,
         # Опциональные параметры (если нужны нестандартные)
         population=1000,
         S0=999,

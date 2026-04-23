@@ -548,7 +548,7 @@ class OptimizationPipeline:
                                                 log_format="json",
                                                 max_retries=3,
                                                 position_threshold=5.0,
-                                                height_threshold_relative=0.10,
+                                                height_threshold_relative=0.30,
                                                 position_tolerance=250.0,           # ±5 дней для "unchanged"
                                                 height_tolerance_relative=0.80    # ±5% для "unchanged"
                                             )
@@ -1356,7 +1356,7 @@ def main():
         'I': covid_cases['I'].tolist(),
         'R': covid_cases['R'].tolist(),
         'D': covid_cases['D'].tolist(),
-        'train_size': 120,
+        'train_size': 185,
     }
     
     # ============================================================
@@ -1413,11 +1413,11 @@ def main():
     # ============================================================
     # 6. Параметры для тестирования
     # ============================================================
-    baseline_beta = 0.045727
-    baseline_gamma = 0.034483
-    baseline_mu = 0.005296
+    baseline_beta = 0.0458
+    baseline_gamma = 0.0371
+    baseline_mu = 0.00229
     
-    expert_comment = "Need later peak"
+    expert_comment = "Need lower peak, position is unimportant"
     # expert_comment = "Mask mandate will be introduced"
     # expert_comment = "The peak should be higher and later"
     # expert_comment = "First move the peak LATER. Hieght is unimportant"
