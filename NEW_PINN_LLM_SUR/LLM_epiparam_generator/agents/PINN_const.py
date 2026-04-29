@@ -137,6 +137,15 @@ class EINN_PINN(nn.Module):
 
         self.losses = []
 
+        # В __init__ вызвать:
+    #     self._init_weights()
+
+    # def _init_weights(self):
+    #         for m in self.state_net.modules():
+    #             if isinstance(m, nn.Linear):
+    #                 nn.init.xavier_uniform_(m.weight)
+    #                 nn.init.zeros_(m.bias)
+
     def denormalize_states(self, states_norm):
         '''Из нормализованного в реальный масштаб'''
         S_norm, I_norm, R_norm, D_norm = states_norm[:,
@@ -153,8 +162,21 @@ class EINN_PINN(nn.Module):
         I = F.softplus(I)
         R = F.softplus(R)
         D = F.softplus(D)
+        # Было чисто для проверки, что softplus не влияет на рассогласование
+        # S = torch.clamp(S, min=0.0)
+        # I = torch.clamp(I, min=0.0)
+        # R = torch.clamp(R, min=0.0)
+        # D = torch.clamp(D, min=0.0)
 
         return S, I, R, D
+
+    # def denormalize_states(self, states_norm):
+    #     S, I, R, D = states_norm[:, 0], states_norm[:, 1], states_norm[:, 2], states_norm[:, 3]
+    #     S = torch.clamp(S, min=0.0)
+    #     I = torch.clamp(I, min=0.0)
+    #     R = torch.clamp(R, min=0.0)
+    #     D = torch.clamp(D, min=0.0)
+    #     return S, I, R, D
 
     def forward(self, t_batch):
         '''Прямой проход'''
